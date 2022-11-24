@@ -23,7 +23,7 @@
  - [ic-checkbox](../ic-checkbox)
  - [ic-chip](../ic-chip)
  - [ic-classification-banner](../ic-classification-banner)
- - [ic-data-entity](../ic-data-entity)
+ - [ic-data-list](../ic-data-list)
  - [ic-data-row](../ic-data-row)
  - [ic-footer](../ic-footer)
  - [ic-footer-link-group](../ic-footer-link-group)
@@ -57,7 +57,7 @@ graph TD;
   ic-checkbox --> ic-typography
   ic-chip --> ic-typography
   ic-classification-banner --> ic-typography
-  ic-data-entity --> ic-typography
+  ic-data-list --> ic-typography
   ic-data-row --> ic-typography
   ic-footer --> ic-typography
   ic-footer-link-group --> ic-typography

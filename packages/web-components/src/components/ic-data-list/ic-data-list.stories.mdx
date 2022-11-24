@@ -14,7 +14,7 @@ import Button from "../ic-button/readme.md";
 import TextField from "../ic-text-field/readme.md";
 import Typography from "../ic-typography/readme.md";
 
-<Meta title="Web Components/Data entity" component="ic-data-entity" />
+<Meta title="Web Components/Data list" component="ic-data-list" />
 
 <Description markdown={readme} />
 
@@ -22,7 +22,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Default">
-    {html`<ic-data-entity heading="Personal details">
+    {html`<ic-data-list heading="Personal details">
       <ic-data-row label="Name" value="Michael Johnson"></ic-data-row>
       <ic-data-row label="Date of birth" value="16 October 1995"></ic-data-row>
       <ic-data-row label="Telephone" value="07449 7654873"></ic-data-row>
@@ -38,7 +38,7 @@ import Typography from "../ic-typography/readme.md";
           United Kingdom
         </ic-typography>
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -46,7 +46,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Long text values">
-    {html`<ic-data-entity
+    {html` <ic-data-list
       heading="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
     >
       <ic-data-row
@@ -71,7 +71,7 @@ import Typography from "../ic-typography/readme.md";
           United Kingdom
         </ic-typography>
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -79,7 +79,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Small">
-    {html`<ic-data-entity heading="Personal details" small>
+    {html`<ic-data-list heading="Personal details" small>
       <ic-data-row label="Name" value="Michael Johnson"></ic-data-row>
       <ic-data-row label="Date of birth" value="16 October 1995"></ic-data-row>
       <ic-data-row label="Telephone" value="07449 7654873"></ic-data-row>
@@ -95,7 +95,7 @@ import Typography from "../ic-typography/readme.md";
           United Kingdom
         </ic-typography>
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -103,7 +103,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Link">
-    {html`<ic-data-entity heading="Personal details">
+    {html`<ic-data-list heading="Personal details">
       <ic-data-row label="Name" value="Michael Johnson">
         <ic-link href="#" slot="end-component"> Edit </ic-link>
       </ic-data-row>
@@ -128,7 +128,7 @@ import Typography from "../ic-typography/readme.md";
         </ic-typography>
         <ic-link href="#" slot="end-component"> Edit </ic-link>
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -136,7 +136,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Icon button">
-    {html`<ic-data-entity heading="Personal details">
+    {html`<ic-data-list heading="Personal details">
       <ic-data-row label="Name" value="Michael Johnson">
         <ic-button variant="icon" aria-label="Edit" slot="end-component">
           <svg
@@ -216,7 +216,7 @@ import Typography from "../ic-typography/readme.md";
           </svg>
         </ic-button>
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -224,7 +224,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Adornment">
-    {html`<ic-data-entity heading="Personal details">
+    {html`<ic-data-list heading="Personal details">
       <ic-data-row label="Name" value="Michael Johnson">
         <ic-status-tag
           status="success"
@@ -273,7 +273,7 @@ import Typography from "../ic-typography/readme.md";
           slot="end-component"
         />
       </ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -281,7 +281,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Status tag">
-    {html` <ic-data-entity heading="Personal details">
+    {html` <ic-data-list heading="Personal details">
       <ic-data-row label="Name"
         ><ic-status-tag
           status="success"
@@ -317,7 +317,7 @@ import Typography from "../ic-typography/readme.md";
           variant="secondary"
           slot="value"
       /></ic-data-row>
-    </ic-data-entity>`}
+    </ic-data-list>`}
   </Story>
 </Canvas>
 
@@ -325,7 +325,7 @@ import Typography from "../ic-typography/readme.md";
 
 <Canvas>
   <Story name="Editable example">
-    {html`<ic-data-entity heading="Personal details">
+    {html`<ic-data-list heading="Personal details">
         <ic-data-row label="Name">
           <ic-text-field
             slot="value"
@@ -376,7 +376,7 @@ import Typography from "../ic-typography/readme.md";
             full-width
           />
         </ic-data-row>
-      </ic-data-entity>
+      </ic-data-list>
       <ic-button
         onclick="
         var textFields = document.querySelectorAll('ic-text-field');

@@ -1,15 +1,15 @@
 import { Component, Element, Host, h, Prop } from "@stencil/core";
 
 @Component({
-  tag: "ic-data-entity",
-  styleUrl: "ic-data-entity.css",
+  tag: "ic-data-list",
+  styleUrl: "ic-data-list.css",
   shadow: true,
 })
-export class DataEntity {
-  @Element() el: HTMLIcDataEntityElement;
+export class DataList {
+  @Element() el: HTMLIcDataListElement;
 
   /**
-   * The title for the data entity.
+   * The title for the data list.
    */
   @Prop() heading: string;
 
@@ -31,13 +31,13 @@ export class DataEntity {
 
     return (
       <Host class={{ ["small"]: small }}>
-        <div class="heading" id="data-entity-heading">
+        <div class="heading" id="data-list-heading">
           <slot name="heading">
             <ic-typography variant="h3">{heading}</ic-typography>
           </slot>
         </div>
         <div class="divider" />
-        <ul aria-labelledby="data-entity-heading" class="rows">
+        <ul aria-labelledby="data-list-heading" class="rows">
           <slot></slot>
         </ul>
       </Host>
