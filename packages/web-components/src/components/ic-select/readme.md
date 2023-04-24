@@ -72,6 +72,10 @@ Type: `Promise<void>`
 
 ## Dependencies
 
+### Used by
+
+ - [ic-pagination-bar](../ic-pagination-bar)
+
 ### Depends on
 
 - [ic-input-container](../ic-input-container)
@@ -101,6 +105,7 @@ graph TD;
   ic-menu --> ic-typography
   ic-menu --> ic-button
   ic-input-validation --> ic-typography
+  ic-pagination-bar --> ic-select
   style ic-select fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
