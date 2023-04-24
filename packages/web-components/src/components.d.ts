@@ -19,7 +19,8 @@ import { IcLoadingSizes, IcLoadingTypes } from "./components/ic-loading-indicato
 import { IcSearchBarBlurEventDetail, IcSearchBarSearchModes } from "./components/ic-search-bar/ic-search-bar.types";
 import { IcMenuChangeEventDetail, IcMenuOptionIdEventDetail, IcOptionSelectEventDetail } from "./components/ic-menu/ic-menu.types";
 import { IcMenuItemVariants } from "./components/ic-menu-item/ic-menu-item.types";
-import { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
+import { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationAlignmentOptions, IcPaginationItemDisplayTypes, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
+import { IcThemeForeground as IcThemeForeground1 } from "./interface";
 import { IcPaginationItemType } from "./components/ic-pagination-item/ic-pagination-item.types";
 import { IcChangeEventDetail as IcChangeEventDetail2 } from "./components/ic-radio-group/ic-radio-group.types";
 import { IcSkeletonVariants } from "./components/ic-skeleton/ic-skeleton.types";
@@ -44,7 +45,8 @@ export { IcLoadingSizes, IcLoadingTypes } from "./components/ic-loading-indicato
 export { IcSearchBarBlurEventDetail, IcSearchBarSearchModes } from "./components/ic-search-bar/ic-search-bar.types";
 export { IcMenuChangeEventDetail, IcMenuOptionIdEventDetail, IcOptionSelectEventDetail } from "./components/ic-menu/ic-menu.types";
 export { IcMenuItemVariants } from "./components/ic-menu-item/ic-menu-item.types";
-export { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
+export { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationAlignmentOptions, IcPaginationItemDisplayTypes, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
+export { IcThemeForeground as IcThemeForeground1 } from "./interface";
 export { IcPaginationItemType } from "./components/ic-pagination-item/ic-pagination-item.types";
 export { IcChangeEventDetail as IcChangeEventDetail2 } from "./components/ic-radio-group/ic-radio-group.types";
 export { IcSkeletonVariants } from "./components/ic-skeleton/ic-skeleton.types";
@@ -1263,6 +1265,55 @@ export namespace Components {
          */
         "type": IcPaginationTypes;
     }
+    interface IcPaginationBar {
+        /**
+          * The alignment of the items in the pagination bar.
+         */
+        "alignment"?: IcPaginationAlignmentOptions;
+        /**
+          * The appearance for the items in the pagination bar.
+         */
+        "appearance"?: IcThemeForeground1;
+        /**
+          * The label that will be used in place of 'Items' if paginationType is 'data'. Should be capitalised.
+         */
+        "itemLabel"?: string;
+        /**
+          * The options that will be displayed for the 'items per page' select input. Set a maximum of 4 options including a required 'All' option with a value equal to the total number of items.
+         */
+        "itemsPerPageOptions"?: {
+    label: string;
+    value: string;
+  }[];
+        /**
+          * The label that will be used in place of 'Page' if paginationType is 'page'. Should be capitalised.
+         */
+        "pageLabel"?: string;
+        /**
+          * Whether total number of items and current item range or the total number of pages and current page is displayed.
+         */
+        "paginationItemDisplay"?: IcPaginationItemDisplayTypes;
+        /**
+          * Whether the displayed pagination is simple or complex.
+         */
+        "paginationType"?: IcPaginationTypes;
+        /**
+          * If `true`, the 'go to page' control will be displayed.
+         */
+        "showGoToPageControl"?: boolean;
+        /**
+          * If `true`, the number of total items and current item range or the number of total pages and current page will be displayed.
+         */
+        "showItemsPerPage"?: boolean;
+        /**
+          * If `true`, the select input to control 'items per page' will be displayed.
+         */
+        "showItemsPerPageControl"?: boolean;
+        /**
+          * The total number of items to be displayed across all pages.
+         */
+        "totalItems": number;
+    }
     interface IcPaginationItem {
         /**
           * The appearance of the pagination, e.g. dark, light or the default.
@@ -2263,6 +2314,10 @@ export interface IcPaginationCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcPaginationElement;
 }
+export interface IcPaginationBarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLIcPaginationBarElement;
+}
 export interface IcPaginationItemCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcPaginationItemElement;
@@ -2544,6 +2599,12 @@ declare global {
         prototype: HTMLIcPaginationElement;
         new (): HTMLIcPaginationElement;
     };
+    interface HTMLIcPaginationBarElement extends Components.IcPaginationBar, HTMLStencilElement {
+    }
+    var HTMLIcPaginationBarElement: {
+        prototype: HTMLIcPaginationBarElement;
+        new (): HTMLIcPaginationBarElement;
+    };
     interface HTMLIcPaginationItemElement extends Components.IcPaginationItem, HTMLStencilElement {
     }
     var HTMLIcPaginationItemElement: {
@@ -2727,6 +2788,7 @@ declare global {
         "ic-navigation-menu": HTMLIcNavigationMenuElement;
         "ic-page-header": HTMLIcPageHeaderElement;
         "ic-pagination": HTMLIcPaginationElement;
+        "ic-pagination-bar": HTMLIcPaginationBarElement;
         "ic-pagination-item": HTMLIcPaginationItemElement;
         "ic-popover-menu": HTMLIcPopoverMenuElement;
         "ic-radio-group": HTMLIcRadioGroupElement;
@@ -3960,6 +4022,63 @@ declare namespace LocalJSX {
          */
         "type"?: IcPaginationTypes;
     }
+    interface IcPaginationBar {
+        /**
+          * The alignment of the items in the pagination bar.
+         */
+        "alignment"?: IcPaginationAlignmentOptions;
+        /**
+          * The appearance for the items in the pagination bar.
+         */
+        "appearance"?: IcThemeForeground1;
+        /**
+          * The label that will be used in place of 'Items' if paginationType is 'data'. Should be capitalised.
+         */
+        "itemLabel"?: string;
+        /**
+          * The options that will be displayed for the 'items per page' select input. Set a maximum of 4 options including a required 'All' option with a value equal to the total number of items.
+         */
+        "itemsPerPageOptions"?: {
+    label: string;
+    value: string;
+  }[];
+        /**
+          * Emitted when the items per page option is changed.
+         */
+        "onIcItemsPerPageChange"?: (event: IcPaginationBarCustomEvent<{ value: number }>) => void;
+        /**
+          * Emitted when a page is navigated to via the 'go to' input.
+         */
+        "onIcPageChange"?: (event: IcPaginationBarCustomEvent<{ value: number }>) => void;
+        /**
+          * The label that will be used in place of 'Page' if paginationType is 'page'. Should be capitalised.
+         */
+        "pageLabel"?: string;
+        /**
+          * Whether total number of items and current item range or the total number of pages and current page is displayed.
+         */
+        "paginationItemDisplay"?: IcPaginationItemDisplayTypes;
+        /**
+          * Whether the displayed pagination is simple or complex.
+         */
+        "paginationType"?: IcPaginationTypes;
+        /**
+          * If `true`, the 'go to page' control will be displayed.
+         */
+        "showGoToPageControl"?: boolean;
+        /**
+          * If `true`, the number of total items and current item range or the number of total pages and current page will be displayed.
+         */
+        "showItemsPerPage"?: boolean;
+        /**
+          * If `true`, the select input to control 'items per page' will be displayed.
+         */
+        "showItemsPerPageControl"?: boolean;
+        /**
+          * The total number of items to be displayed across all pages.
+         */
+        "totalItems": number;
+    }
     interface IcPaginationItem {
         /**
           * The appearance of the pagination, e.g. dark, light or the default.
@@ -5051,6 +5170,7 @@ declare namespace LocalJSX {
         "ic-navigation-menu": IcNavigationMenu;
         "ic-page-header": IcPageHeader;
         "ic-pagination": IcPagination;
+        "ic-pagination-bar": IcPaginationBar;
         "ic-pagination-item": IcPaginationItem;
         "ic-popover-menu": IcPopoverMenu;
         "ic-radio-group": IcRadioGroup;
@@ -5119,6 +5239,7 @@ declare module "@stencil/core" {
             "ic-navigation-menu": LocalJSX.IcNavigationMenu & JSXBase.HTMLAttributes<HTMLIcNavigationMenuElement>;
             "ic-page-header": LocalJSX.IcPageHeader & JSXBase.HTMLAttributes<HTMLIcPageHeaderElement>;
             "ic-pagination": LocalJSX.IcPagination & JSXBase.HTMLAttributes<HTMLIcPaginationElement>;
+            "ic-pagination-bar": LocalJSX.IcPaginationBar & JSXBase.HTMLAttributes<HTMLIcPaginationBarElement>;
             "ic-pagination-item": LocalJSX.IcPaginationItem & JSXBase.HTMLAttributes<HTMLIcPaginationItemElement>;
             "ic-popover-menu": LocalJSX.IcPopoverMenu & JSXBase.HTMLAttributes<HTMLIcPopoverMenuElement>;
             "ic-radio-group": LocalJSX.IcRadioGroup & JSXBase.HTMLAttributes<HTMLIcRadioGroupElement>;

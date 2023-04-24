@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-23T09:18:33",
+  "timestamp": "2023-11-23T20:02:58",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.3.0",
@@ -1982,6 +1982,7 @@
         "ic-navigation-button",
         "ic-navigation-menu",
         "ic-pagination",
+        "ic-pagination-bar",
         "ic-search-bar",
         "ic-select",
         "ic-side-navigation",
@@ -2031,6 +2032,9 @@
           "ic-button"
         ],
         "ic-pagination": [
+          "ic-button"
+        ],
+        "ic-pagination-bar": [
           "ic-button"
         ],
         "ic-search-bar": [
@@ -9580,7 +9584,9 @@
       "styles": [],
       "slots": [],
       "parts": [],
-      "dependents": [],
+      "dependents": [
+        "ic-pagination-bar"
+      ],
       "dependencies": [
         "ic-button",
         "ic-pagination-item"
@@ -9601,6 +9607,397 @@
           "ic-typography"
         ],
         "ic-pagination-item": [
+          "ic-typography"
+        ],
+        "ic-pagination-bar": [
+          "ic-pagination"
+        ]
+      }
+    },
+    {
+      "filePath": "src/components/ic-pagination-bar/ic-pagination-bar.tsx",
+      "encapsulation": "shadow",
+      "tag": "ic-pagination-bar",
+      "readme": "# ic-pagination-bar\n\n\n",
+      "docs": "",
+      "docsTags": [],
+      "usage": {},
+      "props": [
+        {
+          "name": "alignment",
+          "type": "\"left\" | \"right\" | \"space-between\"",
+          "complexType": {
+            "original": "\"left\" | \"right\" | \"space-between\"",
+            "resolved": "\"left\" | \"right\" | \"space-between\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "alignment",
+          "reflectToAttr": false,
+          "docs": "The alignment of the items in the pagination bar.",
+          "docsTags": [],
+          "default": "\"right\"",
+          "values": [
+            {
+              "value": "left",
+              "type": "string"
+            },
+            {
+              "value": "right",
+              "type": "string"
+            },
+            {
+              "value": "space-between",
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "appearance",
+          "type": "\"dark\" | \"default\" | \"light\"",
+          "complexType": {
+            "original": "IcThemeForeground",
+            "resolved": "\"dark\" | \"default\" | \"light\"",
+            "references": {
+              "IcThemeForeground": {
+                "location": "import",
+                "path": "../../interface",
+                "id": "src/interface.d.ts::IcThemeForeground"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "appearance",
+          "reflectToAttr": false,
+          "docs": "The styling for the items in the pagination bar.",
+          "docsTags": [],
+          "default": "\"default\"",
+          "values": [
+            {
+              "value": "dark",
+              "type": "string"
+            },
+            {
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "value": "light",
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "itemLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "item-label",
+          "reflectToAttr": false,
+          "docs": "The label that will be used in place of 'Items' if paginationType is 'data'. Should be capitalised.",
+          "docsTags": [],
+          "default": "\"Item\"",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "itemsPerPageOptions",
+          "type": "{ label: string; value: string; }[]",
+          "complexType": {
+            "original": "{\n    label: string;\n    value: string;\n  }[]",
+            "resolved": "{ label: string; value: string; }[]",
+            "references": {}
+          },
+          "mutable": true,
+          "reflectToAttr": false,
+          "docs": "The options that will be displayed for the 'items per page' select input. Maximum of 4 options including a required 'All' option with a value equal to the total number of items.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "{ label: string; value: string; }[]"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "pageLabel",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "page-label",
+          "reflectToAttr": false,
+          "docs": "The label that will be used in place of 'Page' if paginationType is 'page'. Should be capitalised.",
+          "docsTags": [],
+          "default": "\"Page\"",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "paginationControl",
+          "type": "\"complex\" | \"simple\"",
+          "complexType": {
+            "original": "\"simple\" | \"complex\"",
+            "resolved": "\"complex\" | \"simple\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pagination-control",
+          "reflectToAttr": false,
+          "docs": "Whether the displayed pagination is simple or complex.",
+          "docsTags": [],
+          "default": "\"simple\"",
+          "values": [
+            {
+              "value": "complex",
+              "type": "string"
+            },
+            {
+              "value": "simple",
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "paginationType",
+          "type": "\"data\" | \"page\"",
+          "complexType": {
+            "original": "\"data\" | \"page\"",
+            "resolved": "\"data\" | \"page\"",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "pagination-type",
+          "reflectToAttr": false,
+          "docs": "Whether the total number of items and current item range is displayed or total number of pages and current page is displayed.",
+          "docsTags": [],
+          "default": "\"page\"",
+          "values": [
+            {
+              "value": "data",
+              "type": "string"
+            },
+            {
+              "value": "page",
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "showGoToPageControl",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-go-to-page-control",
+          "reflectToAttr": false,
+          "docs": "If `true`, the 'go to page' control will be displayed.",
+          "docsTags": [],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "showItemsPerPage",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-items-per-page",
+          "reflectToAttr": false,
+          "docs": "If `true`, the number of total items and current item range or number of total pages and current page will be displayed.",
+          "docsTags": [],
+          "default": "true",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "showItemsPerPageControl",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "show-items-per-page-control",
+          "reflectToAttr": false,
+          "docs": "If `true`, the select input to control 'items per page' will be displayed.",
+          "docsTags": [],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "totalItems",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "total-items",
+          "reflectToAttr": false,
+          "docs": "The total number of items to be displayed across all pages.",
+          "docsTags": [],
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": true
+        }
+      ],
+      "methods": [],
+      "events": [
+        {
+          "event": "icItemsPerPageChange",
+          "detail": "{ value: number; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: number }",
+            "resolved": "{ value: number; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emitted when the items per page option is changed.",
+          "docsTags": []
+        },
+        {
+          "event": "icPageChange",
+          "detail": "{ value: number; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: number }",
+            "resolved": "{ value: number; }",
+            "references": {}
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emitted when a page is navigated to via the 'go to' input.",
+          "docsTags": []
+        }
+      ],
+      "listeners": [
+        {
+          "event": "icPageChange",
+          "capture": false,
+          "passive": false
+        }
+      ],
+      "styles": [],
+      "slots": [],
+      "parts": [],
+      "dependents": [],
+      "dependencies": [
+        "ic-typography",
+        "ic-select",
+        "ic-pagination",
+        "ic-tooltip",
+        "ic-text-field",
+        "ic-button"
+      ],
+      "dependencyGraph": {
+        "ic-pagination-bar": [
+          "ic-typography",
+          "ic-select",
+          "ic-pagination",
+          "ic-tooltip",
+          "ic-text-field",
+          "ic-button"
+        ],
+        "ic-select": [
+          "ic-input-container",
+          "ic-input-label",
+          "ic-input-component-container",
+          "ic-typography",
+          "ic-button",
+          "ic-menu",
+          "ic-input-validation"
+        ],
+        "ic-input-label": [
+          "ic-typography"
+        ],
+        "ic-button": [
+          "ic-loading-indicator",
+          "ic-tooltip"
+        ],
+        "ic-loading-indicator": [
+          "ic-typography"
+        ],
+        "ic-tooltip": [
+          "ic-typography"
+        ],
+        "ic-menu": [
+          "ic-loading-indicator",
+          "ic-typography",
+          "ic-button"
+        ],
+        "ic-input-validation": [
+          "ic-typography"
+        ],
+        "ic-pagination": [
+          "ic-button",
+          "ic-pagination-item"
+        ],
+        "ic-pagination-item": [
+          "ic-typography"
+        ],
+        "ic-text-field": [
+          "ic-input-container",
+          "ic-input-label",
+          "ic-input-component-container",
+          "ic-input-validation",
           "ic-typography"
         ]
       }
@@ -13101,7 +13498,9 @@
       ],
       "slots": [],
       "parts": [],
-      "dependents": [],
+      "dependents": [
+        "ic-pagination-bar"
+      ],
       "dependencies": [
         "ic-input-container",
         "ic-input-label",
@@ -13141,6 +13540,9 @@
         ],
         "ic-input-validation": [
           "ic-typography"
+        ],
+        "ic-pagination-bar": [
+          "ic-select"
         ]
       }
     },
@@ -16007,6 +16409,7 @@
       ],
       "parts": [],
       "dependents": [
+        "ic-pagination-bar",
         "ic-search-bar"
       ],
       "dependencies": [
@@ -16029,6 +16432,9 @@
         ],
         "ic-input-validation": [
           "ic-typography"
+        ],
+        "ic-pagination-bar": [
+          "ic-text-field"
         ],
         "ic-search-bar": [
           "ic-text-field"
@@ -16685,7 +17091,8 @@
       "dependents": [
         "ic-button",
         "ic-chip",
-        "ic-navigation-item"
+        "ic-navigation-item",
+        "ic-pagination-bar"
       ],
       "dependencies": [
         "ic-typography"
@@ -16701,6 +17108,9 @@
           "ic-tooltip"
         ],
         "ic-navigation-item": [
+          "ic-tooltip"
+        ],
+        "ic-pagination-bar": [
           "ic-tooltip"
         ]
       }
@@ -17267,6 +17677,7 @@
         "ic-navigation-item",
         "ic-navigation-menu",
         "ic-page-header",
+        "ic-pagination-bar",
         "ic-pagination-item",
         "ic-popover-menu",
         "ic-radio-option",
@@ -17359,6 +17770,9 @@
           "ic-typography"
         ],
         "ic-page-header": [
+          "ic-typography"
+        ],
+        "ic-pagination-bar": [
           "ic-typography"
         ],
         "ic-pagination-item": [
@@ -17619,6 +18033,16 @@
       "docstring": "",
       "path": "src/components/ic-pagination-item/ic-pagination-item.types.ts"
     },
+    "src/interface.d.ts::IcThemeForeground": {
+      "declaration": "any",
+      "docstring": "",
+      "path": "src/interface.d.ts"
+    },
+    "src/components/ic-tooltip/ic-tooltip.types.ts::IcTooltipPlacements": {
+      "declaration": "export type IcTooltipPlacements =\n  | \"top-start\"\n  | \"top\"\n  | \"top-end\"\n  | \"right-start\"\n  | \"right\"\n  | \"right-end\"\n  | \"bottom-end\"\n  | \"bottom\"\n  | \"bottom-start\"\n  | \"left-end\"\n  | \"left\"\n  | \"left-start\";",
+      "docstring": "",
+      "path": "src/components/ic-tooltip/ic-tooltip.types.ts"
+    },
     "src/utils/types.ts::IcOrientation": {
       "declaration": "export type IcOrientation = \"horizontal\" | \"vertical\";",
       "docstring": "",
@@ -17693,11 +18117,6 @@
       "declaration": "{\n  mode: IcThemeForeground;\n  color: IcColorRGB;\n}",
       "docstring": "",
       "path": "src/utils/types.ts"
-    },
-    "src/components/ic-tooltip/ic-tooltip.types.ts::IcTooltipPlacements": {
-      "declaration": "export type IcTooltipPlacements =\n  | \"top-start\"\n  | \"top\"\n  | \"top-end\"\n  | \"right-start\"\n  | \"right\"\n  | \"right-end\"\n  | \"bottom-end\"\n  | \"bottom\"\n  | \"bottom-start\"\n  | \"left-end\"\n  | \"left\"\n  | \"left-start\";",
-      "docstring": "",
-      "path": "src/components/ic-tooltip/ic-tooltip.types.ts"
     }
   }
 }
