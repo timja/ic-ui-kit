@@ -393,7 +393,6 @@ export namespace Components {
         "value": string;
     }
     interface IcDateInput {
-        "disabledDates"?: IcDisabledDateTypes;
         /**
           * The format in which the date will be displayed.
          */
@@ -2803,7 +2802,6 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface IcDateInput {
-        "disabledDates"?: IcDisabledDateTypes;
         /**
           * The format in which the date will be displayed.
          */

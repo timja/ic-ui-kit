@@ -291,16 +291,16 @@ export class DateInput {
 
     let maxValue;
 
-    switch (input) {
-      case this.dayInputEl:
-        maxValue = 31;
-        break;
-      case this.monthInputEl:
-        maxValue = 12;
-        break;
-      case this.yearInputEl:
-        maxValue = 9999;
-    }
+  //   switch (input) {
+  //     case this.dayInputEl:
+  //       maxValue = 31;
+  //       break;
+  //     case this.monthInputEl:
+  //       maxValue = 12;
+  //       break;
+  //     case this.yearInputEl:
+  //       maxValue = 9999;
+  //   }
 
     // Make value loop round when min / max reached
     if (input?.value) {
@@ -691,6 +691,15 @@ export class DateInput {
 
     return inputDescriptors === "" ? "" : inputDescriptors + ", ";
   };
+
+  // private getInputAriaLiveRegions = () => {
+  //   let regionEls
+
+
+  //   this.inputsInOrder.forEach(input => {
+
+  //   })
+  // }
 
   // Prevent non-number characters being entered
   // ('e' or '.' - which are usually allowed in <input type="number">)
