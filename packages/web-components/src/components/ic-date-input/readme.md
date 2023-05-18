@@ -33,13 +33,6 @@
 | `icFocus`  | Emitted when input gains focus.     | `CustomEvent<{ value: Date; }>` |
 
 
-## Events
-
-| Event      | Description                         | Type                            |
-| ---------- | ----------------------------------- | ------------------------------- |
-| `icChange` | Emitted when the value has changed. | `CustomEvent<{ value: Date; }>` |
-
-
 ## Dependencies
 
 ### Depends on

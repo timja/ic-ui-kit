@@ -319,6 +319,48 @@ export class DateInput {
     }
   };
 
+  private handleLeftRightArrowKeyPress = (
+    input: HTMLInputElement,
+    key: string
+  ) => {
+    if (key === "ArrowRight") {
+      this.moveToNextInput(input);
+    } else {
+      this.moveToPreviousInput(input);
+    }
+  };
+
+  private handleUpDownArrowKeyPress = (
+    input: HTMLInputElement,
+    event: KeyboardEvent
+  ) => {
+    const minValue = input === this.yearInputEl ? 0 : 1;
+
+    let maxValue;
+
+    switch (input) {
+      case this.dayInputEl:
+        maxValue = 31;
+        break;
+      case this.monthInputEl:
+        maxValue = 12;
+        break;
+      case this.yearInputEl:
+        maxValue = 9999;
+    }
+
+    // Make value loop round when min / max reached
+    if (input.value) {
+      if (event.key === "ArrowUp" && +input.value === maxValue) {
+        event.preventDefault();
+        input.value = minValue.toString();
+      } else if (event.key === "ArrowDown" && +input.value === minValue) {
+        event.preventDefault();
+        input.value = maxValue.toString();
+      }
+    }
+  };
+
   private handleDateChange = () => {
     // Prevent icChange being emitted when each individual input is changed
     // This method is used within componentWillUpdate instead of using @Watch('value');
@@ -692,13 +734,16 @@ export class DateInput {
     return inputDescriptors === "" ? "" : inputDescriptors + ", ";
   };
 
-  // private getInputAriaLiveRegions = () => {
-  //   let regionEls
+  // private updateInputValues = (day: string, month: string, year: string) => {
+  //   const oldValues = [this.day, this.month, this.year];
+  //   const newValues = [day, month, year];
 
-
-  //   this.inputsInOrder.forEach(input => {
-
+  //   newValues.forEach((value, index) => {
+  //     if (value !== oldValues[index]) {
+  //       oldValues[index]
+  //     }
   //   })
+  //   [this.dayInputEl.value, this.monthInputEl.value, this.yearInputEl.value] = [this.day, this.month, this.year];
   // }
 
   // Prevent non-number characters being entered
