@@ -65,3 +65,23 @@ describe("ic-date-input component", () => {
     expect(page.root).toMatchSnapshot();
   });
 });
+
+describe("event handlers & functions in ic-date-input", () => {
+  it("should test the keydown handler", async () => {
+    const page = await newSpecPage({
+      components: [DateInput],
+      html: `<ic-date-input label="Test label"></ic-date-input>`,
+    });
+
+    page.root.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "4",
+      })
+    );
+
+    // const dayInputEl = page.root.shadowRoot.querySelector(
+    //   "#ic-date-input-0 > div > input.day-input"
+    // );
+    // expect(dayInputEl === document.activeElement).toBe(true);
+  });
+});

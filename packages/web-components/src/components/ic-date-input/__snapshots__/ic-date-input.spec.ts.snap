@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-date-input component should render 1`] = `
+<ic-date-input label="Test label">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-0" helpertext="DD/MM/YYYY" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-0-screen-reader-info">
+        Date format: DD/MM/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-0-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the day, month, and year.
+      </span>
+      <ic-input-component-container id="ic-date-input-0" validationstatus="">
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-0-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-0" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render as disabled 1`] = `
+<ic-date-input disabled="" label="Test label">
+  <mock:shadow-root>
+    <ic-input-container disabled="">
+      <ic-input-label disabled="" for="ic-date-input-2" helpertext="DD/MM/YYYY" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-2-screen-reader-info">
+        Date format: DD/MM/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-2-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the day, month, and year.
+      </span>
+      <ic-input-component-container disabled="" id="ic-date-input-2" validationstatus="">
+        <input aria-label="day" aria-valuenow="" class="day-input" disabled="" placeholder="DD" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" disabled="" placeholder="MM" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" disabled="" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-2-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" disabled="" name="ic-date-input-2" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render as required 1`] = `
+<ic-date-input label="Test label" required="">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-1" helpertext="DD/MM/YYYY" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-1-screen-reader-info">
+        required, Date format: DD/MM/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-1-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the day, month, and year.
+      </span>
+      <ic-input-component-container id="ic-date-input-1" validationstatus="">
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-1-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-1" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render correctly with MM/DD/YYYY format 1`] = `
+<ic-date-input date-format="MM/DD/YYYY" label="Test label">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-4" helpertext="MM/DD/YYYY" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-4-screen-reader-info">
+        Date format: MM/DD/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-4-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the month, day, and year.
+      </span>
+      <ic-input-component-container id="ic-date-input-4" validationstatus="">
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-4-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-4" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render correctly with YYYY/MM/DD format 1`] = `
+<ic-date-input date-format="YYY/MM/DD" label="Test label">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-5" helpertext="YYY/MM/DD" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-5-screen-reader-info">
+        Date format: YYY/MM/DD.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-5-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the undefined.
+      </span>
+      <ic-input-component-container id="ic-date-input-5" validationstatus="">
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-5-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-5" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render with custom helper text 1`] = `
+<ic-date-input helper-text="Test helper text" label="Test label">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-3" helpertext="Test helper text" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-3-screen-reader-info">
+        Date format: DD/MM/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-3-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the day, month, and year.
+      </span>
+      <ic-input-component-container id="ic-date-input-3" validationstatus="">
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-3-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-3" type="hidden" value="">
+</ic-date-input>
+`;
+
+exports[`ic-date-input component should render with custom validation status and text 1`] = `
+<ic-date-input label="Test label" validation-status="error" validation-text="Test error text">
+  <mock:shadow-root>
+    <ic-input-container>
+      <ic-input-label for="ic-date-input-6" helpertext="DD/MM/YYYY" label="Test label"></ic-input-label>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-6-screen-reader-info">
+        invalid data, Date format: DD/MM/YYYY.
+      </span>
+      <span aria-hidden="true" class="sr-only" id="ic-date-input-6-assistive-hint">
+        Type or use the up and down arrow keys to change the values for the day, month, and year.
+      </span>
+      <ic-input-component-container id="ic-date-input-6" validationstatus="error">
+        <input aria-label="day" aria-valuenow="" class="day-input" placeholder="DD" type="number">
+        /
+        <input aria-label="month" aria-valuenow="" class="month-input" placeholder="MM" type="number">
+        /
+        <input aria-label="year" aria-valuenow="" class="year-input" maxlength="4" placeholder="YYYY" type="number">
+      </ic-input-component-container>
+      <span class="sr-only" id="ic-date-input-6-selected-date-info">
+        Selected date:
+        <span role="status"></span>
+        .
+      </span>
+      <ic-input-validation for="ic-date-input-6" message="Test error text" status="error"></ic-input-validation>
+    </ic-input-container>
+  </mock:shadow-root>
+  <input class="ic-input" name="ic-date-input-6" type="hidden" value="">
+</ic-date-input>
+`;
