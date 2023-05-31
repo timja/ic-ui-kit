@@ -38,6 +38,7 @@
 | Event      | Description                         | Type                            |
 | ---------- | ----------------------------------- | ------------------------------- |
 | `icChange` | Emitted when the value has changed. | `CustomEvent<{ value: Date; }>` |
+| `icFocus`  | Emitted when input gains focus.     | `CustomEvent<{ value: Date; }>` |
 
 
 ## Dependencies
