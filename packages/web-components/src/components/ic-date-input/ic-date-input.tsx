@@ -591,7 +591,7 @@ export class DateInput {
         aria-valuetext={!isEmptyString(this.day) ? this.day : undefined}
         aria-live="polite"
         aria-describedby="live-region"
-        value={!isEmptyString(this.day) ? +this.day : null}
+        value={!isEmptyString(this.day) ? this.day : null}
       ></input>
     );
 
@@ -607,7 +607,7 @@ export class DateInput {
         aria-valuetext={!isEmptyString(this.month) ? this.month : undefined}
         aria-live="polite"
         aria-describedby="live-region"
-        value={!isEmptyString(this.month) ? +this.month : null}
+        value={!isEmptyString(this.month) ? this.month : null}
       ></input>
     );
 
@@ -624,7 +624,7 @@ export class DateInput {
         aria-valuetext={!isEmptyString(this.year) ? this.year : undefined}
         aria-live="polite"
         aria-describedby="live-region"
-        value={!isEmptyString(this.year) ? +this.year : null}
+        value={!isEmptyString(this.year) ? this.year : null}
       ></input>
     );
 
