@@ -624,6 +624,22 @@ export namespace Components {
          */
         "disableUntilNow"?: boolean;
         /**
+          * The days of the week to disable.
+         */
+        "disableDays"?: IcWeekDays[];
+        /**
+          * The text to display as the validation message when `disableDays` is set and a disabled date is entered.
+         */
+        "disableDaysMessage"?: string;
+        /**
+          * If `true`, the user cannot select dates from now. A validation message will appear if they enter a disabled date.
+         */
+        "disableFromNow"?: boolean;
+        /**
+          * If `true`, the user cannot select dates until now. A validation message will appear if they enter a disabled date.
+         */
+        "disableUntilNow"?: boolean;
+        /**
           * If `true`, the disabled state will be set.
          */
         "disabled"?: boolean;
@@ -3531,6 +3547,22 @@ declare namespace LocalJSX {
           * The text to display as the validation message when `disablePast` is true and a date in the past is entered.
          */
         "disablePastMessage"?: string;
+        /**
+          * The days of the week to disable.
+         */
+        "disableDays"?: IcWeekDays[];
+        /**
+          * The text to display as the validation message when `disableDays` is set and a disabled date is entered.
+         */
+        "disableDaysMessage"?: string;
+        /**
+          * If `true`, the user cannot select dates from now. A validation message will appear if they enter a disabled date.
+         */
+        "disableFromNow"?: boolean;
+        /**
+          * If `true`, the user cannot select dates until now. A validation message will appear if they enter a disabled date.
+         */
+        "disableUntilNow"?: boolean;
         /**
           * The days of the week to disable.
          */
