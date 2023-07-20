@@ -247,6 +247,11 @@ export class DateInput {
   @Event() icChange: EventEmitter<{ value: Date }>;
 
   /**
+   * Emitted when value is cleared with clear button
+   */
+  @Event() icClear: EventEmitter<void>;
+
+  /**
    * Emitted when the input gains focus.
    */
   @Event() icFocus: EventEmitter<{ value: Date }>;
