@@ -80,7 +80,6 @@ export class InputComponentContainer {
       dark,
       appearance,
       validationInline,
-      size,
     } = this;
     const hasValidationStatus =
       this.validationStatus !== "" && !this.disabled && !this.readonly
