@@ -1096,18 +1096,20 @@ describe("ic-date-input component", () => {
         componentInstance.disableFutureMessage
       );
     });
-    it("should set invalidDateText empty string if date valid", async () => {
+    it("should set invalidDateText to disableDays message if date is on a disabled weekday", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
       component.disableFuture = true;
 
-      componentInstance.day = "1";
-      componentInstance.month = "1";
-      componentInstance.year = "2000";
+      componentInstance.day = "16";
+      componentInstance.month = "7";
+      componentInstance.year = "2023";
 
       componentInstance.setValidationMessage();
 
-      expect(componentInstance.invalidDateText).toBe("");
+      expect(componentInstance.invalidDateText).toBe(
+        componentInstance.disableDaysMessage
+      );
     });
     it("should set invalidDateText to min message if date is before min date", async () => {
       const { component, componentInstance } = await createDateInputEnv();
