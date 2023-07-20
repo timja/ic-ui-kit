@@ -3,7 +3,7 @@ import { Component, Element, Host, Prop, h } from "@stencil/core";
 import {
   IcInformationStatus,
   IcInformationStatusOrEmpty,
-  IcSizesNoLarge,
+  IcSizes,
 } from "../../utils/types";
 import successIcon from "../../assets/success-icon.svg";
 import { isSlotUsed } from "../../utils/helpers";
@@ -51,7 +51,7 @@ export class InputComponentContainer {
   /**
    * The size of the input component container component.
    */
-  @Prop() size?: IcSizesNoLarge = "default";
+  @Prop() size?: IcSizes = "default";
 
   /**
    * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
@@ -80,6 +80,7 @@ export class InputComponentContainer {
       dark,
       appearance,
       validationInline,
+      size,
     } = this;
     const hasValidationStatus =
       this.validationStatus !== "" && !this.disabled && !this.readonly
@@ -89,6 +90,7 @@ export class InputComponentContainer {
       <Host
         class={{
           ["small"]: small || size === "small",
+          ["large"]: size === "large",
           [validationStatus]: hasValidationStatus,
           ["disabled"]: disabled,
           ["readonly"]: readonly,
