@@ -239,6 +239,11 @@ export class DateInput {
   @Event() icChange: EventEmitter<{ value: Date }>;
 
   /**
+   * Emitted when value is cleared with clear button
+   */
+  @Event() icClear: EventEmitter<void>;
+
+  /**
    * Emitted when the input gains focus.
    */
   @Event() icFocus: EventEmitter<{ value: Date }>;
@@ -1130,6 +1135,20 @@ export class DateInput {
     }
 
     if (this.maxDate && this.selectedDate > this.maxDate && isNotToday) {
+      this.isAfterMax = true;
+      disabled = true;
+    }
+
+    if (this.disableDays.includes(this.selectedDate.getDay())) {
+      disabled = true;
+    }
+
+    if (this.min && this.selectedDate < this.minDate) {
+      this.isBeforeMin = true;
+      disabled = true;
+    }
+
+    if (this.max && this.selectedDate > this.maxDate) {
       this.isAfterMax = true;
       disabled = true;
     }
