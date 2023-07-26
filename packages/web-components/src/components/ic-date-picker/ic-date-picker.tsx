@@ -229,9 +229,9 @@ export class DatePicker {
   @Prop() required?: boolean = false;
 
   /**
-   * Determines whether days outside the current month are rendered.
+   * The days of the week to disable.
    */
-  @Prop() showDaysOutsideMonth?: boolean = true;
+  @Prop() disableDays?: IcWeekDays[] = [];
 
   /**
    * Determines whether the `Clear` button on the date picker is visible.
@@ -510,6 +510,13 @@ export class DatePicker {
     this.setSelectedDate(null);
     this.focusFocussedDay();
     // this.focusFirstElement();
+  };
+
+  private clearButtonKeyDownHandler = (ev: KeyboardEvent) => {
+    if (ev.key === "Tab" && !ev.shiftKey) {
+      this.focusFirstElement();
+      ev.preventDefault();
+    }
   };
 
   private clearButtonKeyDownHandler = (ev: KeyboardEvent) => {

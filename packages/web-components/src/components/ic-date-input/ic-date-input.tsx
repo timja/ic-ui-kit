@@ -1062,34 +1062,6 @@ export class DateInput {
       disabled = true;
     }
 
-    if (this.min && this.selectedDate < this.minDate) {
-      this.isBeforeMin = true;
-      disabled = true;
-    }
-
-    if (this.max && this.selectedDate > this.maxDate) {
-      this.isAfterMax = true;
-      disabled = true;
-    }
-
-    if (this.disableDays.includes(this.selectedDate.getDay())) {
-      disabled = true;
-    }
-
-    if (this.min && this.selectedDate < this.minDate) {
-      this.isBeforeMin = true;
-      disabled = true;
-    }
-
-    if (this.max && this.selectedDate > this.maxDate) {
-      this.isAfterMax = true;
-      disabled = true;
-    }
-
-    if (this.disableDays.includes(this.selectedDate.getDay())) {
-      disabled = true;
-    }
-
     if (
       ((this.disablePast && this.selectedDate < currentDate) ||
         (this.disableFuture && this.selectedDate > currentDate)) &&
