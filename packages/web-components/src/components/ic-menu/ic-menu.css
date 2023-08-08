@@ -11,7 +11,7 @@
 }
 
 :host {
-  border-radius: var(--ic-border-radius);
+  /* border-radius: var(--ic-border-radius); */
   max-height: 0;
   width: var(--input-width, 20rem);
   color: var(--ic-color-primary-text);
@@ -20,6 +20,8 @@
   z-index: var(--ic-z-index-menu);
   box-sizing: border-box;
   box-shadow: var(--ic-elevation-overlay);
+  /* border: var(--ic-space-1px) solid var(--ic-architectural-400); */
+  border-radius: var(--ic-border-radius);
 }
 
 :host(:not(.no-focus):focus-within) {
@@ -45,8 +47,8 @@
 .menu {
   text-decoration: none;
   list-style-type: none;
-  border: var(--ic-space-1px) solid var(--ic-architectural-400);
-  border-radius: var(--ic-border-radius);
+  /* border: var(--ic-space-1px) solid var(--ic-architectural-400);
+  border-radius: var(--ic-border-radius); */
   background-color: var(--ic-architectural-white);
   visibility: hidden;
   max-height: 0;
@@ -64,6 +66,12 @@
 :host(.open) {
   max-height: none;
   display: block;
+  border: var(--ic-space-1px) solid var(--ic-architectural-400);
+}
+
+:host(.open) .option-bar {
+  visibility: visible;
+  max-height: 20.125rem;
 }
 
 :host(.open) .menu {
@@ -178,6 +186,16 @@
 
 :host(.no-results) li:hover {
   background-color: transparent;
+}
+
+.option-bar {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--ic-architectural-40);
+  visibility: hidden;
+  border-bottom: var(--ic-space-1px) solid var(--ic-architectural-900);
 }
 
 @media (forced-colors: active) {

@@ -1379,6 +1379,10 @@ export namespace Components {
          */
         "loadingLabel"?: string;
         /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
+        /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
@@ -1433,7 +1437,7 @@ export namespace Components {
         /**
           * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
          */
-        "value"?: string;
+        "value"?: string | string[];
     }
     interface IcSideNavigation {
         /**
@@ -3790,6 +3794,10 @@ declare namespace LocalJSX {
          */
         "loadingLabel"?: string;
         /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
+        /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
@@ -3868,7 +3876,7 @@ declare namespace LocalJSX {
         /**
           * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
          */
-        "value"?: string;
+        "value"?: string | string[];
     }
     interface IcSideNavigation {
         /**

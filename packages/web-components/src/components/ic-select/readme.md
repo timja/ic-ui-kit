@@ -23,6 +23,7 @@
 | `loading`                     | `loading`                        | If `true`, the loading state will be triggered when fetching options asyncronously.                                                                          | `boolean`                                 | `false`              |
 | `loadingErrorLabel`           | `loading-error-label`            | The message displayed when external loading times out.                                                                                                       | `string`                                  | `"Loading Error"`    |
 | `loadingLabel`                | `loading-label`                  | The message displayed whilst the options are being loaded externally.                                                                                        | `string`                                  | `"Loading..."`       |
+| `multiple`                    | `multiple`                       | If `true`, multiple options can be selected.                                                                                                                 | `boolean`                                 | `false`              |
 | `name`                        | `name`                           | The name of the control, which is submitted with the form data.                                                                                              | `string`                                  | `this.inputId`       |
 | `options`                     | --                               | The possible selection options.                                                                                                                              | `IcMenuOption[]`                          | `[]`                 |
 | `placeholder`                 | `placeholder`                    | The placeholder value to be displayed.                                                                                                                       | `string`                                  | `"Select an option"` |
@@ -35,7 +36,7 @@
 | `timeout`                     | `timeout`                        | If using external filtering, set a timeout for when loading takes too long.                                                                                  | `number`                                  | `undefined`          |
 | `validationStatus`            | `validation-status`              | The validation status - e.g. 'error' \| 'warning' \| 'success'.                                                                                              | `"" \| "error" \| "success" \| "warning"` | `""`                 |
 | `validationText`              | `validation-text`                | The text to display as the validation message.                                                                                                               | `string`                                  | `""`                 |
-| `value`                       | `value`                          | The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. | `string`                                  | `undefined`          |
+| `value`                       | `value`                          | The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. | `string \| string[]`                      | `undefined`          |
 
 
 ## Events
@@ -62,14 +63,6 @@ Sets focus on the input box.
 Type: `Promise<void>`
 
 
-
-
-## CSS Custom Properties
-
-| Name                | Description              |
-| ------------------- | ------------------------ |
-| `--ic-z-index-menu` | z-index of select menu   |
-| `--input-width`     | Width of the input field |
 
 
 ## Dependencies

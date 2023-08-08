@@ -140,6 +140,11 @@ export class Select {
   @Prop() loadingLabel?: string = "Loading...";
 
   /**
+   * If `true`, multiple options can be selected.
+   */
+  @Prop() multiple?: boolean = false;
+
+  /**
    * The name of the control, which is submitted with the form data.
    */
   @Prop() name?: string = this.inputId;
@@ -254,9 +259,9 @@ export class Select {
   /**
    * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
    */
-  @Prop({ mutable: true }) value?: string;
+  @Prop({ mutable: true }) value?: string | string[];
   @State() initialValue = this.value;
-  @State() inputValueToFilter = this.value;
+  @State() inputValueToFilter = this.value as string;
   @State() currValue = this.value;
 
   @Watch("value")
@@ -267,7 +272,8 @@ export class Select {
 
     if (this.searchable) {
       this.searchableSelectInputValue =
-        this.getLabelFromValue(this.currValue) || this.currValue;
+        this.getLabelFromValue(this.currValue as string) ||
+        (this.currValue as string);
     }
   }
 
@@ -339,7 +345,7 @@ export class Select {
 
     if (this.loading) this.triggerLoading();
 
-    this.hiddenInputValue = this.searchable && this.currValue;
+    this.hiddenInputValue = this.searchable && (this.currValue as string);
   }
 
   componentDidRender(): void {
@@ -378,12 +384,17 @@ export class Select {
 
   private emitIcChange = (value: string) => {
     if (!this.searchable) {
-      this.value = value;
+      if (this.multiple) {
+        this.handleMultipleSelectChange(value);
+        console.log("value" + this.value);
+      } else {
+        this.value = value;
+      }
     }
 
     clearTimeout(this.debounceIcChange);
     this.debounceIcChange = window.setTimeout(() => {
-      this.icChange.emit({ value: value });
+      this.icChange.emit({ value: this.value });
     }, this.currDebounce);
   };
 
@@ -420,6 +431,31 @@ export class Select {
       this.open = open;
     }
   };
+
+  // Get / convert to string if single select, string[] if multi select
+  // private getValue = (value: string | string[]): string | string[] => {
+  //   const isValueArray = Array.isArray(value);
+
+  //   let valueArray = [];
+  //   let newValue = value;
+
+  //   if (this.multiple) {
+  //     if (!isValueArray) {
+  //       valueArray.push(value)
+  //       newValue = valueArray;
+  //     }
+  //   } else {
+  //     if (isValueArray) {
+  //       newValue = value[0];
+  //     }
+  //   }
+
+  //   return value;
+  // }
+
+  // private getValueWithCorrectType = () => {
+  //   return this.multiple ? this.value as string[] : this.value as string;
+  // }
 
   private getLabelFromValue = (value: string): string | undefined => {
     return getLabelFromValue(value, this.options);
@@ -467,7 +503,9 @@ export class Select {
 
       // After editing the input, if selecting the same option as before, set the input value to label again
       if (this.value === this.currValue) {
-        this.searchableSelectInputValue = this.getLabelFromValue(this.value);
+        this.searchableSelectInputValue = this.getLabelFromValue(
+          this.value as string
+        );
       }
 
       this.inputValueToFilter = null;
@@ -479,6 +517,21 @@ export class Select {
     this.ariaActiveDescendant = event.detail.optionId;
     this.icOptionSelect.emit({ value: event.detail.value });
     this.emitIcChange(event.detail.value);
+  };
+
+  private handleMultipleSelectChange = (value: string) => {
+    if (this.value) {
+      if (this.value.includes(value)) {
+        const valueIndex = this.value.indexOf(value);
+        (this.value as string[]).splice(valueIndex, 1);
+      } else {
+        (this.value as string[]).push(value);
+      }
+    } else {
+      const valueArray = [];
+      valueArray.push(value);
+      this.value = valueArray;
+    }
   };
 
   private handleMenuChange = (event: CustomEvent): void => {
@@ -784,7 +837,9 @@ export class Select {
 
   private setDefaultValue() {
     if (!this.hasSetDefaultValue && this.currValue) {
-      this.searchableSelectInputValue = this.getDefaultValue(this.currValue);
+      this.searchableSelectInputValue = this.getDefaultValue(
+        this.currValue as string
+      ); // CHECK THE TYPE HERE
       this.initialValue = this.currValue;
       this.hasSetDefaultValue = true;
     }
@@ -841,8 +896,10 @@ export class Select {
   private handleFormReset = (): void => {
     this.value = this.initialValue;
     if (this.searchable) {
-      this.searchableSelectInputValue = this.getDefaultValue(this.value);
-      this.hiddenInputValue = this.value;
+      this.searchableSelectInputValue = this.getDefaultValue(
+        this.value as string
+      );
+      this.hiddenInputValue = this.value as string;
     }
   };
 
@@ -876,7 +933,8 @@ export class Select {
           this.noOptions[0].label === this.emptyOptionListText));
     const inputValue = this.searchable ? this.hiddenInputValue : currValue;
 
-    renderHiddenInput(true, this.host, name, inputValue, disabled);
+    // TYPE NEEDS FIXING
+    renderHiddenInput(true, this.host, name, inputValue as string, disabled);
 
     const invalid =
       validationStatus === IcInformationStatus.Error ? "true" : "false";
@@ -918,8 +976,9 @@ export class Select {
             validationStatus={validationStatus}
           >
             {readonly ? (
+              // STRING TYPE NEEDS UPDATING
               <ic-typography>
-                <p>{this.getLabelFromValue(currValue)}</p>
+                <p>{this.getLabelFromValue(currValue as string)}</p>
               </ic-typography>
             ) : isMobileOrTablet() ? (
               <select
@@ -1044,7 +1103,8 @@ export class Select {
                   ref={(el) => (this.customSelectElement = el)}
                   id={this.inputId}
                   aria-label={`${label}, ${
-                    this.getLabelFromValue(currValue) || placeholder
+                    // STRING TYPE NEEDS UPDATING
+                    this.getLabelFromValue(currValue as string) || placeholder
                   }${required ? ", required" : ""}`}
                   aria-describedby={describedBy}
                   aria-invalid={invalid}
@@ -1064,10 +1124,18 @@ export class Select {
                     class={{
                       "value-text": true,
                       placeholder:
-                        this.getLabelFromValue(currValue) === undefined,
+                        // STRING TYPE NEEDS UPDATING
+                        this.getLabelFromValue(currValue as string) ===
+                        undefined,
                     }}
                   >
-                    <p>{this.getLabelFromValue(currValue) || placeholder}</p>
+                    <p>
+                      {
+                        // STRING TYPE NEEDS UPDATING
+                        this.getLabelFromValue(currValue as string) ||
+                          placeholder
+                      }
+                    </p>
                   </ic-typography>
                   <div class="select-input-end">
                     {currValue && showClearButton && (
@@ -1124,7 +1192,7 @@ export class Select {
               menuId={menuId}
               open={this.open}
               options={searchable ? this.filteredOptions : options}
-              value={currValue}
+              value={currValue as string} // CHECK THE TYPE
               fullWidth={fullWidth}
               onMenuStateChange={this.handleMenuChange}
               onMenuOptionSelect={this.handleCustomSelectChange}

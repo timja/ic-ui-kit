@@ -175,9 +175,14 @@ export type IcOrientation = "horizontal" | "vertical";
 export type IcSizes = "default" | "large" | "small";
 
 export interface IcValueEventDetail {
-  value: string;
+  value: string | string[];
   keyPressed?: string;
 }
+
+// export interface IcValueArrayEventDetail {
+//   value: string[];
+// }
+
 export interface IcBlurEventDetail {
   relatedTarget: IcRelatedTarget;
 }

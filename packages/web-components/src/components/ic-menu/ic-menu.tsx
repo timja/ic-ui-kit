@@ -38,6 +38,7 @@ export class Menu {
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
   private isLoading: boolean = false;
+  private isMultiSelect: boolean = false;
   private isSearchBar: boolean = false;
   private isSearchableSelect: boolean = false;
   private menu: HTMLUListElement;
@@ -410,12 +411,18 @@ export class Menu {
   private getParentEl = (parent: HTMLElement) => {
     if (parent.tagName === "IC-SEARCH-BAR") {
       this.isSearchBar = true;
-    } else if (
-      parent.tagName === "IC-SELECT" &&
-      parent.getAttribute("searchable") !== null &&
-      parent.getAttribute("searchable") !== undefined
-    ) {
-      this.isSearchableSelect = true;
+    } else if (parent.tagName === "IC-SELECT") {
+      if (
+        parent.getAttribute("searchable") !== null &&
+        parent.getAttribute("searchable") !== undefined
+      ) {
+        this.isSearchableSelect = true;
+      } else if (
+        parent.getAttribute("multiple") !== null &&
+        parent.getAttribute("multiple") !== undefined
+      ) {
+        this.isMultiSelect = true;
+      }
     }
   };
 
@@ -920,6 +927,14 @@ export class Menu {
           open: open,
         }}
       >
+        {this.isMultiSelect && (
+          <div class="option-bar">
+            <ic-typography>
+              <p>selected</p>
+            </ic-typography>
+            <ic-button variant="tertiary">Button</ic-button>
+          </div>
+        )}
         {options.length !== 0 && (
           <ul
             id={menuId}
@@ -929,6 +944,7 @@ export class Menu {
             aria-activedescendant={
               value != null && value !== "" ? this.getOptionId(value) : ""
             }
+            aria-multiselectable={this.isMultiSelect ? "true" : "false"}
             tabindex={
               open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
             }
