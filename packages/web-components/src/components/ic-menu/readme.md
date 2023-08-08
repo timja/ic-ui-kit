@@ -15,11 +15,12 @@
 | `inputEl` _(required)_    | --                | The reference to the input element.                                                                                                             | `HTMLElement`             | `undefined`    |
 | `inputLabel` _(required)_ | `input-label`     | The label for the input element.                                                                                                                | `string`                  | `undefined`    |
 | `menuId` _(required)_     | `menu-id`         | The ID of the menu.                                                                                                                             | `string`                  | `undefined`    |
+| `multiple`                | `multiple`        | If `true`, multiple options can be selected.                                                                                                    | `boolean`                 | `false`        |
 | `open` _(required)_       | `open`            | If `true`, the menu will be displayed open.                                                                                                     | `boolean`                 | `undefined`    |
 | `options` _(required)_    | --                | The possible menu selection options.                                                                                                            | `IcMenuOption[]`          | `undefined`    |
 | `searchMode`              | `search-mode`     | Specify the mode search bar uses to search. `navigation` allows for quick lookups of a set of values, `query` allows for more general searches. | `"navigation" \| "query"` | `"navigation"` |
 | `small`                   | `small`           | If `true`, the small styling will be applied to the menu.                                                                                       | `boolean`                 | `false`        |
-| `value` _(required)_      | `value`           | The value of the currently selected option.                                                                                                     | `string`                  | `undefined`    |
+| `value` _(required)_      | `value`           | The value of the currently selected option.                                                                                                     | `string \| string[]`      | `undefined`    |
 
 
 ## Methods

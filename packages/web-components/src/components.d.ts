@@ -804,6 +804,10 @@ export namespace Components {
          */
         "menuId": string;
         /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
+        /**
           * If `true`, the menu will be displayed open.
          */
         "open": boolean;
@@ -823,7 +827,7 @@ export namespace Components {
         /**
           * The value of the currently selected option.
          */
-        "value": string;
+        "value": string | string[];
     }
     interface IcMenuGroup {
         /**
@@ -3160,6 +3164,10 @@ declare namespace LocalJSX {
           * The ID of the menu.
          */
         "menuId": string;
+        /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
         "onMenuKeyPress"?: (event: IcMenuCustomEvent<{ isNavKey: boolean; key: string }>) => void;
         "onMenuOptionId"?: (event: IcMenuCustomEvent<IcMenuOptionIdEventDetail>) => void;
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;
@@ -3188,7 +3196,7 @@ declare namespace LocalJSX {
         /**
           * The value of the currently selected option.
          */
-        "value": string;
+        "value": string | string[];
     }
     interface IcMenuGroup {
         /**

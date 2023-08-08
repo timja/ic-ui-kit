@@ -91,6 +91,11 @@ export class Menu {
   @Prop() menuId!: string;
 
   /**
+   * If `true`, multiple options can be selected.
+   */
+  @Prop() multiple?: boolean = false;
+
+  /**
    * If `true`, the menu will be displayed open.
    */
   @Prop({ reflect: true }) open!: boolean;
@@ -126,7 +131,7 @@ export class Menu {
   /**
    * The value of the currently selected option.
    */
-  @Prop({ mutable: true }) value!: string;
+  @Prop({ mutable: true }) value!: string | string[];
 
   @Watch("value")
   watchValueHandler(): void {
@@ -791,7 +796,7 @@ export class Menu {
     this.timeoutBlur.emit({ ev });
   };
 
-  private optionContent = (option: IcMenuOption) => {
+  private optionContent = (option: IcMenuOption, selected: boolean) => {
     return (
       <Fragment>
         {option.loading && <ic-loading-indicator size="icon" />}
@@ -812,7 +817,8 @@ export class Menu {
         </div>
         {!!option.value &&
           !!this.value &&
-          option?.value.toLowerCase() === this.value?.toLowerCase() &&
+          // option?.value.toLowerCase() === value?.toLowerCase() &&
+          selected &&
           this.parentEl.tagName !== "IC-SEARCH-BAR" && (
             <span class="check-icon" innerHTML={Check} />
           )}
@@ -822,12 +828,12 @@ export class Menu {
 
   private displayOption = (
     option: IcMenuOption,
+    selected: boolean,
     index?: number,
     parentOption?: IcMenuOption
   ): HTMLLIElement => {
     const {
       open,
-      value,
       keyboardNav,
       isManualMode,
       initialOptionsListRender,
@@ -843,7 +849,7 @@ export class Menu {
           "focused-option": isManualMode
             ? (keyboardNav || initialOptionsListRender) &&
               option.value === optionHighlighted
-            : keyboardNav && option.value === value,
+            : keyboardNav && selected,
           "last-recommended-option":
             option.recommended &&
             options[index + 1] &&
@@ -855,13 +861,13 @@ export class Menu {
         role="option"
         tabindex={
           open &&
-          (option.value === value || option.value === optionHighlighted) &&
+          (selected || option.value === optionHighlighted) &&
           keyboardNav
             ? "0"
             : "-1"
         }
         aria-label={this.getOptionAriaLabel(option, parentOption)}
-        aria-selected={option.value === value}
+        aria-selected={selected}
         aria-disabled={option.disabled ? "true" : "false"}
         onClick={!option.timedOut && !option.loading && this.handleOptionClick}
         onBlur={this.handleBlur}
@@ -897,7 +903,7 @@ export class Menu {
             </ic-button>
           </Fragment>
         ) : (
-          this.optionContent(option)
+          this.optionContent(option, selected)
         )}
       </li>
     );
@@ -942,7 +948,9 @@ export class Menu {
             role="listbox"
             aria-label={inputLabel}
             aria-activedescendant={
-              value != null && value !== "" ? this.getOptionId(value) : ""
+              value != null && value !== ""
+                ? this.getOptionId(value as string)
+                : "" // TYPE NEEDS CHANGING
             }
             aria-multiselectable={this.isMultiSelect ? "true" : "false"}
             tabindex={
@@ -966,7 +974,14 @@ export class Menu {
                         <p>{option.label}</p>
                       </ic-typography>
                       {option.children.map((childOption) =>
-                        this.displayOption(childOption, index, option)
+                        this.displayOption(
+                          childOption,
+                          this.multiple
+                            ? childOption.value === childOption.value
+                            : value?.includes(childOption.value),
+                          index,
+                          option
+                        )
                       )}
                     </div>
                   );
@@ -974,7 +989,12 @@ export class Menu {
                   return null;
                 }
               } else {
-                return this.displayOption(option, index);
+                return this.displayOption(
+                  option,
+                  this.multiple
+                    ? option.value === option.value
+                    : value?.includes(option.value)
+                );
               }
             })}
           </ul>
