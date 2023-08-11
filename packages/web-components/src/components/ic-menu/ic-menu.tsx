@@ -138,7 +138,7 @@ export class Menu {
   @Watch("value")
   watchValueHandler(): void {
     this.menuValueChange.emit({ value: this.value });
-    console.log("emitted");
+    // console.log("emitted");
   }
 
   // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
@@ -157,6 +157,11 @@ export class Menu {
    * @internal Emitted when an option is selected.
    */
   @Event() menuOptionSelect!: EventEmitter<IcOptionSelectEventDetail>;
+
+  /**
+   * @internal Emitted when all options are selected or deselected.
+   */
+  @Event() menuOptionSelectAll!: EventEmitter<{ select: boolean }>;
 
   /**
    * @internal Emitted when state of menu changes (i.e. open or close).
@@ -646,17 +651,21 @@ export class Menu {
   };
 
   private handleAllOptionsClick = () => {
-    console.log('hi');
-    if (this.value.length === this.options.length) {
-      this.value = [];
-      console.log('hello')
-    } else {
-      const newValueArray = this.options.map(option => option.value);
-      console.log('here')
-      newValueArray.forEach(value => this.menuOptionSelect.emit({ value })); // SHOULD THIS JUST EMIT ONE EVENT INSTEAD OF ONE FOR EACH OPTION?
-      // this.menuOptionSelect.emit({ newValue });
-    }
-  }
+    this.menuOptionSelectAll.emit({
+      select: !(this.value.length === this.options.length),
+    });
+
+    // console.log('hi');
+    // if (this.value.length === this.options.length) {
+    //   this.value = [];
+    //   console.log('hello')
+    // } else {
+    //   const newValueArray = this.options.map(option => option.value);
+    //   console.log('here')
+    //   newValueArray.forEach(value => this.menuOptionSelect.emit({ value })); // SHOULD THIS JUST EMIT ONE EVENT INSTEAD OF ONE FOR EACH OPTION?
+    //   // this.menuOptionSelect.emit({ newValue });
+    // }
+  };
 
   private emitMenuKeyPress = (isNavKey: boolean, key: string) => {
     this.menuKeyPress.emit({ isNavKey: isNavKey, key: key });
@@ -954,10 +963,16 @@ export class Menu {
         {this.isMultiSelect && (
           <div class="option-bar">
             <ic-typography>
-              <p>{`${this.value ? this.value.length : 0}/${this.options.length} selected`}</p>
+              <p>{`${this.value ? this.value.length : 0}/${
+                this.options.length
+              } selected`}</p>
             </ic-typography>
-            <ic-button variant="tertiary" onClick={this.handleAllOptionsClick}>{`${this.value?.length === this.options.length ? "Clear" : "Select"} all`}</ic-button>
-            
+            <ic-button
+              variant="tertiary"
+              onClick={this.handleAllOptionsClick}
+            >{`${
+              this.value?.length === this.options.length ? "Clear" : "Select"
+            } all`}</ic-button>
           </div>
           // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
         )}

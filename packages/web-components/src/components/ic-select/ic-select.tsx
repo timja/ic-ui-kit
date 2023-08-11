@@ -285,7 +285,7 @@ export class Select {
   /**
    * Emitted when the value changes.
    */
-  @Event() icChange!: EventEmitter<IcValueEventDetail>;
+  @Event() icChange!: EventEmitter<IcValueEventDetail>; // CHECK THIS IS HAPPENING
 
   /**
    * Emitted when the clear button is clicked.
@@ -306,7 +306,7 @@ export class Select {
    * Emitted when an option is highlighted within the menu.
    * Highlighting a menu item will also trigger an `icChange/onIcChange` due to the value being updated.
    */
-  @Event() icOptionSelect: EventEmitter<IcOptionSelectEventDetail>;
+  @Event() icOptionSelect: EventEmitter<IcOptionSelectEventDetail>; // THIS HAPPENS WHEN AN OPTION IS DESELECTED - NEEDS FIXING
 
   /**
    * Emitted when the 'retry loading' button is clicked for a searchable variant.
@@ -382,14 +382,17 @@ export class Select {
     }
   }
 
-  private emitIcChange = (value: string) => {
-    if (!this.searchable) {
-      if (this.multiple) {
-        this.handleMultipleSelectChange(value);
-        console.log("value" + this.value);
-      } else {
+  private emitIcChange = (value: string | string[]) => {
+    if (!this.searchable && this.multiple) {
+      if (Array.isArray(value)) {
         this.value = value;
+      } else {
+        this.handleMultipleSelectChange(value);
       }
+
+      // console.log("value" + this.value);
+    } else {
+      this.value = value;
     }
 
     clearTimeout(this.debounceIcChange);
@@ -462,9 +465,11 @@ export class Select {
   };
 
   private getMultipleOptionsString = (selectedValues: string[]) => {
-    const selectedLabels = selectedValues?.map(value => this.getLabelFromValue(value)) // WHAT IF ARRAY IS EMPTY?
-    return selectedLabels?.join(', ');
-  }
+    const selectedLabels = selectedValues?.map((value) =>
+      this.getLabelFromValue(value)
+    ); // WHAT IF ARRAY IS EMPTY?
+    return selectedLabels?.join(", ");
+  };
 
   private getFilteredChildMenuOptions = (option: IcMenuOption) => {
     let children = option.children;
@@ -535,16 +540,34 @@ export class Select {
         const valueArray = (this.value as string[]).slice();
         valueArray.push(value);
 
-        const valuesFromAllOptions = this.options.map(option => option.value);
-        valueArray.sort((a, b) => valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b));
+        const valuesFromAllOptions = this.options.map((option) => option.value);
+        valueArray.sort(
+          (a, b) =>
+            valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b)
+        );
 
-        this.value = valueArray;
+        this.value = valueArray; // SHOULD THIS BE ICOPTIONSELECT?
       }
     } else {
       const valueArray = [];
       valueArray.push(value);
       this.value = valueArray;
     }
+  };
+
+  private handleSelectAllChange = (event: CustomEvent) => {
+    const selectAllOptions = event.detail.select;
+    let values: string[];
+
+    if (selectAllOptions) {
+      values = this.options.map((option) => option.value);
+      values.forEach((value) => this.icOptionSelect.emit({ value }));
+      // this.icOptionSelect.emit({ value: event.detail.value });
+    } else {
+      values = [];
+    }
+
+    this.emitIcChange(values);
   };
 
   private handleMenuChange = (event: CustomEvent): void => {
@@ -1135,14 +1158,15 @@ export class Select {
                       "value-text": true,
                       placeholder:
                         // CHECK THIS
-                        !this.value || this.multiple && this.value.length < 1
+                        !this.value || (this.multiple && this.value.length < 1),
                     }}
                   >
                     <p>
                       {
                         // DOUBLE CHECK THIS
-                        (this.multiple ? (this.getMultipleOptionsString(currValue as string[])) : 
-                        this.getLabelFromValue(currValue as string)) ||
+                        (this.multiple
+                          ? this.getMultipleOptionsString(currValue as string[])
+                          : this.getLabelFromValue(currValue as string)) ||
                           placeholder
                       }
                     </p>
@@ -1203,6 +1227,7 @@ export class Select {
               fullWidth={fullWidth}
               onMenuStateChange={this.handleMenuChange}
               onMenuOptionSelect={this.handleCustomSelectChange}
+              onMenuOptionSelectAll={this.handleSelectAllChange}
               onMenuKeyPress={this.handleMenuKeyPress}
               onMenuValueChange={this.handleMenuValueChange}
               onUngroupedOptionsSet={this.setUngroupedOptions}

@@ -45,6 +45,9 @@ export const defaultArgs = {
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
           });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect " + event.detail.value);
+          });
         </script>`
     }
   </Story>
@@ -1611,6 +1614,9 @@ export const defaultArgs = {
           ];
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect" + event.detail.value);
           });
         </script>`
     }
