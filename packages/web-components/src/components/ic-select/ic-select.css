@@ -156,10 +156,6 @@ select:not([disabled]) {
   color: var(--ic-action-dark);
 }
 
-.expand-icon-filled {
-  color: var(--ic-action-dark);
-}
-
 .expand-icon-open,
 :host(.searchable) .expand-icon-open {
   transform: rotateX(180deg);

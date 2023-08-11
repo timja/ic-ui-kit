@@ -461,6 +461,11 @@ export class Select {
     return getLabelFromValue(value, this.options);
   };
 
+  private getMultipleOptionsString = (selectedValues: string[]) => {
+    const selectedLabels = selectedValues?.map(value => this.getLabelFromValue(value)) // WHAT IF ARRAY IS EMPTY?
+    return selectedLabels?.join(', ');
+  }
+
   private getFilteredChildMenuOptions = (option: IcMenuOption) => {
     let children = option.children;
 
@@ -519,13 +524,21 @@ export class Select {
     this.emitIcChange(event.detail.value);
   };
 
+  // Update selected options - adds / removes them, in order of option list
+  // Create new array if value prop is undefined
   private handleMultipleSelectChange = (value: string) => {
     if (this.value) {
       if (this.value.includes(value)) {
         const valueIndex = this.value.indexOf(value);
         (this.value as string[]).splice(valueIndex, 1);
       } else {
-        (this.value as string[]).push(value);
+        const valueArray = (this.value as string[]).slice();
+        valueArray.push(value);
+
+        const valuesFromAllOptions = this.options.map(option => option.value);
+        valueArray.sort((a, b) => valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b));
+
+        this.value = valueArray;
       }
     } else {
       const valueArray = [];
@@ -1083,9 +1096,6 @@ export class Select {
                   class={{
                     "expand-icon": true,
                     "expand-icon-open": this.open,
-                    "expand-icon-filled": !(
-                      currValue == null || currValue === ""
-                    ),
                   }}
                   innerHTML={Expand}
                   aria-hidden="true"
@@ -1124,15 +1134,15 @@ export class Select {
                     class={{
                       "value-text": true,
                       placeholder:
-                        // STRING TYPE NEEDS UPDATING
-                        this.getLabelFromValue(currValue as string) ===
-                        undefined,
+                        // CHECK THIS
+                        !this.value || this.multiple && this.value.length < 1
                     }}
                   >
                     <p>
                       {
-                        // STRING TYPE NEEDS UPDATING
-                        this.getLabelFromValue(currValue as string) ||
+                        // DOUBLE CHECK THIS
+                        (this.multiple ? (this.getMultipleOptionsString(currValue as string[])) : 
+                        this.getLabelFromValue(currValue as string)) ||
                           placeholder
                       }
                     </p>
@@ -1145,9 +1155,6 @@ export class Select {
                       class={{
                         "expand-icon": true,
                         "expand-icon-open": this.open,
-                        "expand-icon-filled": !(
-                          currValue == null || currValue === ""
-                        ),
                       }}
                       innerHTML={Expand}
                       aria-hidden="true"

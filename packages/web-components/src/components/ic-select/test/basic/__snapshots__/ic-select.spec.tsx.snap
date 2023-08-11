@@ -278,7 +278,7 @@ exports[`ic-select should test with clear button: with-clear-button 1`] = `
               </ic-typography>
               <div class="select-input-end">
                 <div class="divider"></div>
-                <span aria-hidden="true" class="expand-icon expand-icon-filled">
+                <span aria-hidden="true" class="expand-icon">
                   svg
                 </span>
               </div>

@@ -46,9 +46,11 @@ export class Menu {
   // Prevents menu re-opening immediately after it is closed on blur when clicking input.
   private preventClickOpen: boolean = false;
   private ungroupedOptions: IcMenuOption[] = [];
+  // private allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
 
   @Element() host: HTMLIcMenuElement;
 
+  // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
   @State() focusFromSearchKeypress: boolean = false;
   @State() initialOptionsListRender: boolean = false;
   @State() keyboardNav: boolean = false;
@@ -136,7 +138,10 @@ export class Menu {
   @Watch("value")
   watchValueHandler(): void {
     this.menuValueChange.emit({ value: this.value });
+    console.log("emitted");
   }
+
+  // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
 
   /**
    * @internal Emitted when key is pressed while menu is open
@@ -640,6 +645,19 @@ export class Menu {
     }
   };
 
+  private handleAllOptionsClick = () => {
+    console.log('hi');
+    if (this.value.length === this.options.length) {
+      this.value = [];
+      console.log('hello')
+    } else {
+      const newValueArray = this.options.map(option => option.value);
+      console.log('here')
+      newValueArray.forEach(value => this.menuOptionSelect.emit({ value })); // SHOULD THIS JUST EMIT ONE EVENT INSTEAD OF ONE FOR EACH OPTION?
+      // this.menuOptionSelect.emit({ newValue });
+    }
+  }
+
   private emitMenuKeyPress = (isNavKey: boolean, key: string) => {
     this.menuKeyPress.emit({ isNavKey: isNavKey, key: key });
   };
@@ -936,10 +954,12 @@ export class Menu {
         {this.isMultiSelect && (
           <div class="option-bar">
             <ic-typography>
-              <p>selected</p>
+              <p>{`${this.value ? this.value.length : 0}/${this.options.length} selected`}</p>
             </ic-typography>
-            <ic-button variant="tertiary">Button</ic-button>
+            <ic-button variant="tertiary" onClick={this.handleAllOptionsClick}>{`${this.value?.length === this.options.length ? "Clear" : "Select"} all`}</ic-button>
+            
           </div>
+          // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
         )}
         {options.length !== 0 && (
           <ul
