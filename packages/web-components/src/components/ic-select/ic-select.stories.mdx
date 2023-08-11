@@ -1616,7 +1616,10 @@ export const defaultArgs = {
             console.log(event.detail.value);
           });
           select.addEventListener("icOptionSelect", function (event) {
-            console.log("optionSelect" + event.detail.value);
+            console.log("optionSelect " + event.detail.value);
+          });
+          select.addEventListener("icOptionDeselect", function (event) {
+            console.log("optionDeselect " + event.detail.value);
           });
         </script>`
     }

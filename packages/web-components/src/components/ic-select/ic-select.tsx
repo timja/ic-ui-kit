@@ -303,10 +303,15 @@ export class Select {
   @Event() icInput: EventEmitter<IcValueEventDetail>;
 
   /**
-   * Emitted when an option is highlighted within the menu.
-   * Highlighting a menu item will also trigger an `icChange/onIcChange` due to the value being updated.
+   * Emitted when an option is selected.
+   * Selecting an option will also trigger an `icChange/onIcChange` due to the value being updated.
    */
   @Event() icOptionSelect: EventEmitter<IcOptionSelectEventDetail>; // THIS HAPPENS WHEN AN OPTION IS DESELECTED - NEEDS FIXING
+
+  /**
+   * Emitted when `multiple` is `true` and an option is deselected.
+   */
+  @Event() icOptionDeselect: EventEmitter<IcOptionSelectEventDetail>;
 
   /**
    * Emitted when the 'retry loading' button is clicked for a searchable variant.
@@ -502,13 +507,15 @@ export class Select {
   };
 
   private handleCustomSelectChange = (event: CustomEvent): void => {
+    const value = event.detail.value;
+
     if (this.searchable && event.detail.label === this.emptyOptionListText) {
       this.searchableSelectElement.focus();
       return;
     }
 
     if (this.searchable) {
-      this.value = event.detail.value;
+      this.value = value;
       this.searchableMenuItemSelected = true;
 
       // After editing the input, if selecting the same option as before, set the input value to label again
@@ -524,9 +531,14 @@ export class Select {
       );
     }
 
+    if (this.multiple && this.value?.includes(value)) {
+      this.icOptionDeselect.emit({ value });
+    } else {
+      this.icOptionSelect.emit({ value });
+    }
+
     this.ariaActiveDescendant = event.detail.optionId;
-    this.icOptionSelect.emit({ value: event.detail.value });
-    this.emitIcChange(event.detail.value);
+    this.emitIcChange(value);
   };
 
   // Update selected options - adds / removes them, in order of option list
@@ -557,17 +569,19 @@ export class Select {
 
   private handleSelectAllChange = (event: CustomEvent) => {
     const selectAllOptions = event.detail.select;
-    let values: string[];
+    const allValues = this.options.map((option) => option.value);
+    let newValue: string[];
 
     if (selectAllOptions) {
-      values = this.options.map((option) => option.value);
-      values.forEach((value) => this.icOptionSelect.emit({ value }));
-      // this.icOptionSelect.emit({ value: event.detail.value });
+      const unselectedValues = allValues.filter(value => !((this.value as string[]).includes(value)));
+      unselectedValues.forEach((value) => this.icOptionSelect.emit({ value })); 
+      newValue = allValues;
     } else {
-      values = [];
+      (this.value as string[]).forEach((value) => this.icOptionDeselect.emit({ value }));
+      newValue = [];
     }
 
-    this.emitIcChange(values);
+    this.emitIcChange(newValue);
   };
 
   private handleMenuChange = (event: CustomEvent): void => {
