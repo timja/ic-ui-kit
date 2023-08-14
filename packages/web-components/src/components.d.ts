@@ -3171,6 +3171,7 @@ declare namespace LocalJSX {
         "onMenuKeyPress"?: (event: IcMenuCustomEvent<{ isNavKey: boolean; key: string }>) => void;
         "onMenuOptionId"?: (event: IcMenuCustomEvent<IcMenuOptionIdEventDetail>) => void;
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;
+        "onMenuOptionSelectAll"?: (event: IcMenuCustomEvent<{ select: boolean }>) => void;
         "onMenuStateChange"?: (event: IcMenuCustomEvent<IcMenuChangeEventDetail>) => void;
         "onMenuValueChange"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         "onRetryButtonClicked"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
@@ -3830,7 +3831,11 @@ declare namespace LocalJSX {
          */
         "onIcInput"?: (event: IcSelectCustomEvent<IcValueEventDetail>) => void;
         /**
-          * Emitted when an option is highlighted within the menu. Highlighting a menu item will also trigger an `icChange/onIcChange` due to the value being updated.
+          * Emitted when `multiple` is `true` and an option is deselected.
+         */
+        "onIcOptionDeselect"?: (event: IcSelectCustomEvent<IcOptionSelectEventDetail>) => void;
+        /**
+          * Emitted when an option is selected. Selecting an option will also trigger an `icChange/onIcChange` due to the value being updated.
          */
         "onIcOptionSelect"?: (event: IcSelectCustomEvent<IcOptionSelectEventDetail>) => void;
         /**

@@ -138,7 +138,6 @@ export class Menu {
   @Watch("value")
   watchValueHandler(): void {
     this.menuValueChange.emit({ value: this.value });
-    // console.log("emitted");
   }
 
   // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
@@ -353,10 +352,10 @@ export class Menu {
   async handleKeyboardOpen(event: KeyboardEvent): Promise<void> {
     this.keyboardNav = false;
 
-    if (this.activationType === "automatic") {
-      this.autoSetInputValueKeyboardOpen(event);
+    if (this.isManualMode) {
+      this.manualSetInputValueKeyboardOpen(event);
     } else {
-      this.manSetInputValueKeyboardOpen(event);
+      this.autoSetInputValueKeyboardOpen(event);
     }
   }
 
@@ -446,11 +445,11 @@ export class Menu {
     this.handleMenuChange(true);
   };
 
-  private setMenuOptions = () =>
+  private getMenuOptions = () =>
     this.isSearchBar ? this.options : this.ungroupedOptions;
 
   private setHighlightedOption = (highlightedIndex: number): void => {
-    const menuOptions = this.setMenuOptions();
+    const menuOptions = this.getMenuOptions();
 
     menuOptions[highlightedIndex] &&
       !menuOptions[highlightedIndex].timedOut &&
@@ -485,8 +484,61 @@ export class Menu {
     }
   };
 
-  private manSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
-    const menuOptions = this.setMenuOptions();
+  private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
+    this.handleManualKeyboardNavigation(event);
+  };
+
+  private setInputValue = (highlightedOptionIndex: number) => {
+    const menuOptions = this.getMenuOptions();
+
+    if (menuOptions[highlightedOptionIndex]) {
+      this.menuOptionSelect.emit({
+        value: menuOptions[highlightedOptionIndex]?.value,
+      });
+      this.optionHighlighted = undefined;
+      this.menuOptionId.emit({ optionId: undefined });
+    }
+    if (!this.hasTimedOut) this.handleMenuChange(false);
+    else (this.parentEl as HTMLIcSearchBarElement).setFocus();
+  };
+
+  private handleOptionClick = (event: Event): void => {
+    const { value, label } = (event.target as HTMLLIElement).dataset;
+    this.menuOptionSelect.emit({ value, label });
+    this.handleMenuChange(false);
+  };
+
+  private handleRetry = (): void => {
+    this.retryButtonClicked.emit({ value: this.value });
+  };
+
+  private handleRetryKeyDown = (ev: KeyboardEvent): void => {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      this.retryButtonClicked.emit({ value: this.value, keyPressed: ev.key });
+    }
+  };
+
+  private handleBlur = (event: FocusEvent): void => {
+    if (event.relatedTarget !== this.inputEl) {
+      if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
+        this.handleMenuChange(false, this.hasPreviouslyBlurred);
+      }
+    } else {
+      this.handleMenuChange(false);
+      this.preventClickOpen = true;
+    }
+    if (!this.isSearchBar) this.hasPreviouslyBlurred = !!event.relatedTarget;
+  };
+
+  private handleMouseDown = (event: Event): void => {
+    event.preventDefault();
+  };
+
+  // Keyboard behaviour which occurs both when menu is closed and open
+  // i.e. for keys that do the same thing when pressed on either input box or menu
+  private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
+    const menuOptions = this.getMenuOptions();
 
     this.keyboardNav = false;
 
@@ -555,15 +607,6 @@ export class Menu {
         break;
       case "Enter":
         event.preventDefault();
-        this.setInputValue(highlightedOptionIndex);
-        this.value = menuOptions[highlightedOptionIndex]?.value;
-        break;
-      case "Escape":
-        if (this.open) {
-          event.stopImmediatePropagation();
-        }
-        this.handleMenuChange(false);
-        this.menuOptionId.emit({ optionId: undefined });
         break;
       case "Shift":
       case "Tab":
@@ -595,58 +638,17 @@ export class Menu {
     }
   };
 
-  private setInputValue = (highlightedOptionIndex: number) => {
-    const menuOptions = this.setMenuOptions();
-
-    if (menuOptions[highlightedOptionIndex]) {
-      this.menuOptionSelect.emit({
-        value: menuOptions[highlightedOptionIndex]?.value,
-      });
-      this.optionHighlighted = undefined;
-      this.menuOptionId.emit({ optionId: undefined });
-    }
-    if (!this.hasTimedOut) this.handleMenuChange(false);
-    else (this.parentEl as HTMLIcSearchBarElement).setFocus();
-  };
-
-  private handleOptionClick = (event: Event): void => {
-    const { value, label } = (event.target as HTMLLIElement).dataset;
-    this.menuOptionSelect.emit({ value, label });
-    this.handleMenuChange(false);
-  };
-
-  private handleRetry = (): void => {
-    this.retryButtonClicked.emit({ value: this.value });
-  };
-
-  private handleRetryKeyDown = (ev: KeyboardEvent): void => {
-    if (ev.key === "Enter" || ev.key === " ") {
-      ev.preventDefault();
-      this.retryButtonClicked.emit({ value: this.value, keyPressed: ev.key });
-    }
-  };
-
-  private handleBlur = (event: FocusEvent): void => {
-    if (event.relatedTarget !== this.inputEl) {
-      if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
-        this.handleMenuChange(false, this.hasPreviouslyBlurred);
-      }
-    } else {
-      this.handleMenuChange(false);
-      this.preventClickOpen = true;
-    }
-    if (!this.isSearchBar) this.hasPreviouslyBlurred = !!event.relatedTarget;
-  };
-
-  private handleMouseDown = (event: Event): void => {
-    event.preventDefault();
-  };
-
   private handleMenuKeyDown = (event: KeyboardEvent) => {
-    if (this.activationType === "automatic") {
+    if (this.isManualMode) {
+      this.manualSetValueOnMenuKeyDown(event);
+    } else {
       this.autoSetValueOnMenuKeyDown(event);
-    } else if (this.activationType === "manual" && this.isSearchableSelect) {
-      this.manSetInputValueKeyboardOpen(event);
+    }
+  };
+
+  private handleMenuKeyUp = (event: KeyboardEvent): void => {
+    if (event.key === "Tab" && event.shiftKey) {
+      this.preventClickOpen = false;
     }
   };
 
@@ -654,17 +656,6 @@ export class Menu {
     this.menuOptionSelectAll.emit({
       select: !(this.value.length === this.options.length),
     });
-
-    // console.log('hi');
-    // if (this.value.length === this.options.length) {
-    //   this.value = [];
-    //   console.log('hello')
-    // } else {
-    //   const newValueArray = this.options.map(option => option.value);
-    //   console.log('here')
-    //   newValueArray.forEach(value => this.menuOptionSelect.emit({ value })); // SHOULD THIS JUST EMIT ONE EVENT INSTEAD OF ONE FOR EACH OPTION?
-    //   // this.menuOptionSelect.emit({ newValue });
-    // }
   };
 
   private emitMenuKeyPress = (isNavKey: boolean, key: string) => {
@@ -736,9 +727,26 @@ export class Menu {
     this.emitMenuKeyPress(this.keyboardNav, event.key);
   };
 
-  private handleMenuKeyUp = (event: KeyboardEvent): void => {
-    if (event.key === "Tab" && event.shiftKey) {
-      this.preventClickOpen = false;
+  private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
+    const menuOptions = this.getMenuOptions();
+
+    const highlightedOptionIndex = menuOptions.findIndex(
+      (option) => option.value === this.optionHighlighted
+    );
+
+    switch (event.key) {
+      case "Enter":
+        event.preventDefault();
+        this.setInputValue(highlightedOptionIndex);
+        this.value = menuOptions[highlightedOptionIndex]?.value;
+        break;
+      case "Escape":
+        event.stopImmediatePropagation();
+        this.handleMenuChange(false);
+        this.menuOptionId.emit({ optionId: undefined });
+        break;
+      default:
+        this.handleManualKeyboardNavigation(event);
     }
   };
 

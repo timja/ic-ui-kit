@@ -573,11 +573,15 @@ export class Select {
     let newValue: string[];
 
     if (selectAllOptions) {
-      const unselectedValues = allValues.filter(value => !((this.value as string[]).includes(value)));
-      unselectedValues.forEach((value) => this.icOptionSelect.emit({ value })); 
+      const unselectedValues = allValues.filter(
+        (value) => !(this.value as string[]).includes(value)
+      );
+      unselectedValues.forEach((value) => this.icOptionSelect.emit({ value }));
       newValue = allValues;
     } else {
-      (this.value as string[]).forEach((value) => this.icOptionDeselect.emit({ value }));
+      (this.value as string[]).forEach((value) =>
+        this.icOptionDeselect.emit({ value })
+      );
       newValue = [];
     }
 
@@ -1248,7 +1252,9 @@ export class Select {
               onRetryButtonClicked={this.handleRetry}
               parentEl={this.host}
               onTimeoutBlur={this.onTimeoutBlur}
-              activationType={this.searchable ? "manual" : "automatic"}
+              activationType={
+                this.searchable || this.multiple ? "manual" : "automatic"
+              }
             ></ic-menu>
           )}
           {hasValidationStatus(this.validationStatus, this.disabled) && (

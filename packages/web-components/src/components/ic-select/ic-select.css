@@ -114,6 +114,16 @@ select:not([disabled]) {
   cursor: auto;
 }
 
+.value-text {
+  max-width: calc(100% - (var(--ic-space-lg) + var(--ic-space-xxs)));
+}
+
+.value-text p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .searchable-select-container {
   align-items: center;
   display: flex;
@@ -123,7 +133,7 @@ select:not([disabled]) {
 
 .expand-icon {
   height: var(--ic-space-lg);
-  padding-left: var(--ic-space-xs);
+  padding-left: var(--ic-space-xxs);
   color: var(--ic-action-dark);
 }
 
