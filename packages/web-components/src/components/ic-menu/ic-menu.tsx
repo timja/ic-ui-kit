@@ -131,14 +131,14 @@ export class Menu {
   }
 
   /**
-   * The value of the currently selected option.
+   * The value of the currently selected option - or array of values (if multiple options allowed).
    */
   @Prop({ mutable: true }) value!: string | string[];
 
-  @Watch("value")
-  watchValueHandler(): void {
-    this.menuValueChange.emit({ value: this.value });
-  }
+  // @Watch("value")
+  // watchValueHandler(): void {
+  //   this.menuValueChange.emit({ value: this.value }); // CHECK THIS ISN'T BEING USED ANYWHERE ELSE
+  // }
 
   // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
 
@@ -485,7 +485,17 @@ export class Menu {
   };
 
   private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
-    this.handleManualKeyboardNavigation(event);
+    switch (event.key) {
+      case " ": // COULD THIS AND ABOVE BE MOVED TO A SHARED FUNCTION WITH THE BIT ABOVE?
+      case "Enter":
+        if ((event.target as HTMLElement).id !== "clear-button") {
+          this.handleMenuChange(true);
+        }
+        break;
+      default:
+        this.handleManualKeyboardNavigation(event);
+        break;
+    }
   };
 
   private setInputValue = (highlightedOptionIndex: number) => {
@@ -536,7 +546,7 @@ export class Menu {
   };
 
   // Keyboard behaviour which occurs both when menu is closed and open
-  // i.e. for keys that do the same thing when pressed on either input box or menu
+  // i.e. for keys that do the same thing when pressed on either input box (once menu is open) or menu
   private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
     const menuOptions = this.getMenuOptions();
 
@@ -737,8 +747,11 @@ export class Menu {
     switch (event.key) {
       case "Enter":
         event.preventDefault();
-        this.setInputValue(highlightedOptionIndex);
-        this.value = menuOptions[highlightedOptionIndex]?.value;
+        if (this.optionHighlighted) {
+          this.setInputValue(highlightedOptionIndex);
+        } else {
+          this.handleMenuChange(false); // DOES THIS NEED !this.hasTimedOut && ... AT THE START?
+        }
         break;
       case "Escape":
         event.stopImmediatePropagation();
@@ -747,6 +760,7 @@ export class Menu {
         break;
       default:
         this.handleManualKeyboardNavigation(event);
+        break;
     }
   };
 
@@ -905,7 +919,6 @@ export class Menu {
         aria-selected={selected}
         aria-disabled={option.disabled ? "true" : "false"}
         onClick={!option.timedOut && !option.loading && this.handleOptionClick}
-        onBlur={this.handleBlur}
         onMouseDown={this.handleMouseDown}
         data-value={option.value}
         data-label={option.label}

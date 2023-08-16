@@ -388,16 +388,17 @@ export class Select {
   }
 
   private emitIcChange = (value: string | string[]) => {
-    if (!this.searchable && this.multiple) {
-      if (Array.isArray(value)) {
-        this.value = value;
+    if (!this.searchable) {
+      if (this.multiple) {
+        // If "Select all" button clicked, replace value with new value (array of all option values)
+        // if (Array.isArray(value)) { 
+        //   this.value = value;
+        // } else {
+          this.handleMultipleSelectChange(value as string);
+        // }
       } else {
-        this.handleMultipleSelectChange(value);
+        this.value = value;
       }
-
-      // console.log("value" + this.value);
-    } else {
-      this.value = value;
     }
 
     clearTimeout(this.debounceIcChange);
@@ -506,7 +507,10 @@ export class Select {
     this.setTextColor();
   };
 
+  // Handle option select for when a custom input box and menu is rendered 
+  // (rather than native <select> - rendered when viewed on a small screen)
   private handleCustomSelectChange = (event: CustomEvent): void => {
+    console.log("HANDLE CUSTOM SELECT CHANGE")
     const value = event.detail.value;
 
     if (this.searchable && event.detail.label === this.emptyOptionListText) {

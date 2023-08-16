@@ -825,7 +825,7 @@ export namespace Components {
          */
         "small"?: boolean;
         /**
-          * The value of the currently selected option.
+          * The value of the currently selected option - or array of values (if multiple options allowed).
          */
         "value": string | string[];
     }
@@ -3195,7 +3195,7 @@ declare namespace LocalJSX {
          */
         "small"?: boolean;
         /**
-          * The value of the currently selected option.
+          * The value of the currently selected option - or array of values (if multiple options allowed).
          */
         "value": string | string[];
     }
