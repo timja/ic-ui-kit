@@ -24,7 +24,7 @@
   border-radius: var(--ic-border-radius);
 }
 
-:host(:not(.no-focus):focus-within) {
+:host(.open:not(.no-focus):focus-within) {
   box-shadow: var(--ic-border-focus);
 }
 
@@ -65,7 +65,8 @@
 
 :host(.open) {
   max-height: none;
-  display: block;
+  display: flex;
+  flex-direction: column-reverse;
   border: var(--ic-space-1px) solid var(--ic-architectural-400);
 }
 

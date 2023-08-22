@@ -45,6 +45,7 @@ export class Menu {
   private popperInstance: PopperInstance;
   // Prevents menu re-opening immediately after it is closed on blur when clicking input.
   private preventClickOpen: boolean = false;
+  private selectAllButton: HTMLIcButtonElement;
   private ungroupedOptions: IcMenuOption[] = [];
   // private allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
 
@@ -531,10 +532,11 @@ export class Menu {
 
   private handleBlur = (event: FocusEvent): void => {
     if (event.relatedTarget !== this.inputEl) {
-      if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
+      if (!(this.menu.contains(event.relatedTarget as HTMLElement) || event.relatedTarget === this.selectAllButton)) {
         this.handleMenuChange(false, this.hasPreviouslyBlurred);
       }
-    } else {
+    } 
+    else {
       this.handleMenuChange(false);
       this.preventClickOpen = true;
     }
@@ -662,9 +664,9 @@ export class Menu {
     }
   };
 
-  private handleAllOptionsClick = () => {
+  private handleSelectAllClick = () => {
     this.menuOptionSelectAll.emit({
-      select: !(this.value.length === this.options.length),
+      select: !this.value || !(this.value?.length === this.options.length),
     });
   };
 
@@ -981,22 +983,7 @@ export class Menu {
           open: open,
         }}
       >
-        {this.isMultiSelect && (
-          <div class="option-bar">
-            <ic-typography>
-              <p>{`${this.value ? this.value.length : 0}/${
-                this.options.length
-              } selected`}</p>
-            </ic-typography>
-            <ic-button
-              variant="tertiary"
-              onClick={this.handleAllOptionsClick}
-            >{`${
-              this.value?.length === this.options.length ? "Clear" : "Select"
-            } all`}</ic-button>
-          </div>
-          // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
-        )}
+        
         {options.length !== 0 && (
           <ul
             id={menuId}
@@ -1054,6 +1041,24 @@ export class Menu {
               }
             })}
           </ul>
+        )}
+        {this.isMultiSelect && (
+          <div class="option-bar">
+            <ic-typography>
+              <p>{`${this.value ? this.value.length : 0}/${
+                this.options.length
+              } selected`}</p>
+            </ic-typography>
+            <ic-button
+              class="select-all-button"
+              ref={(el) => this.selectAllButton = el}
+              variant="tertiary"
+              onClick={this.handleSelectAllClick}
+            >{`${
+              this.value?.length === this.options.length ? "Clear" : "Select"
+            } all`}</ic-button>
+          </div>
+          // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
         )}
       </Host>
     );

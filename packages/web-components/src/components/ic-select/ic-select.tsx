@@ -391,11 +391,11 @@ export class Select {
     if (!this.searchable) {
       if (this.multiple) {
         // If "Select all" button clicked, replace value with new value (array of all option values)
-        // if (Array.isArray(value)) { 
-        //   this.value = value;
-        // } else {
+        if (Array.isArray(value)) { 
+          this.value = value;
+        } else {
           this.handleMultipleSelectChange(value as string);
-        // }
+        }
       } else {
         this.value = value;
       }
@@ -510,7 +510,6 @@ export class Select {
   // Handle option select for when a custom input box and menu is rendered 
   // (rather than native <select> - rendered when viewed on a small screen)
   private handleCustomSelectChange = (event: CustomEvent): void => {
-    console.log("HANDLE CUSTOM SELECT CHANGE")
     const value = event.detail.value;
 
     if (this.searchable && event.detail.label === this.emptyOptionListText) {
@@ -578,7 +577,7 @@ export class Select {
 
     if (selectAllOptions) {
       const unselectedValues = allValues.filter(
-        (value) => !(this.value as string[]).includes(value)
+        (value) => this.value && !(this.value as string[]).includes(value)
       );
       unselectedValues.forEach((value) => this.icOptionSelect.emit({ value }));
       newValue = allValues;
