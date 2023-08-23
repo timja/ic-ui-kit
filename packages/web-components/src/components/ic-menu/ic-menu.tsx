@@ -74,6 +74,11 @@ export class Menu {
   @Prop() autoFocusOnSelected: boolean = true;
 
   /**
+   *  If `true`, the menu will close when an option is selected.
+   */
+  @Prop() closeOnSelect: boolean = true;
+
+  /**
    *  If `true`, the menu will fill the width of the container.
    */
   @Prop() fullWidth: boolean = false;
@@ -138,18 +143,18 @@ export class Menu {
 
   // @Watch("value")
   // watchValueHandler(): void {
-  //   this.menuValueChange.emit({ value: this.value }); // CHECK THIS ISN'T BEING USED ANYWHERE ELSE
+  //   // this.menuValueChange.emit({ value: this.value }); // CHECK THIS ISN'T BEING USED ANYWHERE ELSE
   // }
 
   // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
 
   /**
-   * @internal Emitted when key is pressed while menu is open
+   * @internal Emitted when key is pressed while menu is open.
    */
   @Event() menuKeyPress: EventEmitter<{ isNavKey: boolean; key: string }>;
 
   /**
-   * @internal Emitted when an option has been highlighted
+   * @internal Emitted when an option has been highlighted.
    */
   @Event() menuOptionId: EventEmitter<IcMenuOptionIdEventDetail>;
 
@@ -168,18 +173,18 @@ export class Menu {
    */
   @Event() menuStateChange!: EventEmitter<IcMenuChangeEventDetail>;
 
-  /**
-   * @internal Emitted when menu value changes.
-   */
-  @Event() menuValueChange: EventEmitter<IcValueEventDetail>;
+  // /**
+  //  * @internal Emitted when menu value changes.
+  //  */
+  // @Event() menuValueChange: EventEmitter<IcValueEventDetail>;
 
   /**
-   * @internal Emitted when the retry button is clicked
+   * @internal Emitted when the retry button is clicked.
    */
   @Event() retryButtonClicked: EventEmitter<IcValueEventDetail>;
 
   /**
-   * @internal Emitted when the timeout menu loses focus
+   * @internal Emitted when the timeout menu loses focus.
    */
   @Event() timeoutBlur: EventEmitter<{ ev: FocusEvent }>;
 
@@ -506,11 +511,20 @@ export class Menu {
       this.menuOptionSelect.emit({
         value: menuOptions[highlightedOptionIndex]?.value,
       });
-      this.optionHighlighted = undefined;
-      this.menuOptionId.emit({ optionId: undefined });
+
+      if (this.closeOnSelect) {
+        this.optionHighlighted = undefined;
+        this.menuOptionId.emit({ optionId: undefined });
+      }
     }
-    if (!this.hasTimedOut) this.handleMenuChange(false);
-    else (this.parentEl as HTMLIcSearchBarElement).setFocus();
+    
+    if (this.closeOnSelect) {
+      if (!this.hasTimedOut) {
+        this.handleMenuChange(false);
+      } else {
+        (this.parentEl as HTMLIcSearchBarElement).setFocus();
+      };
+    }
   };
 
   private handleOptionClick = (event: Event): void => {
@@ -746,6 +760,8 @@ export class Menu {
       (option) => option.value === this.optionHighlighted
     );
 
+    console.log(event.key);
+
     switch (event.key) {
       case "Enter":
         event.preventDefault();
@@ -759,6 +775,10 @@ export class Menu {
         event.stopImmediatePropagation();
         this.handleMenuChange(false);
         this.menuOptionId.emit({ optionId: undefined });
+        break;
+      case "Tab":
+        // Do nothing
+        // Prevents issue where menu is refocussed on first render when tab pressed
         break;
       default:
         this.handleManualKeyboardNavigation(event);
@@ -1054,6 +1074,7 @@ export class Menu {
               ref={(el) => this.selectAllButton = el}
               variant="tertiary"
               onClick={this.handleSelectAllClick}
+              onBlur={this.handleBlur}
             >{`${
               this.value?.length === this.options.length ? "Clear" : "Select"
             } all`}</ic-button>

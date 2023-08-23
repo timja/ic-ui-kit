@@ -548,11 +548,12 @@ export class Select {
   // Create new array if value prop is undefined
   private handleMultipleSelectChange = (value: string) => {
     if (this.value) {
+      const valueArray = (this.value as string[]).slice();
+
       if (this.value.includes(value)) {
-        const valueIndex = this.value.indexOf(value);
-        (this.value as string[]).splice(valueIndex, 1);
+        const valueIndex = valueArray.indexOf(value);
+        valueArray.splice(valueIndex, 1);
       } else {
-        const valueArray = (this.value as string[]).slice();
         valueArray.push(value);
 
         const valuesFromAllOptions = this.options.map((option) => option.value);
@@ -560,9 +561,9 @@ export class Select {
           (a, b) =>
             valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b)
         );
-
-        this.value = valueArray; // SHOULD THIS BE ICOPTIONSELECT?
       }
+
+      this.value = valueArray;
     } else {
       const valueArray = [];
       valueArray.push(value);
@@ -605,9 +606,9 @@ export class Select {
     this.handleCharacterKeyDown(ev.detail.key);
   };
 
-  private handleMenuValueChange = (ev: CustomEvent): void => {
-    this.value = ev.detail.value;
-  };
+  // private handleMenuValueChange = (ev: CustomEvent): void => {
+  //   this.value = ev.detail.value;
+  // };
 
   private handleFocusIndicatorDisplay = () => {
     const focusIndicator =
@@ -1250,7 +1251,7 @@ export class Select {
               onMenuOptionSelect={this.handleCustomSelectChange}
               onMenuOptionSelectAll={this.handleSelectAllChange}
               onMenuKeyPress={this.handleMenuKeyPress}
-              onMenuValueChange={this.handleMenuValueChange}
+              // onMenuValueChange={this.handleMenuValueChange}
               onUngroupedOptionsSet={this.setUngroupedOptions}
               onRetryButtonClicked={this.handleRetry}
               parentEl={this.host}
@@ -1258,6 +1259,7 @@ export class Select {
               activationType={
                 this.searchable || this.multiple ? "manual" : "automatic"
               }
+              closeOnSelect={!this.multiple}
             ></ic-menu>
           )}
           {hasValidationStatus(this.validationStatus, this.disabled) && (

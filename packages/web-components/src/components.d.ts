@@ -781,6 +781,10 @@ export namespace Components {
         "anchorEl": HTMLElement;
         "autoFocusOnSelected": boolean;
         /**
+          * If `true`, the menu will close when an option is selected.
+         */
+        "closeOnSelect": boolean;
+        /**
           * If `true`, the menu will fill the width of the container.
          */
         "fullWidth": boolean;
@@ -3149,6 +3153,10 @@ declare namespace LocalJSX {
         "anchorEl": HTMLElement;
         "autoFocusOnSelected"?: boolean;
         /**
+          * If `true`, the menu will close when an option is selected.
+         */
+        "closeOnSelect"?: boolean;
+        /**
           * If `true`, the menu will fill the width of the container.
          */
         "fullWidth"?: boolean;
@@ -3173,7 +3181,6 @@ declare namespace LocalJSX {
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;
         "onMenuOptionSelectAll"?: (event: IcMenuCustomEvent<{ select: boolean }>) => void;
         "onMenuStateChange"?: (event: IcMenuCustomEvent<IcMenuChangeEventDetail>) => void;
-        "onMenuValueChange"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         "onRetryButtonClicked"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         "onTimeoutBlur"?: (event: IcMenuCustomEvent<{ ev: FocusEvent }>) => void;
         "onUngroupedOptionsSet"?: (event: IcMenuCustomEvent<{ options: IcMenuOption[] }>) => void;

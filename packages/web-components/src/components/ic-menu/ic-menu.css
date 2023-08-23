@@ -28,6 +28,10 @@
   box-shadow: var(--ic-border-focus);
 }
 
+:host(.open:has(.select-all-button:focus)) {
+  box-shadow: var(--ic-elevation-overlay);
+}
+
 #retry-button::part(button) {
   height: var(--ic-space-lg);
 }
@@ -47,12 +51,15 @@
 .menu {
   text-decoration: none;
   list-style-type: none;
-  /* border: var(--ic-space-1px) solid var(--ic-architectural-400);
-  border-radius: var(--ic-border-radius); */
+  border-radius: 1px;
   background-color: var(--ic-architectural-white);
   visibility: hidden;
   max-height: 0;
   overflow-y: hidden;
+}
+
+.menu:has(+ .option-bar) {
+  border-radius: 0 0 1px 1px;
 }
 
 .menu-scroll {
@@ -68,6 +75,7 @@
   display: flex;
   flex-direction: column-reverse;
   border: var(--ic-space-1px) solid var(--ic-architectural-400);
+  transition: box-shadow var(--ic-easing-transition-fast);
 }
 
 :host(.open) .option-bar {
@@ -100,11 +108,11 @@
 }
 
 .option:last-child {
-  border-radius: 0 0 var(--ic-space-1px) var(--ic-space-1px);
+  border-radius: 0 0 1px 1px;
 }
 
-.option:first-child {
-  border-radius: var(--ic-space-1px) var(--ic-space-1px) 0 0;
+:not(.menu:has(+ .option-bar)) .option:first-child {
+  border-radius: 1px 1px 0 0;
 }
 
 .option:not(.disabled-option):hover {
@@ -197,6 +205,7 @@
   background-color: var(--ic-architectural-40);
   visibility: hidden;
   border-bottom: var(--ic-space-1px) solid var(--ic-architectural-900);
+  border-radius: 1px 1px 0 0;
 }
 
 @media (forced-colors: active) {
