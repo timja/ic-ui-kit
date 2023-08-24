@@ -38,7 +38,6 @@ export class Menu {
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
   private isLoading: boolean = false;
-  private isMultiSelect: boolean = false;
   private isSearchBar: boolean = false;
   private isSearchableSelect: boolean = false;
   private menu: HTMLUListElement;
@@ -441,7 +440,7 @@ export class Menu {
         parent.getAttribute("multiple") !== null &&
         parent.getAttribute("multiple") !== undefined
       ) {
-        this.isMultiSelect = true;
+        this.multiple = true;
       }
     }
   };
@@ -1015,7 +1014,7 @@ export class Menu {
                 ? this.getOptionId(value as string)
                 : "" // TYPE NEEDS CHANGING
             }
-            aria-multiselectable={this.isMultiSelect ? "true" : "false"}
+            aria-multiselectable={this.multiple ? "true" : "false"}
             tabindex={
               open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
             }
@@ -1062,7 +1061,7 @@ export class Menu {
             })}
           </ul>
         )}
-        {this.isMultiSelect && (
+        {this.multiple && (
           <div class="option-bar">
             <ic-typography>
               <p>{`${this.value ? this.value.length : 0}/${
