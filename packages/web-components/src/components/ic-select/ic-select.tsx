@@ -266,8 +266,13 @@ export class Select {
 
   @Watch("value")
   valueChangedHandler(): void {
+    console.log("changed");
     if (this.value !== this.currValue) {
-      this.currValue = this.value;
+      if (this.multiple) {
+        this.currValue = this.getValueSortedByOptions(this.value as string[]);
+      } else {
+        this.currValue = this.value;
+      }
     }
 
     if (this.searchable) {
@@ -391,7 +396,7 @@ export class Select {
     if (!this.searchable) {
       if (this.multiple) {
         // If "Select all" button clicked, replace value with new value (array of all option values)
-        if (Array.isArray(value)) { 
+        if (Array.isArray(value)) {
           this.value = value;
         } else {
           this.handleMultipleSelectChange(value as string);
@@ -501,13 +506,26 @@ export class Select {
     return newOption;
   };
 
+  // (For multi-select) get value array, i.e. selected option values, in order they appear in option list
+  private getValueSortedByOptions = (value: string[]) => {
+    const valueArray = value;
+    const valuesFromAllOptions = this.options.map((option) => option.value);
+
+    valueArray.sort(
+      (a, b) =>
+        valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b)
+    );
+
+    return valueArray;
+  };
+
   private handleNativeSelectChange = (): void => {
     this.icOptionSelect.emit({ value: this.nativeSelectElement.value });
     this.emitImmediateIcChange(this.nativeSelectElement.value);
     this.setTextColor();
   };
 
-  // Handle option select for when a custom input box and menu is rendered 
+  // Handle option select for when a custom input box and menu is rendered
   // (rather than native <select> - rendered when viewed on a small screen)
   private handleCustomSelectChange = (event: CustomEvent): void => {
     const value = event.detail.value;
@@ -548,19 +566,14 @@ export class Select {
   // Create new array if value prop is undefined
   private handleMultipleSelectChange = (value: string) => {
     if (this.value) {
-      const valueArray = (this.value as string[]).slice();
+      let valueArray = (this.value as string[]).slice();
 
       if (this.value.includes(value)) {
         const valueIndex = valueArray.indexOf(value);
         valueArray.splice(valueIndex, 1);
       } else {
         valueArray.push(value);
-
-        const valuesFromAllOptions = this.options.map((option) => option.value);
-        valueArray.sort(
-          (a, b) =>
-            valuesFromAllOptions.indexOf(a) - valuesFromAllOptions.indexOf(b)
-        );
+        valueArray = this.getValueSortedByOptions(valueArray);
       }
 
       this.value = valueArray;
@@ -893,15 +906,21 @@ export class Select {
   private getDefaultValue = (value: string): string | null =>
     this.getLabelFromValue(value) || value || null;
 
-  private setDefaultValue() {
+  private setDefaultValue = (): void => {
     if (!this.hasSetDefaultValue && this.currValue) {
-      this.searchableSelectInputValue = this.getDefaultValue(
-        this.currValue as string
-      ); // CHECK THE TYPE HERE
+      this.searchableSelectInputValue =
+        this.searchable && this.getDefaultValue(this.currValue as string);
+
+      if (this.multiple) {
+        this.currValue = this.getValueSortedByOptions(
+          this.currValue as string[]
+        );
+      }
+
       this.initialValue = this.currValue;
       this.hasSetDefaultValue = true;
     }
-  }
+  };
 
   private onFocus = (): void => {
     this.icFocus.emit();
@@ -989,6 +1008,7 @@ export class Select {
         (this.noOptions !== null &&
           this.noOptions[0] &&
           this.noOptions[0].label === this.emptyOptionListText));
+
     const inputValue = this.searchable ? this.hiddenInputValue : currValue;
 
     // TYPE NEEDS FIXING
@@ -1087,7 +1107,10 @@ export class Select {
             ) : searchable ? (
               <div class="searchable-select-container">
                 <input
-                  class="select-input"
+                  class={{
+                    "select-input": true,
+                    "with-clear-button": !!this.searchableSelectInputValue,
+                  }}
                   role="combobox"
                   autocomplete="off"
                   aria-label={label}
@@ -1109,33 +1132,32 @@ export class Select {
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
                 ></input>
-                {this.searchableSelectInputValue &&
-                  (showClearButton || searchable) && (
-                    <div class="clear-button-container">
-                      <ic-button
-                        id="clear-button"
-                        ref={(el) => (this.clearButton = el)}
-                        aria-label={
-                          this.searchableSelectInputValue && currValue === null
-                            ? "Clear input"
-                            : "Clear selection"
-                        }
-                        class="clear-button"
-                        innerHTML={Clear}
-                        onClick={this.handleClear}
-                        onFocus={this.handleClearButtonFocus}
-                        onBlur={this.handleClearButtonBlur}
-                        size={small ? "small" : "default"}
-                        variant="icon"
-                        appearance={
-                          this.clearButtonFocused
-                            ? IcThemeForegroundEnum.Light
-                            : IcThemeForegroundEnum.Dark
-                        }
-                      ></ic-button>
-                      <div class="divider"></div>
-                    </div>
-                  )}
+                {this.searchableSelectInputValue && (
+                  <div class="clear-button-container">
+                    <ic-button
+                      id="clear-button"
+                      ref={(el) => (this.clearButton = el)}
+                      aria-label={
+                        this.searchableSelectInputValue && currValue === null
+                          ? "Clear input"
+                          : "Clear selection"
+                      }
+                      class="clear-button searchable"
+                      innerHTML={Clear}
+                      onClick={this.handleClear}
+                      onFocus={this.handleClearButtonFocus}
+                      onBlur={this.handleClearButtonBlur}
+                      size={small ? "small" : "default"}
+                      variant="icon"
+                      appearance={
+                        this.clearButtonFocused
+                          ? IcThemeForegroundEnum.Light
+                          : IcThemeForegroundEnum.Dark
+                      }
+                    ></ic-button>
+                    <div class="divider"></div>
+                  </div>
+                )}
                 <span
                   onMouseDown={this.handleExpandIconMouseDown}
                   class={{
@@ -1178,6 +1200,8 @@ export class Select {
                     variant="body"
                     class={{
                       "value-text": true,
+                      "with-clear-button": currValue && this.showClearButton,
+                      small: small,
                       placeholder:
                         // CHECK THIS
                         !this.value || (this.multiple && this.value.length < 1),
@@ -1194,7 +1218,7 @@ export class Select {
                     </p>
                   </ic-typography>
                   <div class="select-input-end">
-                    {currValue && showClearButton && (
+                    {currValue && this.showClearButton && (
                       <div class="divider"></div>
                     )}
                     <span

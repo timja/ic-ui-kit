@@ -516,20 +516,23 @@ export class Menu {
         this.menuOptionId.emit({ optionId: undefined });
       }
     }
-    
+
     if (this.closeOnSelect) {
       if (!this.hasTimedOut) {
         this.handleMenuChange(false);
       } else {
         (this.parentEl as HTMLIcSearchBarElement).setFocus();
-      };
+      }
     }
   };
 
   private handleOptionClick = (event: Event): void => {
     const { value, label } = (event.target as HTMLLIElement).dataset;
     this.menuOptionSelect.emit({ value, label });
-    this.handleMenuChange(false);
+
+    if (!this.multiple) {
+      this.handleMenuChange(false);
+    }
   };
 
   private handleRetry = (): void => {
@@ -545,11 +548,15 @@ export class Menu {
 
   private handleBlur = (event: FocusEvent): void => {
     if (event.relatedTarget !== this.inputEl) {
-      if (!(this.menu.contains(event.relatedTarget as HTMLElement) || event.relatedTarget === this.selectAllButton)) {
+      if (
+        !(
+          this.menu.contains(event.relatedTarget as HTMLElement) ||
+          event.relatedTarget === this.selectAllButton
+        )
+      ) {
         this.handleMenuChange(false, this.hasPreviouslyBlurred);
       }
-    } 
-    else {
+    } else {
       this.handleMenuChange(false);
       this.preventClickOpen = true;
     }
@@ -650,15 +657,13 @@ export class Menu {
         this.focusFromSearchKeypress = true;
         break;
       default:
-        if (event.key !== "Tab") {
-          if (this.isSearchBar) {
-            (this.parentEl as HTMLIcSearchBarElement).setFocus();
-            if (this.searchMode === "navigation") this.setHighlightedOption(0);
-          } else if (this.isSearchableSelect) {
-            (this.parentEl as HTMLIcSelectElement).setFocus();
-          }
-          this.focusFromSearchKeypress = true;
+        if (this.isSearchBar) {
+          (this.parentEl as HTMLIcSearchBarElement).setFocus();
+          if (this.searchMode === "navigation") this.setHighlightedOption(0);
+        } else if (this.isSearchableSelect) {
+          (this.parentEl as HTMLIcSelectElement).setFocus();
         }
+        this.focusFromSearchKeypress = true;
         break;
     }
   };
@@ -774,10 +779,6 @@ export class Menu {
         event.stopImmediatePropagation();
         this.handleMenuChange(false);
         this.menuOptionId.emit({ optionId: undefined });
-        break;
-      case "Tab":
-        // Do nothing
-        // Prevents issue where menu is refocussed on first render when tab pressed
         break;
       default:
         this.handleManualKeyboardNavigation(event);
@@ -1002,7 +1003,6 @@ export class Menu {
           open: open,
         }}
       >
-        
         {options.length !== 0 && (
           <ul
             id={menuId}
@@ -1039,8 +1039,8 @@ export class Menu {
                         this.displayOption(
                           childOption,
                           this.multiple
-                            ? childOption.value === childOption.value
-                            : value?.includes(childOption.value),
+                            ? value?.includes(childOption.value)
+                            : childOption.value === value,
                           index,
                           option
                         )
@@ -1054,14 +1054,14 @@ export class Menu {
                 return this.displayOption(
                   option,
                   this.multiple
-                    ? option.value === option.value
-                    : value?.includes(option.value)
+                    ? value?.includes(option.value)
+                    : option.value === value
                 );
               }
             })}
           </ul>
         )}
-        {this.multiple && (
+        {options.length !== 0 && this.multiple && !isLoading && (
           <div class="option-bar">
             <ic-typography>
               <p>{`${this.value ? this.value.length : 0}/${
@@ -1070,7 +1070,7 @@ export class Menu {
             </ic-typography>
             <ic-button
               class="select-all-button"
-              ref={(el) => this.selectAllButton = el}
+              ref={(el) => (this.selectAllButton = el)}
               variant="tertiary"
               onClick={this.handleSelectAllClick}
               onBlur={this.handleBlur}
@@ -1079,6 +1079,7 @@ export class Menu {
             } all`}</ic-button>
           </div>
           // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
+          // CONVERT ALL 'THIS. ...' TO VARIABLE WITHOUT 'THIS'
         )}
       </Host>
     );

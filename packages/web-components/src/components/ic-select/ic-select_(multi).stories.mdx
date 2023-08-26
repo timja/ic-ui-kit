@@ -1,0 +1,192 @@
+import {
+  Meta,
+  Story,
+  Canvas,
+  ArgsTable,
+  Description,
+} from "@storybook/addon-docs";
+import { html } from "lit-html";
+import readme from "./readme.md";
+
+<Meta title="Web Components/Select/Multi" component="ic-select" />
+
+<Description markdown={readme} />
+
+export const defaultArgs = {
+  disabled: false,
+  ["full-width"]: false,
+  ["helper-text"]: "Such as Arabica, Robusta or Liberica.",
+  ["hide-label"]: false,
+  label: "What is your favourite coffee?",
+  placeholder: "Select an option",
+  readonly: false,
+  required: false,
+  small: false,
+  ["validation-status"]: "",
+  ["validation-text"]: "",
+};
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    {(args) =>
+      html`<ic-select
+          id="select-1"
+          label="What is your favourite coffee?"
+          multiple
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-1");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect " + event.detail.value);
+          });
+          select.addEventListener("icOptionDeselect", function (event) {
+            console.log("optionDeselect " + event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
+
+### Async default
+
+<Canvas>
+  <Story name="Async default" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`<ic-select
+          label="What is your favourite coffee?"
+          loading
+          id="select-2"
+          multiple
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-2");
+          select.options = [];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
+
+### Default value
+
+<Canvas>
+  <Story name="Default value">
+    {(args) =>
+      html`<ic-select
+          id="select-3"
+          label="What is your favourite coffee?"
+          multiple
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-3");
+          select.value = ["Fil", "Moc", "Ame"];
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect " + event.detail.value);
+          });
+          select.addEventListener("icOptionDeselect", function (event) {
+            console.log("optionDeselect " + event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
+
+### With clear button
+
+<Canvas>
+  <Story name="With clear button">
+    {(args) =>
+      html`<ic-select
+          id="select-4"
+          label="What is your favourite coffee?"
+          multiple
+          show-clear-button
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-4");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect " + event.detail.value);
+          });
+          select.addEventListener("icOptionDeselect", function (event) {
+            console.log("optionDeselect " + event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
+
+### Small
+
+<Canvas>
+  <Story name="Small">
+    {(args) =>
+      html`<ic-select
+          id="select-5"
+          label="What is your favourite coffee?"
+          multiple
+          small
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-5");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("optionSelect " + event.detail.value);
+          });
+          select.addEventListener("icOptionDeselect", function (event) {
+            console.log("optionDeselect " + event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
