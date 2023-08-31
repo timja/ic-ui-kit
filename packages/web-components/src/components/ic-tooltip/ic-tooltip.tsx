@@ -26,6 +26,11 @@ export class Tooltip {
   @Element() el: HTMLIcTooltipElement;
 
   /**
+   * If `true`, the tooltip will not be displayed on click, it will require hover or using the display method.
+   */
+  @Prop() disableClick?: boolean = false;
+
+  /**
    * If `true`, the tooltip will not be displayed on hover, it will require a click.
    */
   @Prop() disableHover?: boolean = false;
