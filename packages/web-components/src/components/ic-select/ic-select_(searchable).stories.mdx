@@ -39,10 +39,7 @@ export const defaultArgs = {
         <script>
           var select = document.querySelector("#select-1");
           select.options = [
-            {
-              label: "Cappuccino etert ert erterter tert reterterter",
-              value: "Cap",
-            },
+            { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
             { label: "Americano", value: "Ame" },
             { label: "Filter", value: "Fil" },
@@ -468,7 +465,7 @@ export const defaultArgs = {
               label: "Fancy",
               children: [
                 { label: "Cappuccino", value: "Cap" },
-                { label: "Flat white", value: "Flat" },
+                { label: "Flat white", value: "Fla" },
               ],
             },
             {
@@ -505,7 +502,7 @@ export const defaultArgs = {
               label: "Fancy",
               children: [
                 { label: "Cappuccino", value: "Cap" },
-                { label: "Flat white", value: "Flat" },
+                { label: "Flat white", value: "Fla" },
               ],
             },
             {
@@ -739,7 +736,7 @@ export const defaultArgs = {
 
 ### In form
 
-This shows how the select works within a form. The value will appear in the console.log on submit.
+This shows how the searchable select works within a form. The value will appear in the console.log on submit.
 
 <Canvas>
   <Story name="In form" parameters={{ loki: { skip: true } }}>

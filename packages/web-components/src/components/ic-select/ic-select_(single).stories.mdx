@@ -416,7 +416,7 @@ export const defaultArgs = {
               label: "Fancy",
               children: [
                 { label: "Cappuccino", value: "Cap" },
-                { label: "Flat white", value: "Flat" },
+                { label: "Flat white", value: "Fla" },
               ],
             },
             {
@@ -427,6 +427,7 @@ export const defaultArgs = {
               ],
             },
           ];
+          select.value = "Lat";
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
           });

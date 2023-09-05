@@ -133,6 +133,7 @@
 
 .option-text-container {
   pointer-events: none;
+  max-width: calc(var(--ic-space-lg) * 10 + var(--ic-space-xl));
 }
 
 .option.loading-option .option-text-container {

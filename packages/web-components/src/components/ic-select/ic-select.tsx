@@ -266,9 +266,8 @@ export class Select {
 
   @Watch("value")
   valueChangedHandler(): void {
-    console.log("changed");
     if (this.value !== this.currValue) {
-      if (this.multiple) {
+      if (this.value && this.multiple) {
         this.currValue = this.getValueSortedByOptions(this.value as string[]);
       } else {
         this.currValue = this.value;
@@ -509,7 +508,9 @@ export class Select {
   // (For multi-select) get value array, i.e. selected option values, in order they appear in option list
   private getValueSortedByOptions = (value: string[]) => {
     const valueArray = value;
-    const valuesFromAllOptions = this.options.map((option) => option.value);
+    const valuesFromAllOptions = this.ungroupedOptions.map(
+      (option) => option.value
+    );
 
     valueArray.sort(
       (a, b) =>
@@ -586,7 +587,10 @@ export class Select {
 
   private handleSelectAllChange = (event: CustomEvent) => {
     const selectAllOptions = event.detail.select;
-    const allValues = this.options.map((option) => option.value);
+    const allEnabledOptions = this.ungroupedOptions.filter(
+      (option) => !option.disabled
+    );
+    const allValues = allEnabledOptions.map((option) => option.value);
     let newValue: string[];
 
     if (selectAllOptions) {
@@ -1023,6 +1027,8 @@ export class Select {
       hasValidationStatus(this.validationStatus, this.disabled)
     ).trim();
 
+    // TEST DEFAULT VALUE WITH GROUPED OPTIONS
+
     return (
       <Host
         class={{
@@ -1056,7 +1062,11 @@ export class Select {
             {readonly ? (
               // STRING TYPE NEEDS UPDATING
               <ic-typography>
-                <p>{this.getLabelFromValue(currValue as string)}</p>
+                <p>
+                  {this.multiple
+                    ? this.getMultipleOptionsString(currValue as string[])
+                    : this.getLabelFromValue(currValue as string)}
+                </p>
               </ic-typography>
             ) : isMobileOrTablet() ? (
               <select

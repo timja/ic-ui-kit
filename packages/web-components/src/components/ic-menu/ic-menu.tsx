@@ -684,7 +684,8 @@ export class Menu {
 
   private handleSelectAllClick = () => {
     this.menuOptionSelectAll.emit({
-      select: !this.value || !(this.value?.length === this.options.length),
+      select:
+        !this.value || !(this.value?.length === this.ungroupedOptions.length),
     });
   };
 
@@ -1000,7 +1001,7 @@ export class Menu {
           "full-width": fullWidth,
           "no-focus": inputEl?.tagName === "INPUT" || hasTimedOut || isLoading,
           small: small,
-          open: open,
+          open: open && options.length !== 0,
         }}
       >
         {options.length !== 0 && (
@@ -1055,7 +1056,8 @@ export class Menu {
                   option,
                   this.multiple
                     ? value?.includes(option.value)
-                    : option.value === value
+                    : option.value === value,
+                  index
                 );
               }
             })}
@@ -1065,7 +1067,7 @@ export class Menu {
           <div class="option-bar">
             <ic-typography>
               <p>{`${this.value ? this.value.length : 0}/${
-                this.options.length
+                this.ungroupedOptions.length
               } selected`}</p>
             </ic-typography>
             <ic-button
@@ -1075,7 +1077,9 @@ export class Menu {
               onClick={this.handleSelectAllClick}
               onBlur={this.handleBlur}
             >{`${
-              this.value?.length === this.options.length ? "Clear" : "Select"
+              this.value?.length === this.ungroupedOptions.length
+                ? "Clear"
+                : "Select"
             } all`}</ic-button>
           </div>
           // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
