@@ -260,12 +260,19 @@ export class SideNavigation {
    */
   private arrangeSlottedNavigationItem = (menuExpanded?: boolean) => {
     const navItems = this.el.querySelectorAll("ic-navigation-item");
-
     navItems.forEach((navItem) => {
-      const hasUsedSlot = isSlotUsed(navItem, "navigation-item");
-
-      if (hasUsedSlot) {
-        const navItemSlot = navItem.querySelector("[slot='navigation-item']");
+      const isNamedSlot = isSlotUsed(navItem, "navigation-item");
+      const isUnnamedSlot = !navItem.children[0].getAttribute("slot");
+      // const hasUsedSlot = !!navItem.children[0]
+      if (isNamedSlot || isUnnamedSlot) {
+        let navItemSlot;
+        if (isNamedSlot) {
+          navItemSlot = navItem.querySelector("[slot='navigation-item']");
+        } else {
+          navItemSlot = navItem.children[0];
+        }
+        // const navItemSlot = navItem.children[0]
+        // const navItemSlot = navItem.querySelector("[slot='navigation-item']");
         const iconWrapper = document.createElement("div");
         const icon = navItemSlot.querySelector("svg");
         const label = navItem.textContent.trim();
