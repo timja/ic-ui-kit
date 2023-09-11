@@ -80,7 +80,6 @@
 
 :host(.open) .option-bar {
   visibility: visible;
-  max-height: 20.125rem;
 }
 
 :host(.open) .menu {

@@ -590,5 +590,5 @@ export const removeDisabledFalse = (
 };
 
 export const isMacDevice = () => {
- return window.navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
-}
+  return window.navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
+};

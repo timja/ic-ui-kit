@@ -19,7 +19,10 @@ import {
   IcValueEventDetail,
 } from "../../utils/types";
 import Check from "../../assets/check-icon.svg";
-import { isMacDevice, onComponentRequiredPropUndefined } from "../../utils/helpers";
+import {
+  isMacDevice,
+  onComponentRequiredPropUndefined,
+} from "../../utils/helpers";
 import {
   IcOptionSelectEventDetail,
   IcMenuChangeEventDetail,
@@ -42,11 +45,11 @@ export class Menu {
   private isSearchableSelect: boolean = false;
   private menu: HTMLUListElement;
   private popperInstance: PopperInstance;
-  // Prevents menu re-opening immediately after it is closed on blur when clicking input.
-  private preventClickOpen: boolean = false;
+  private preventClickOpen: boolean = false; // Prevents menu re-opening immediately after it is closed on blur when clicking input.
   private selectAllButton: HTMLIcButtonElement;
   private ungroupedOptions: IcMenuOption[] = [];
   // private allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
+  private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu
 
   @Element() host: HTMLIcMenuElement;
 
@@ -241,6 +244,12 @@ export class Menu {
   }
 
   componentDidUpdate(): void {
+    // console.log(this.focusFromSearchKeypress);
+    // console.log(this.initialOptionsListRender);
+    // console.log(this.keyboardNav);
+    // console.log(this.optionHighlighted);
+    // console.log(this.preventIncorrectTabOrder);
+
     const inputValueInOptions: boolean = this.options.some(
       (option) => option.value === this.value
     );
@@ -250,7 +259,7 @@ export class Menu {
       this.optionHighlighted !== undefined &&
       this.optionHighlighted !== "";
 
-    if (this.open && this.options.length !== 0) {
+    if (this.open && this.options.length !== 0 && !this.preventMenuFocus) {
       if (
         this.value &&
         this.keyboardNav &&
@@ -281,6 +290,7 @@ export class Menu {
         }
       }
     }
+    this.preventMenuFocus = false;
   }
 
   componentDidRender(): void {
@@ -390,9 +400,16 @@ export class Menu {
   private handleMenuChange = (open: boolean, focusInput?: boolean): void => {
     this.menuStateChange.emit({ open, focusInput });
 
-    if (!open && focusInput !== false) {
-      this.inputEl.focus();
-      this.preventClickOpen = false;
+    if (!open) {
+      if (focusInput !== false) {
+        this.inputEl.focus();
+        this.preventClickOpen = false;
+      }
+
+      // Reset optionHighlighted so previously highlighted option doesn't get reselected on Enter
+      if (this.multiple) {
+        this.optionHighlighted = undefined;
+      }
     }
   };
 
@@ -492,6 +509,8 @@ export class Menu {
     }
   };
 
+  // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
+  // and menu is closed
   private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
     switch (event.key) {
       case " ": // COULD THIS AND ABOVE BE MOVED TO A SHARED FUNCTION WITH THE BIT ABOVE?
@@ -507,6 +526,7 @@ export class Menu {
   };
 
   private setInputValue = (highlightedOptionIndex: number) => {
+    console.log("setinputvalue");
     const menuOptions = this.getMenuOptions();
 
     if (menuOptions[highlightedOptionIndex]) {
@@ -570,7 +590,7 @@ export class Menu {
     event.preventDefault();
   };
 
-  // Keyboard behaviour which occurs both when menu is closed and open
+  // Manual keyboard behaviour which occurs both when menu is closed and open
   // i.e. for keys that do the same thing when pressed on either input box (once menu is open) or menu
   private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
     const menuOptions = this.getMenuOptions();
@@ -648,7 +668,9 @@ export class Menu {
         if (this.isSearchBar) {
           this.keyboardNav = true;
         }
-        this.preventIncorrectTabOrder = true;
+        if (!this.multiple) {
+          this.preventIncorrectTabOrder = true;
+        }
         break;
       case "Backspace":
         if (this.isSearchBar) {
@@ -686,7 +708,14 @@ export class Menu {
   };
 
   private handleSelectAllClick = () => {
+    this.menu.focus();
     this.emitSelectAll();
+  };
+
+  private handleSelectAllBlur = (event: FocusEvent) => {
+    if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
+      this.handleMenuChange(false, false);
+    }
   };
 
   private emitSelectAll = () => {
@@ -765,6 +794,8 @@ export class Menu {
     this.emitMenuKeyPress(this.keyboardNav, event.key);
   };
 
+  // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
+  // and menu is open
   private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
     event.stopPropagation();
     const menuOptions = this.getMenuOptions();
@@ -791,9 +822,21 @@ export class Menu {
       case "a":
         // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
         // Otherwise, if a different OS, checks Ctrl key
-        if (isMacDevice() && event.metaKey || !isMacDevice() && event.ctrlKey) {
+        if (
+          (isMacDevice() && event.metaKey) ||
+          (!isMacDevice() && event.ctrlKey)
+        ) {
           this.emitSelectAll();
         }
+      case "Tab":
+        console.log("TAB");
+        if (this.multiple) {
+          event.preventDefault();
+          this.selectAllButton.focus(); // Move focus to select all button instead of focussed option
+          this.preventMenuFocus = true;
+          this.optionHighlighted = undefined;
+        }
+        break;
       default:
         this.handleManualKeyboardNavigation(event);
         break;
@@ -946,7 +989,8 @@ export class Menu {
         role="option"
         tabindex={
           open &&
-          (selected || option.value === optionHighlighted) &&
+          ((!this.multiple && selected) ||
+            option.value === optionHighlighted) &&
           keyboardNav
             ? "0"
             : "-1"
@@ -1030,7 +1074,10 @@ export class Menu {
             }
             aria-multiselectable={this.multiple ? "true" : "false"}
             tabindex={
-              open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
+              open &&
+              (this.multiple || (!keyboardNav && inputEl?.tagName !== "INPUT"))
+                ? "0"
+                : "-1"
             }
             ref={(el) => (this.menu = el)}
             onKeyDown={this.handleMenuKeyDown}
@@ -1088,7 +1135,7 @@ export class Menu {
               ref={(el) => (this.selectAllButton = el)}
               variant="tertiary"
               onClick={this.handleSelectAllClick}
-              onBlur={this.handleBlur}
+              onBlur={this.handleSelectAllBlur}
             >{`${
               this.value?.length === this.ungroupedOptions.length
                 ? "Clear"
