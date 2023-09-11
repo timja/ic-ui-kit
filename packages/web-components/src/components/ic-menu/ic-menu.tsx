@@ -19,7 +19,7 @@ import {
   IcValueEventDetail,
 } from "../../utils/types";
 import Check from "../../assets/check-icon.svg";
-import { onComponentRequiredPropUndefined } from "../../utils/helpers";
+import { isMacDevice, onComponentRequiredPropUndefined } from "../../utils/helpers";
 import {
   IcOptionSelectEventDetail,
   IcMenuChangeEventDetail,
@@ -259,16 +259,19 @@ export class Menu {
         !this.isSearchableSelect
       ) {
         this.scrollToSelected(this.menu);
+        console.log("1");
       } else if (
         this.inputEl.tagName !== "IC-TEXT-FIELD" &&
         this.inputEl.tagName !== "INPUT"
       ) {
         this.menu.focus();
+        console.log("2");
       } else if (
         optionHighlightedIsSet &&
         !this.focusFromSearchKeypress &&
         !this.preventIncorrectTabOrder
       ) {
+        console.log("3");
         const highlightedEl = this.host.querySelector(
           `li[data-value="${this.optionHighlighted}"]`
         ) as HTMLElement;
@@ -683,6 +686,10 @@ export class Menu {
   };
 
   private handleSelectAllClick = () => {
+    this.emitSelectAll();
+  };
+
+  private emitSelectAll = () => {
     this.menuOptionSelectAll.emit({
       select:
         !this.value || !(this.value?.length === this.ungroupedOptions.length),
@@ -694,7 +701,7 @@ export class Menu {
   };
 
   private autoSetValueOnMenuKeyDown = (event: KeyboardEvent): void => {
-    event.cancelBubble = true;
+    event.stopPropagation();
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
       (option) => option.value === this.value
     );
@@ -759,15 +766,15 @@ export class Menu {
   };
 
   private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
+    event.stopPropagation();
     const menuOptions = this.getMenuOptions();
 
     const highlightedOptionIndex = menuOptions.findIndex(
       (option) => option.value === this.optionHighlighted
     );
 
-    console.log(event.key);
-
     switch (event.key) {
+      case " ":
       case "Enter":
         event.preventDefault();
         if (this.optionHighlighted) {
@@ -781,6 +788,12 @@ export class Menu {
         this.handleMenuChange(false);
         this.menuOptionId.emit({ optionId: undefined });
         break;
+      case "a":
+        // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
+        // Otherwise, if a different OS, checks Ctrl key
+        if (isMacDevice() && event.metaKey || !isMacDevice() && event.ctrlKey) {
+          this.emitSelectAll();
+        }
       default:
         this.handleManualKeyboardNavigation(event);
         break;

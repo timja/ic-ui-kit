@@ -620,7 +620,9 @@ export class Select {
   // to prevent delay in change event, which should only occur when typing in input
   private handleMenuKeyPress = (ev: CustomEvent): void => {
     ev.cancelBubble = true;
-    this.handleCharacterKeyDown(ev.detail.key);
+    if (!this.multiple) {
+      this.handleCharacterKeyDown(ev.detail.key);
+    }
   };
 
   // private handleMenuValueChange = (ev: CustomEvent): void => {
@@ -755,7 +757,9 @@ export class Select {
           // Keyboard events get passed onto ic-menu
           this.menu.handleKeyboardOpen(event);
         }
-        this.handleCharacterKeyDown(event.key);
+        if (!this.multiple) {
+          this.handleCharacterKeyDown(event.key);
+        }
       }
     }
   };
@@ -1068,7 +1072,7 @@ export class Select {
                     : this.getLabelFromValue(currValue as string)}
                 </p>
               </ic-typography>
-            ) : isMobileOrTablet() ? (
+            ) : isMobileOrTablet() && !this.multiple ? (
               <select
                 ref={(el) => (this.nativeSelectElement = el)}
                 disabled={disabled}
@@ -1262,7 +1266,7 @@ export class Select {
               </div>
             )}
           </ic-input-component-container>
-          {!isMobileOrTablet() && (
+          {(!isMobileOrTablet() || this.multiple) && (
             <ic-menu
               class={{
                 "no-results": noOptionSelect,

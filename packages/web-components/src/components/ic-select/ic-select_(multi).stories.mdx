@@ -48,13 +48,13 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
           select.addEventListener("icOptionSelect", function (event) {
-            console.log("optionSelect " + event.detail.value);
+            console.log("icOptionSelect: " + event.detail.value);
           });
           select.addEventListener("icOptionDeselect", function (event) {
-            console.log("optionDeselect " + event.detail.value);
+            console.log("icOptionDeselect: " + event.detail.value);
           });
         </script>`
     }
@@ -123,12 +123,6 @@ export const defaultArgs = {
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
           });
-          select.addEventListener("icOptionSelect", function (event) {
-            console.log("optionSelect " + event.detail.value);
-          });
-          select.addEventListener("icOptionDeselect", function (event) {
-            console.log("optionDeselect " + event.detail.value);
-          });
         </script>`
     }
   </Story>
@@ -158,12 +152,6 @@ export const defaultArgs = {
           ];
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
-          });
-          select.addEventListener("icOptionSelect", function (event) {
-            console.log("optionSelect " + event.detail.value);
-          });
-          select.addEventListener("icOptionDeselect", function (event) {
-            console.log("optionDeselect " + event.detail.value);
           });
         </script>`
     }
@@ -282,12 +270,6 @@ export const defaultArgs = {
           ];
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
-          });
-          select.addEventListener("icOptionSelect", function (event) {
-            console.log("optionSelect " + event.detail.value);
-          });
-          select.addEventListener("icOptionDeselect", function (event) {
-            console.log("optionDeselect " + event.detail.value);
           });
         </script>`
     }
@@ -527,9 +509,9 @@ export const defaultArgs = {
           select1.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
-            { label: "Americano", value: "Ame", recommended: true },
+            { label: "Americano", value: "Ame" },
             { label: "Filter", value: "Fil" },
-            { label: "Flat white", value: "Fla", recommended: true },
+            { label: "Flat white", value: "Fla" },
             { label: "Mocha", value: "Moc" },
             { label: "Macchiato", value: "Mac" },
           ];
@@ -549,9 +531,9 @@ export const defaultArgs = {
           select2.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
-            { label: "Americano", value: "Ame", recommended: true },
+            { label: "Americano", value: "Ame" },
             { label: "Filter", value: "Fil" },
-            { label: "Flat white", value: "Fla", recommended: true },
+            { label: "Flat white", value: "Fla" },
             { label: "Mocha", value: "Moc" },
             { label: "Macchiato", value: "Mac" },
           ];
@@ -571,9 +553,9 @@ export const defaultArgs = {
           select3.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
-            { label: "Americano", value: "Ame", recommended: true },
+            { label: "Americano", value: "Ame" },
             { label: "Filter", value: "Fil" },
-            { label: "Flat white", value: "Fla", recommended: true },
+            { label: "Flat white", value: "Fla" },
             { label: "Mocha", value: "Moc" },
             { label: "Macchiato", value: "Mac" },
           ];
