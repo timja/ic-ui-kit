@@ -186,6 +186,30 @@ slot[name="app-icon"]::slotted(a) {
   text-decoration: none;
 }
 
+slot[name="app-title"]::slotted(ic-typography),
+slot[name="app-title"]::slotted(a){
+  margin-left: var(--ic-space-xs) !important;
+}
+
+slot[name="app-title"]::slotted(a){
+  font: var(--ic-font-subtitle-small);
+}
+
+@media screen and (min-width: 577px){
+  :host(.sm-collapsed) slot[name="app-title"]::slotted(ic-typography),
+  :host(.sm-collapsed) slot[name="app-title"]::slotted(a){
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    transition: opacity var(--ic-easing-transition-slow);
+  }
+  :host(.sm-expanded) slot[name="app-title"]::slotted(a){
+    font: var(--ic-font-h3) !important;
+    font-weight: var(--ic-font-weight-semibold) !important;
+    margin-left: var(--ic-space-md) !important;
+  }
+}
+
 :host .title-link:hover {
   border-radius: var(--ic-border-radius);
   background-color: var(--ic-theme-hover);
@@ -341,6 +365,12 @@ slot[name="app-icon"]::slotted(a) {
   visibility: visible;
   width: 100%;
 }
+
+.app-title-show {
+  min-width: 15.5rem;
+}
+
+
 
 /* Media Queries */
 
@@ -632,3 +662,4 @@ slot[name="app-icon"]::slotted(a) {
     fill: currentcolor;
   }
 }
+
