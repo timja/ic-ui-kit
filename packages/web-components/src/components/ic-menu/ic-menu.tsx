@@ -50,6 +50,7 @@ export class Menu {
   private ungroupedOptions: IcMenuOption[] = [];
   // private allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
   private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu
+  private multiOptionClicked: string = null;
 
   @Element() host: HTMLIcMenuElement;
 
@@ -268,26 +269,28 @@ export class Menu {
         !this.isSearchableSelect
       ) {
         this.scrollToSelected(this.menu);
-        console.log("1");
-      } else if (
-        this.inputEl.tagName !== "IC-TEXT-FIELD" &&
-        this.inputEl.tagName !== "INPUT"
-      ) {
-        this.menu.focus();
-        console.log("2");
+        // console.log("1");
       } else if (
         optionHighlightedIsSet &&
         !this.focusFromSearchKeypress &&
         !this.preventIncorrectTabOrder
       ) {
-        console.log("3");
+        // console.log("3");
         const highlightedEl = this.host.querySelector(
           `li[data-value="${this.optionHighlighted}"]`
         ) as HTMLElement;
+        // console.log(highlightedEl);
 
         if (highlightedEl) {
+          // console.log("highlight");
           highlightedEl.focus();
         }
+      } else if (
+        this.inputEl.tagName !== "IC-TEXT-FIELD" &&
+        this.inputEl.tagName !== "INPUT"
+      ) {
+        this.menu.focus();
+        // console.log("2");
       }
     }
     this.preventMenuFocus = false;
@@ -401,7 +404,7 @@ export class Menu {
     this.menuStateChange.emit({ open, focusInput });
 
     if (!open) {
-      if (focusInput !== false) {
+      if (focusInput) {
         this.inputEl.focus();
         this.preventClickOpen = false;
       }
@@ -526,7 +529,6 @@ export class Menu {
   };
 
   private setInputValue = (highlightedOptionIndex: number) => {
-    console.log("setinputvalue");
     const menuOptions = this.getMenuOptions();
 
     if (menuOptions[highlightedOptionIndex]) {
@@ -552,8 +554,11 @@ export class Menu {
   private handleOptionClick = (event: Event): void => {
     const { value, label } = (event.target as HTMLLIElement).dataset;
     this.menuOptionSelect.emit({ value, label });
+    this.optionHighlighted = undefined;
 
-    if (!this.multiple) {
+    if (this.multiple) {
+      this.multiOptionClicked = value;
+    } else {
       this.handleMenuChange(false);
     }
   };
@@ -570,6 +575,7 @@ export class Menu {
   };
 
   private handleBlur = (event: FocusEvent): void => {
+    // console.log("blur");
     if (event.relatedTarget !== this.inputEl) {
       if (
         !(
@@ -601,6 +607,10 @@ export class Menu {
       (option) => option.value === this.optionHighlighted
     );
 
+    const clickedMultiOptionIndex = menuOptions.findIndex(
+      (option) => option.value === this.multiOptionClicked
+    );
+
     const getOptionId = (index: number): string =>
       Array.from(this.host.querySelectorAll("li"))[index]?.id;
 
@@ -608,7 +618,10 @@ export class Menu {
       case "ArrowDown":
         this.keyboardNav = true;
         this.arrowBehaviour(event);
-        if (highlightedOptionIndex < menuOptions.length - 1) {
+        if (this.multiOptionClicked) {
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (highlightedOptionIndex < menuOptions.length - 1) {
           this.setHighlightedOption(highlightedOptionIndex + 1);
           this.menuOptionId.emit({
             optionId: getOptionId(highlightedOptionIndex + 1),
@@ -625,7 +638,10 @@ export class Menu {
       case "ArrowUp":
         this.keyboardNav = true;
         this.arrowBehaviour(event);
-        if (
+        if (this.multiOptionClicked) {
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (
           highlightedOptionIndex <= 0 ||
           highlightedOptionIndex > menuOptions.length + 1
         ) {
@@ -662,6 +678,7 @@ export class Menu {
         break;
       case "Enter":
         event.preventDefault();
+        // this.inputEl.focus();
         break;
       case "Shift":
       case "Tab":
@@ -804,9 +821,12 @@ export class Menu {
       (option) => option.value === this.optionHighlighted
     );
 
+    console.log(highlightedOptionIndex);
+
     switch (event.key) {
       case " ":
       case "Enter":
+        // console.log("HERE");
         event.preventDefault();
         if (this.optionHighlighted) {
           this.setInputValue(highlightedOptionIndex);
@@ -828,12 +848,13 @@ export class Menu {
         ) {
           this.emitSelectAll();
         }
+        break;
       case "Tab":
-        console.log("TAB");
-        if (this.multiple) {
+        if (this.multiple && !event.shiftKey) {
           event.preventDefault();
           this.selectAllButton.focus(); // Move focus to select all button instead of focussed option
           this.preventMenuFocus = true;
+          this.preventClickOpen = true;
           this.optionHighlighted = undefined;
         }
         break;
@@ -996,9 +1017,11 @@ export class Menu {
             : "-1"
         }
         aria-label={this.getOptionAriaLabel(option, parentOption)}
-        aria-selected={selected}
+        aria-multiselectable={this.multiple}
+        aria-selected={selected ? "true" : "false"}
         aria-disabled={option.disabled ? "true" : "false"}
         onClick={!option.timedOut && !option.loading && this.handleOptionClick}
+        onBlur={this.handleBlur}
         onMouseDown={this.handleMouseDown}
         data-value={option.value}
         data-label={option.label}
@@ -1052,6 +1075,10 @@ export class Menu {
       keyboardNav,
     } = this;
 
+    const selectAllButtonText = `${
+      this.value?.length === this.ungroupedOptions.length ? "Clear" : "Select"
+    } all`;
+
     return (
       <Host
         class={{
@@ -1066,11 +1093,11 @@ export class Menu {
             id={menuId}
             class="menu"
             role="listbox"
-            aria-label={inputLabel}
+            aria-label={`${inputLabel} pop-up`}
             aria-activedescendant={
               value != null && value !== ""
-                ? this.getOptionId(value as string)
-                : "" // TYPE NEEDS CHANGING
+                ? this.optionHighlighted
+                : this.getOptionId(value as string)
             }
             aria-multiselectable={this.multiple ? "true" : "false"}
             tabindex={
@@ -1132,15 +1159,14 @@ export class Menu {
             </ic-typography>
             <ic-button
               class="select-all-button"
+              aria-label={`${selectAllButtonText} options for ${inputLabel}`}
               ref={(el) => (this.selectAllButton = el)}
               variant="tertiary"
               onClick={this.handleSelectAllClick}
               onBlur={this.handleSelectAllBlur}
-            >{`${
-              this.value?.length === this.ungroupedOptions.length
-                ? "Clear"
-                : "Select"
-            } all`}</ic-button>
+            >
+              {selectAllButtonText}
+            </ic-button>
           </div>
           // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
           // CONVERT ALL 'THIS. ...' TO VARIABLE WITHOUT 'THIS'

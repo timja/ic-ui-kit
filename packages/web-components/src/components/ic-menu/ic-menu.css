@@ -78,13 +78,17 @@
   transition: box-shadow var(--ic-easing-transition-fast);
 }
 
+:host(.open) .menu {
+  visibility: visible;
+  max-height: 20.125rem;
+}
+
 :host(.open) .option-bar {
   visibility: visible;
 }
 
-:host(.open) .menu {
-  visibility: visible;
-  max-height: 20.125rem;
+:host(.open) .select-all-button {
+  display: block;
 }
 
 :host(.full-width) {
@@ -206,6 +210,10 @@
   visibility: hidden;
   border-bottom: var(--ic-space-1px) solid var(--ic-architectural-900);
   border-radius: 1px 1px 0 0;
+}
+
+.select-all-button {
+  display: none;
 }
 
 @media (forced-colors: active) {

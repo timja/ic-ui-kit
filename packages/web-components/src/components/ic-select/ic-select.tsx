@@ -1031,6 +1031,8 @@ export class Select {
       hasValidationStatus(this.validationStatus, this.disabled)
     ).trim();
 
+    // const multiSelectAriaLabel = `${this.value ? this.value.length : 0} of ${this.ungroupedOptions.length} selected${currValue ? `, ${this.getMultipleOptionsString(currValue as string[])}` : ""}`;
+
     // TEST DEFAULT VALUE WITH GROUPED OPTIONS
 
     return (
@@ -1194,8 +1196,9 @@ export class Select {
                   ref={(el) => (this.customSelectElement = el)}
                   id={this.inputId}
                   aria-label={`${label}, ${
-                    // STRING TYPE NEEDS UPDATING
-                    this.getLabelFromValue(currValue as string) || placeholder
+                    this.multiple
+                      ? this.getMultipleOptionsString(currValue as string[])
+                      : this.getLabelFromValue(currValue as string)
                   }${required ? ", required" : ""}`}
                   aria-describedby={describedBy}
                   aria-invalid={invalid}
