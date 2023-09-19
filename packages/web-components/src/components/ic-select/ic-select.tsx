@@ -32,6 +32,7 @@ import {
   IcMenuOption,
   IcSearchMatchPositions,
   IcValueEventDetail,
+  IcSizes,
 } from "../../utils/types";
 import Expand from "./assets/Expand.svg";
 import Clear from "./assets/Clear.svg";
@@ -180,9 +181,14 @@ export class Select {
   @Prop() showClearButton?: boolean = false;
 
   /**
-   * If `true`, the small styling will be applied to the select.
+   * The size of the select.
    */
-  @Prop() small?: boolean = false;
+  @Prop() size?: IcSizes = "default";
+
+  /**
+   * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
+   */
+  @Prop() small: boolean = false;
 
   /**
    * If using external filtering, set a timeout for when loading takes too long.
@@ -990,6 +996,7 @@ export class Select {
 
   render() {
     const {
+      size,
       small,
       disabled,
       fullWidth,
@@ -1041,6 +1048,7 @@ export class Select {
           disabled: disabled,
           searchable: searchable,
           small: small,
+          [size]: true,
           "full-width": fullWidth,
         }}
         onBlur={this.onBlur}
@@ -1060,13 +1068,13 @@ export class Select {
             ref={(el) => (this.anchorEl = el)}
             class={{ "menu-open": this.open }}
             small={small}
+            size={size}
             fullWidth={fullWidth}
             disabled={disabled}
             readonly={readonly}
             validationStatus={validationStatus}
           >
             {readonly ? (
-              // STRING TYPE NEEDS UPDATING
               <ic-typography>
                 <p>
                   {this.multiple
@@ -1163,7 +1171,7 @@ export class Select {
                       onClick={this.handleClear}
                       onFocus={this.handleClearButtonFocus}
                       onBlur={this.handleClearButtonBlur}
-                      size={small ? "small" : "default"}
+                      size={small ? "small" : size}
                       variant="icon"
                       appearance={
                         this.clearButtonFocused
@@ -1218,20 +1226,15 @@ export class Select {
                     class={{
                       "value-text": true,
                       "with-clear-button": currValue && this.showClearButton,
-                      small: small,
                       placeholder:
-                        // CHECK THIS
                         !this.value || (this.multiple && this.value.length < 1),
                     }}
                   >
                     <p>
-                      {
-                        // DOUBLE CHECK THIS
-                        (this.multiple
-                          ? this.getMultipleOptionsString(currValue as string[])
-                          : this.getLabelFromValue(currValue as string)) ||
-                          placeholder
-                      }
+                      {(this.multiple
+                        ? this.getMultipleOptionsString(currValue as string[])
+                        : this.getLabelFromValue(currValue as string)) ||
+                        placeholder}
                     </p>
                   </ic-typography>
                   <div class="select-input-end">
@@ -1257,7 +1260,7 @@ export class Select {
                     onClick={this.handleClear}
                     onFocus={this.handleClearButtonFocus}
                     onBlur={this.handleClearButtonBlur}
-                    size={small ? "small" : "default"}
+                    size={small ? "small" : size}
                     variant="icon"
                     appearance={
                       this.clearButtonFocused
@@ -1282,7 +1285,7 @@ export class Select {
               }
               inputLabel={label}
               anchorEl={this.anchorEl}
-              small={small}
+              size={small ? "small" : size}
               menuId={menuId}
               open={this.open}
               options={searchable ? this.filteredOptions : options}
@@ -1292,7 +1295,6 @@ export class Select {
               onMenuOptionSelect={this.handleCustomSelectChange}
               onMenuOptionSelectAll={this.handleSelectAllChange}
               onMenuKeyPress={this.handleMenuKeyPress}
-              // onMenuValueChange={this.handleMenuValueChange}
               onUngroupedOptionsSet={this.setUngroupedOptions}
               onRetryButtonClicked={this.handleRetry}
               parentEl={this.host}

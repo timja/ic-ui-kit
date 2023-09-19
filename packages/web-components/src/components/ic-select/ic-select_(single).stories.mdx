@@ -21,8 +21,8 @@ export const defaultArgs = {
   placeholder: "Select an option",
   readonly: false,
   required: false,
-  small: false,
-  ["validation-status"]: "",
+  size: "default",
+  ["validation-status"]: "none",
   ["validation-text"]: "",
 };
 
@@ -225,15 +225,16 @@ export const defaultArgs = {
   </Story>
 </Canvas>
 
-### Small
+### Sizes
 
 <Canvas>
-  <Story name="Small">
+  <Story name="Sizes">
     {(args) =>
-      html`<ic-select
+      html`<div style="display: flex; flex-direction: column; gap: 16px;">
+        <ic-select
           id="select-8"
           label="What is your favourite coffee?"
-          small
+          size="small"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-8");
@@ -241,11 +242,55 @@ export const defaultArgs = {
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
             { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
           });
-        </script>`
+        </script>
+        <ic-select
+          id="select-9"
+          label="What is your favourite coffee?"
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-9");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+        </script>
+        <ic-select
+          id="select-10"
+          label="What is your favourite coffee?"
+          size="large"
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-10");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+            { label: "Filter", value: "Fil" },
+            { label: "Flat white", value: "Fla" },
+            { label: "Mocha", value: "Moc" },
+            { label: "Macchiato", value: "Mac" },
+          ];
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+        </script>
+      </div>`
     }
   </Story>
 </Canvas>
@@ -256,12 +301,12 @@ export const defaultArgs = {
   <Story name="Disabled">
     {(args) =>
       html`<ic-select
-          id="select-9"
+          id="select-11"
           label="What is your favourite coffee?"
           disabled
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-9");
+          var select = document.querySelector("#select-11");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -281,11 +326,11 @@ export const defaultArgs = {
   <Story name="Disabled options">
     {(args) =>
       html`<ic-select
-          id="select-10"
+          id="select-12"
           label="What is your favourite coffee?"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-10");
+          var select = document.querySelector("#select-12");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat", disabled: true },
@@ -305,12 +350,12 @@ export const defaultArgs = {
   <Story name="Full width">
     {(args) =>
       html`<ic-select
-          id="select-11"
+          id="select-13"
           label="What is your favourite coffee?"
           full-width="true"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-11");
+          var select = document.querySelector("#select-13");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -330,12 +375,12 @@ export const defaultArgs = {
   <Story name="Hidden label">
     {(args) =>
       html`<ic-select
-          id="select-12"
+          id="select-14"
           label="What is your favourite coffee?"
           hide-label
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-12");
+          var select = document.querySelector("#select-14");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -355,12 +400,12 @@ export const defaultArgs = {
   <Story name="Required">
     {(args) =>
       html`<ic-select
-          id="select-13"
+          id="select-15"
           label="What is your favourite coffee?"
           required
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-13");
+          var select = document.querySelector("#select-15");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -380,13 +425,13 @@ export const defaultArgs = {
   <Story name="Read-only">
     {() =>
       html`<ic-select
-          id="select-14"
+          id="select-16"
           label="What is your favourite coffee?"
           readonly
           value="Cap"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-14");
+          var select = document.querySelector("#select-16");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -406,11 +451,11 @@ export const defaultArgs = {
   <Story name="Groups">
     {(args) =>
       html`<ic-select
-          id="select-15"
+          id="select-17"
           label="What is your favourite coffee?"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-15");
+          var select = document.querySelector("#select-17");
           select.options = [
             {
               label: "Fancy",
@@ -442,11 +487,11 @@ export const defaultArgs = {
   <Story name="Recommended">
     {(args) =>
       html`<ic-select
-          id="select-16"
+          id="select-18"
           label="What is your favourite coffee?"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-16");
+          var select = document.querySelector("#select-18");
           select.options = [
             { label: "Cappuccino", value: "Cappuccino" },
             { label: "Flat white", value: "Flat white", recommended: true },
@@ -468,13 +513,13 @@ export const defaultArgs = {
   <Story name="Validation">
     {(args) =>
       html`<ic-select
-          id="ic-select-17"
+          id="ic-select-19"
           label="What is your favourite coffee?"
           validation-status="success"
           validation-text="Success message"
         ></ic-select>
         <script>
-          var select1 = document.querySelector("#ic-select-17");
+          var select1 = document.querySelector("#ic-select-19");
           var option1 = "Cappuccino";
           select1.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -486,13 +531,13 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="ic-select-18"
+          id="ic-select-20"
           label="What is your favourite coffee?"
           validation-status="warning"
           validation-text="Warning message"
         ></ic-select>
         <script>
-          var select2 = document.querySelector("#ic-select-18");
+          var select2 = document.querySelector("#ic-select-20");
           var option2 = "Cappuccino";
           select2.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -504,13 +549,13 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="ic-select-19"
+          id="ic-select-21"
           label="What is your favourite coffee?"
           validation-status="error"
           validation-text="Error message"
         ></ic-select>
         <script>
-          var select3 = document.querySelector("#ic-select-19");
+          var select3 = document.querySelector("#ic-select-21");
           var option3 = "Cappuccino";
           select3.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -531,11 +576,11 @@ export const defaultArgs = {
   <Story name="Scroll behaviour">
     {(args) =>
       html`<ic-select
-          id="select-20"
+          id="select-22"
           label="What is your favourite coffee?"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-20");
+          var select = document.querySelector("#select-22");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -568,7 +613,7 @@ This shows how the select works within a form. The value will appear in the cons
       html`
         <form>
           <ic-select
-            id="select-21"
+            id="select-23"
             label="What is your favourite coffee?"
           ></ic-select>
           <br />
@@ -577,7 +622,7 @@ This shows how the select works within a form. The value will appear in the cons
           <input type="reset" value="Reset" />
         </form>
         <script>
-          var select = document.querySelector("#select-21");
+          var select = document.querySelector("#select-23");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -609,11 +654,15 @@ This shows how the select works within a form. The value will appear in the cons
         options: ["none", "error", "success", "warning"],
         control: { type: "inline-radio" },
       },
+      size: {
+        options: ["small", "default", "large"],
+        control: { type: "inline-radio" },
+      },
     }}
   >
     {(args) =>
       html` <ic-select
-          id="select-22"
+          id="select-23"
           disabled=${args.disabled}
           full-width=${args["full-width"]}
           helper-text=${args["helper-text"]}
@@ -623,13 +672,13 @@ This shows how the select works within a form. The value will appear in the cons
           readonly=${args.readonly}
           required=${args.required}
           show-clear-button=${args["show-clear-button"]}
-          small=${args.small}
+          size=${args.size}
           validation-status=${args["validation-status"]}
           validation-text=${args["validation-text"]}
         >
         </ic-select>
         <script>
-          var select = document.querySelector("#select-22");
+          var select = document.querySelector("#select-23");
           select.options = [
             {
               label: "Cappuccino",

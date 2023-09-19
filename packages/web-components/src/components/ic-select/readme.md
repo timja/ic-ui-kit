@@ -32,7 +32,8 @@
 | `searchMatchPosition`         | `search-match-position`          | Whether the search string of the searchable select should match the start of or anywhere in the options. Only applies to built in filtering.                 | `"anywhere" \| "start"`                   | `"anywhere"`         |
 | `searchable`                  | `searchable`                     | If `true`, a searchable variant of the select will be displayed which can be typed in to filter options.                                                     | `boolean`                                 | `false`              |
 | `showClearButton`             | `show-clear-button`              | If `true`, a button which clears the select input when clicked will be displayed. The button will always appear on the searchable select.                    | `boolean`                                 | `false`              |
-| `small`                       | `small`                          | If `true`, the small styling will be applied to the select.                                                                                                  | `boolean`                                 | `false`              |
+| `size`                        | `size`                           | The size of the select.                                                                                                                                      | `"default" \| "large" \| "small"`         | `"default"`          |
+| `small`                       | `small`                          | <span style="color:red">**[DEPRECATED]**</span> This prop should not be used anymore. Set prop `size` to "small" instead.<br/><br/>                          | `boolean`                                 | `false`              |
 | `timeout`                     | `timeout`                        | If using external filtering, set a timeout for when loading takes too long.                                                                                  | `number`                                  | `undefined`          |
 | `validationStatus`            | `validation-status`              | The validation status - e.g. 'error' \| 'warning' \| 'success'.                                                                                              | `"" \| "error" \| "success" \| "warning"` | `""`                 |
 | `validationText`              | `validation-text`                | The text to display as the validation message.                                                                                                               | `string`                                  | `""`                 |
@@ -68,10 +69,11 @@ Type: `Promise<void>`
 
 ## CSS Custom Properties
 
-| Name                | Description              |
-| ------------------- | ------------------------ |
-| `--ic-z-index-menu` | z-index of select menu   |
-| `--input-width`     | Width of the input field |
+| Name                | Description                |
+| ------------------- | -------------------------- |
+| `--ic-z-index-menu` | z-index of select menu     |
+| `--input-width`     | Width of the input field   |
+| `--menu-width`      | Width of the dropdown menu |
 
 
 ## Dependencies

@@ -611,7 +611,11 @@ export namespace Components {
          */
         "readonly": boolean;
         /**
-          * If `true`, the small styling will be applied to the input component container.
+          * The size of the input component container.
+         */
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small": boolean;
         /**
@@ -825,9 +829,13 @@ export namespace Components {
          */
         "searchMode"?: IcSearchBarSearchModes;
         /**
-          * If `true`, the small styling will be applied to the menu.
+          * The size of the menu.
          */
-        "small"?: boolean;
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
+         */
+        "small": boolean;
         /**
           * The value of the currently selected option - or array of values (if multiple options allowed).
          */
@@ -1427,9 +1435,13 @@ export namespace Components {
          */
         "showClearButton"?: boolean;
         /**
-          * If `true`, the small styling will be applied to the select.
+          * The size of the select.
          */
-        "small"?: boolean;
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
+         */
+        "small": boolean;
         /**
           * If using external filtering, set a timeout for when loading takes too long.
          */
@@ -2987,7 +2999,11 @@ declare namespace LocalJSX {
          */
         "readonly"?: boolean;
         /**
-          * If `true`, the small styling will be applied to the input component container.
+          * The size of the input component container.
+         */
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small"?: boolean;
         /**
@@ -3198,7 +3214,11 @@ declare namespace LocalJSX {
          */
         "searchMode"?: IcSearchBarSearchModes;
         /**
-          * If `true`, the small styling will be applied to the menu.
+          * The size of the menu.
+         */
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small"?: boolean;
         /**
@@ -3878,7 +3898,11 @@ declare namespace LocalJSX {
          */
         "showClearButton"?: boolean;
         /**
-          * If `true`, the small styling will be applied to the select.
+          * The size of the select.
+         */
+        "size"?: IcSizes;
+        /**
+          * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small"?: boolean;
         /**

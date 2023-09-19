@@ -16,6 +16,7 @@ import { createPopper, Instance as PopperInstance } from "@popperjs/core";
 import {
   IcActivationTypes,
   IcMenuOption,
+  IcSizes,
   IcValueEventDetail,
 } from "../../utils/types";
 import Check from "../../assets/check-icon.svg";
@@ -48,13 +49,11 @@ export class Menu {
   private preventClickOpen: boolean = false; // Prevents menu re-opening immediately after it is closed on blur when clicking input.
   private selectAllButton: HTMLIcButtonElement;
   private ungroupedOptions: IcMenuOption[] = [];
-  // private allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
   private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu
   private multiOptionClicked: string = null;
 
   @Element() host: HTMLIcMenuElement;
 
-  // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
   @State() focusFromSearchKeypress: boolean = false;
   @State() initialOptionsListRender: boolean = false;
   @State() keyboardNav: boolean = false;
@@ -122,9 +121,14 @@ export class Menu {
   @Prop() searchMode?: IcSearchBarSearchModes = "navigation";
 
   /**
-   * If `true`, the small styling will be applied to the menu.
+   * The size of the menu.
    */
-  @Prop({ reflect: true }) small?: boolean = false;
+  @Prop() size?: IcSizes = "default";
+
+  /**
+   * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
+   */
+  @Prop() small: boolean = false;
 
   /**
    * The possible menu selection options.
@@ -245,12 +249,6 @@ export class Menu {
   }
 
   componentDidUpdate(): void {
-    // console.log(this.focusFromSearchKeypress);
-    // console.log(this.initialOptionsListRender);
-    // console.log(this.keyboardNav);
-    // console.log(this.optionHighlighted);
-    // console.log(this.preventIncorrectTabOrder);
-
     const inputValueInOptions: boolean = this.options.some(
       (option) => option.value === this.value
     );
@@ -269,28 +267,26 @@ export class Menu {
         !this.isSearchableSelect
       ) {
         this.scrollToSelected(this.menu);
-        // console.log("1");
       } else if (
         optionHighlightedIsSet &&
         !this.focusFromSearchKeypress &&
         !this.preventIncorrectTabOrder
       ) {
-        // console.log("3");
         const highlightedEl = this.host.querySelector(
           `li[data-value="${this.optionHighlighted}"]`
         ) as HTMLElement;
-        // console.log(highlightedEl);
 
         if (highlightedEl) {
-          // console.log("highlight");
+          this.menu.tabIndex = -1;
+          this.menu.setAttribute("aria-activedescendant", highlightedEl.id);
           highlightedEl.focus();
         }
       } else if (
         this.inputEl.tagName !== "IC-TEXT-FIELD" &&
         this.inputEl.tagName !== "INPUT"
       ) {
+        this.menu.tabIndex = 0;
         this.menu.focus();
-        // console.log("2");
       }
     }
     this.preventMenuFocus = false;
@@ -321,11 +317,11 @@ export class Menu {
 
       if (adjust) {
         this.popperInstance = createPopper(this.anchorEl, this.host, {
-          placement: "top",
+          placement: "top-start",
         });
       } else {
         this.popperInstance = createPopper(this.anchorEl, this.host, {
-          placement: "bottom",
+          placement: "bottom-start",
           modifiers: [
             {
               name: "offset",
@@ -404,12 +400,12 @@ export class Menu {
     this.menuStateChange.emit({ open, focusInput });
 
     if (!open) {
-      if (focusInput) {
+      if (focusInput !== false) {
         this.inputEl.focus();
         this.preventClickOpen = false;
       }
 
-      // Reset optionHighlighted so previously highlighted option doesn't get reselected on Enter
+      // Reset optionHighlighted so previously highlighted option doesn't get reselected when Enter pressed
       if (this.multiple) {
         this.optionHighlighted = undefined;
       }
@@ -575,7 +571,6 @@ export class Menu {
   };
 
   private handleBlur = (event: FocusEvent): void => {
-    // console.log("blur");
     if (event.relatedTarget !== this.inputEl) {
       if (
         !(
@@ -725,6 +720,7 @@ export class Menu {
   };
 
   private handleSelectAllClick = () => {
+    this.menu.tabIndex = 0;
     this.menu.focus();
     this.emitSelectAll();
   };
@@ -821,12 +817,9 @@ export class Menu {
       (option) => option.value === this.optionHighlighted
     );
 
-    console.log(highlightedOptionIndex);
-
     switch (event.key) {
       case " ":
       case "Enter":
-        // console.log("HERE");
         event.preventDefault();
         if (this.optionHighlighted) {
           this.setInputValue(highlightedOptionIndex);
@@ -853,6 +846,7 @@ export class Menu {
         if (this.multiple && !event.shiftKey) {
           event.preventDefault();
           this.selectAllButton.focus(); // Move focus to select all button instead of focussed option
+          this.menu.tabIndex = -1;
           this.preventMenuFocus = true;
           this.preventClickOpen = true;
           this.optionHighlighted = undefined;
@@ -910,6 +904,8 @@ export class Menu {
       ) {
         menu.scrollTop = selectedOption.offsetTop;
       }
+      this.menu.tabIndex = -1;
+      this.menu.setAttribute("aria-activedescendant", selectedOption.id);
       selectedOption.focus();
     }
   };
@@ -966,7 +962,6 @@ export class Menu {
         </div>
         {!!option.value &&
           !!this.value &&
-          // option?.value.toLowerCase() === value?.toLowerCase() &&
           selected &&
           this.parentEl.tagName !== "IC-SEARCH-BAR" && (
             <span class="check-icon" innerHTML={Check} />
@@ -1010,14 +1005,12 @@ export class Menu {
         role="option"
         tabindex={
           open &&
-          ((!this.multiple && selected) ||
-            option.value === optionHighlighted) &&
+          (selected || option.value === optionHighlighted) &&
           keyboardNav
             ? "0"
             : "-1"
         }
         aria-label={this.getOptionAriaLabel(option, parentOption)}
-        aria-multiselectable={this.multiple}
         aria-selected={selected ? "true" : "false"}
         aria-disabled={option.disabled ? "true" : "false"}
         onClick={!option.timedOut && !option.loading && this.handleOptionClick}
@@ -1069,14 +1062,16 @@ export class Menu {
       fullWidth,
       hasTimedOut,
       isLoading,
+      size,
       small,
       open,
       inputEl,
       keyboardNav,
+      multiple,
     } = this;
 
     const selectAllButtonText = `${
-      this.value?.length === this.ungroupedOptions.length ? "Clear" : "Select"
+      value?.length === this.ungroupedOptions.length ? "Clear" : "Select"
     } all`;
 
     return (
@@ -1085,7 +1080,9 @@ export class Menu {
           "full-width": fullWidth,
           "no-focus": inputEl?.tagName === "INPUT" || hasTimedOut || isLoading,
           small: small,
+          [size]: true,
           open: open && options.length !== 0,
+          multiple: multiple,
         }}
       >
         {options.length !== 0 && (
@@ -1094,17 +1091,9 @@ export class Menu {
             class="menu"
             role="listbox"
             aria-label={`${inputLabel} pop-up`}
-            aria-activedescendant={
-              value != null && value !== ""
-                ? this.optionHighlighted
-                : this.getOptionId(value as string)
-            }
-            aria-multiselectable={this.multiple ? "true" : "false"}
+            aria-multiselectable={multiple ? "true" : "false"}
             tabindex={
-              open &&
-              (this.multiple || (!keyboardNav && inputEl?.tagName !== "INPUT"))
-                ? "0"
-                : "-1"
+              open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
             }
             ref={(el) => (this.menu = el)}
             onKeyDown={this.handleMenuKeyDown}
@@ -1126,7 +1115,7 @@ export class Menu {
                       {option.children.map((childOption) =>
                         this.displayOption(
                           childOption,
-                          this.multiple
+                          multiple
                             ? value?.includes(childOption.value)
                             : childOption.value === value,
                           index,
@@ -1141,7 +1130,7 @@ export class Menu {
               } else {
                 return this.displayOption(
                   option,
-                  this.multiple
+                  multiple
                     ? value?.includes(option.value)
                     : option.value === value,
                   index
@@ -1150,10 +1139,10 @@ export class Menu {
             })}
           </ul>
         )}
-        {options.length !== 0 && this.multiple && !isLoading && (
+        {options.length !== 0 && multiple && !isLoading && (
           <div class="option-bar">
             <ic-typography>
-              <p>{`${this.value ? this.value.length : 0}/${
+              <p>{`${value ? value.length : 0}/${
                 this.ungroupedOptions.length
               } selected`}</p>
             </ic-typography>
@@ -1164,12 +1153,12 @@ export class Menu {
               variant="tertiary"
               onClick={this.handleSelectAllClick}
               onBlur={this.handleSelectAllBlur}
+              size={size === "small" ? "small" : "default"}
             >
               {selectAllButtonText}
             </ic-button>
           </div>
           // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
-          // CONVERT ALL 'THIS. ...' TO VARIABLE WITHOUT 'THIS'
         )}
       </Host>
     );

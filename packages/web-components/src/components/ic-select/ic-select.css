@@ -2,11 +2,13 @@
 
 /**
  * @prop --input-width: Width of the input field
+ * @prop --menu-width: Width of the dropdown menu
  * @prop --ic-z-index-menu: z-index of select menu
  */
 
 :host {
   position: relative;
+  --menu-max-height: 100px;
 }
 
 :host(.full-width) {
@@ -127,10 +129,6 @@ select:not([disabled]) {
   padding-right: calc(var(--ic-space-xl) + var(--ic-space-xs));
 }
 
-.value-text.with-clear-button.small {
-  padding-right: var(--ic-space-xl);
-}
-
 .value-text p {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -208,6 +206,10 @@ select:not([disabled]) {
 
 :host(.small) .divider {
   height: var(--ic-space-md);
+}
+
+:host(.large) .divider {
+  height: var(--ic-space-xl);
 }
 
 .clear-button {
