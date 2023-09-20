@@ -1,5 +1,5 @@
 import { Meta, Story, Canvas, ArgsTable, Description} from '@storybook/addon-docs';
-import { IcBreadcrumbGroup, IcBreadcrumb, IcLink, IcButton, IcTypography } from '../components';
+import { IcBreadcrumbGroup, IcBreadcrumb, IcLink, IcButton, IcTypography, IcSectionContainer } from '../components';
 import readme from "../../../web-components/src/components/ic-breadcrumb-group/readme.md";
 import IcBreadcrumbReadme from "../../../web-components/src/components/ic-breadcrumb/readme.md";
 
@@ -195,7 +195,6 @@ export const Breadcrumbs = () => {
     )]}
     >
     <div>
-        <BreadcrumbGroup />
         <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/daily-tippers" element={<DailyTippers />} />

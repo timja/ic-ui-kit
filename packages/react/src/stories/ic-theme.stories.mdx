@@ -88,22 +88,21 @@ export const Controlled = () => {
               label="Filter display"
               hide-label
             ></ic-text-field>
-            <IcButton variant="primary" style={{ marginLeft: 16 }}
-              >Filter</IcButton
-            >
+            <IcButton variant="primary" style={{ marginLeft: 16 }}>Filter</IcButton>
           </div>
           <IcButton variant="secondary" slot="interaction">See all</IcButton>
           <ic-link
             href="https://google.com"
             slot="interaction"
-            style={{marginTop: 10}}
-            >Help</ic-link
-          >
+            style={{marginTop: 10}}>
+            Help
+          </ic-link>
         </IcHero>
         <IcAlert
           heading="This alert uses a custom message slot"
           dismissible="true"
-          ><IcButton slot="action" variant="secondary">Button</IcButton>
+        >
+          <IcButton slot="action" variant="secondary">Button</IcButton>
           <IcTypography variant="body" slot="message">
             <p>
               This is some text and

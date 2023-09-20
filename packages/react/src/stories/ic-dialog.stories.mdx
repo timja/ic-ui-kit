@@ -365,16 +365,15 @@ export const showScrollableDialog = () => {
 
 <Canvas>
   <Story name="Scrollable" parameters={{ loki: { skip: true } }}>
-        
-      <IcButton variant="primary" onclick={showScrollableDialog}
-        >Launch scrollable dialog</IcButton
-      >
+      <IcButton variant="primary" onclick={showScrollableDialog}>Launch scrollable dialog</IcButton>
       <IcDialog
         heading="This dialog has overflowing content"
         label="Scrollable"
       >
       <IcTypography>
-        What is Lorem Ipsum?<br /><br />
+        What is Lorem Ipsum?
+        <br />
+        <br />
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
         since the 1500s, when an unknown printer took a galley of type and
@@ -390,7 +389,9 @@ export const showScrollableDialog = () => {
       <IcSelect label="What is your favourite coffee?" options={options}></IcSelect>
       <IcTypography>
         <br />
-        Why do we use it?<br /><br />
+        Why do we use it?
+        <br />
+        <br />
         It is a long established fact that a reader will be distracted by the
         readable content of a page when looking at its layout. The point of
         using Lorem Ipsum is that it has a more-or-less normal distribution of
