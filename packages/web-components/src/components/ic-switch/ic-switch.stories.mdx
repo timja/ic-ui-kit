@@ -94,56 +94,64 @@ import readme from "./readme.md";
 ### Helper text
 
 <Canvas>
-  <Story name="Helper text">{html`
-    <ic-switch label="Label" helper-text="Helper Text"></ic-switch>
-  `}</Story>
+  <Story name="Helper text">
+    {html` <ic-switch label="Label" helper-text="Helper Text"></ic-switch> `}
+  </Story>
 </Canvas>
 
 ### Right adornment
 
 <Canvas>
-  <Story name="Right adornment">{html`
-    <ic-switch label="Right adornment">
-      <svg
-        slot="right-adornment"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8ZM8 10C5.33 10 0 11.34 0 14V16H16V14C16 11.34 10.67 10 8 10Z"
-        />
-      </svg>
-    </ic-switch>
-  `}</Story>
+  <Story name="Right adornment">
+    {html`
+      <ic-switch label="Right adornment">
+        <svg
+          slot="right-adornment"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8ZM8 10C5.33 10 0 11.34 0 14V16H16V14C16 11.34 10.67 10 8 10Z"
+          />
+        </svg>
+      </ic-switch>
+    `}
+  </Story>
 </Canvas>
 
 ### Default in form
 
 <Canvas>
-  <Story name="Default in form">{html`
-    <form id="form" aria-label="test form">
-      <ic-switch id="switch" label="custom label" hide-label="true"></ic-switch>
-      <br />
-      <br />
-      <input type="submit" value="Submit" />
-      <input type="reset" value="Reset" />
-      <form>
-        <script>
-          const tcForm = document.getElementById("form");
-          tcForm.addEventListener("submit", handleSubmit);
-          function handleSubmit(e) {
-            e.preventDefault();
-            var data = "HTML Form Data (name: value): \\n";
-            for (const element of document.getElementById("form").elements) {
-              data += element.name + ": " + element.value + "\\n";
+  <Story name="Default in form">
+    {html`
+      <form id="form" aria-label="test form">
+        <ic-switch
+          id="switch"
+          label="custom label"
+          hide-label="true"
+        ></ic-switch>
+        <br />
+        <br />
+        <input type="submit" value="Submit" />
+        <input type="reset" value="Reset" />
+        <form>
+          <script>
+            const tcForm = document.getElementById("form");
+            tcForm.addEventListener("submit", handleSubmit);
+            function handleSubmit(e) {
+              e.preventDefault();
+              var data = "HTML Form Data (name: value): \\n";
+              for (const element of document.getElementById("form").elements) {
+                data += element.name + ": " + element.value + "\\n";
+              }
+              alert(data);
             }
-            alert(data);
-          }
-        </script>
+          </script>
+        </form>
       </form>
-    </form>
-  `}</Story>
+    `}
+  </Story>
 </Canvas>
