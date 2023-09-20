@@ -41,16 +41,17 @@ export class Menu {
   private firstRender: boolean = true;
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
-  private isLoading: boolean = false;
+  private isLoading: boolean = false
+  private isMultiSelect: boolean = false;
   private isSearchBar: boolean = false;
   private isSearchableSelect: boolean = false;
   private menu: HTMLUListElement;
+  private multiOptionClicked: string = null;
   private popperInstance: PopperInstance;
   private preventClickOpen: boolean = false; // Prevents menu re-opening immediately after it is closed on blur when clicking input.
+  private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu.
   private selectAllButton: HTMLIcButtonElement;
   private ungroupedOptions: IcMenuOption[] = [];
-  private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu
-  private multiOptionClicked: string = null;
 
   @Element() host: HTMLIcMenuElement;
 
@@ -101,11 +102,6 @@ export class Menu {
   @Prop() menuId!: string;
 
   /**
-   * If `true`, multiple options can be selected.
-   */
-  @Prop() multiple?: boolean = false;
-
-  /**
    * If `true`, the menu will be displayed open.
    */
   @Prop({ reflect: true }) open!: boolean;
@@ -148,13 +144,6 @@ export class Menu {
    */
   @Prop({ mutable: true }) value!: string | string[];
 
-  // @Watch("value")
-  // watchValueHandler(): void {
-  //   // this.menuValueChange.emit({ value: this.value }); // CHECK THIS ISN'T BEING USED ANYWHERE ELSE
-  // }
-
-  // @State() allOptionsSelected: boolean = this.multiple && this.value.length === this.options.length;
-
   /**
    * @internal Emitted when key is pressed while menu is open.
    */
@@ -179,11 +168,6 @@ export class Menu {
    * @internal Emitted when state of menu changes (i.e. open or close).
    */
   @Event() menuStateChange!: EventEmitter<IcMenuChangeEventDetail>;
-
-  // /**
-  //  * @internal Emitted when menu value changes.
-  //  */
-  // @Event() menuValueChange: EventEmitter<IcValueEventDetail>;
 
   /**
    * @internal Emitted when the retry button is clicked.
@@ -277,8 +261,8 @@ export class Menu {
         ) as HTMLElement;
 
         if (highlightedEl) {
-          this.menu.tabIndex = -1;
-          this.menu.setAttribute("aria-activedescendant", highlightedEl.id);
+          this.menu.tabIndex = -1; // Ensure element with role="listbox" is not focusable
+          this.menu.setAttribute("aria-activedescendant", highlightedEl.id); // Aria-activedescendant can control / affect focus 
           highlightedEl.focus();
         }
       } else if (
@@ -406,7 +390,7 @@ export class Menu {
       }
 
       // Reset optionHighlighted so previously highlighted option doesn't get reselected when Enter pressed
-      if (this.multiple) {
+      if (this.isMultiSelect) {
         this.optionHighlighted = undefined;
       }
     }
@@ -459,11 +443,12 @@ export class Menu {
         parent.getAttribute("multiple") !== null &&
         parent.getAttribute("multiple") !== undefined
       ) {
-        this.multiple = true;
+        this.isMultiSelect = true;
       }
     }
   };
 
+  // Open menu when up or down arrow keys are pressed
   private arrowBehaviour = (event: KeyboardEvent): void => {
     event.preventDefault();
     this.handleMenuChange(true);
@@ -472,6 +457,7 @@ export class Menu {
   private getMenuOptions = () =>
     this.isSearchBar ? this.options : this.ungroupedOptions;
 
+  // Set option that is focused and so should show focus state
   private setHighlightedOption = (highlightedIndex: number): void => {
     const menuOptions = this.getMenuOptions();
 
@@ -481,6 +467,9 @@ export class Menu {
         menuOptions[highlightedIndex].value || undefined);
   };
 
+  // Determines keyboard behaviour when selection is automatic 
+  // (i.e. you don't have to press Enter select an option - just focus on it)
+  // and menu is closed
   private autoSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
       (option) => option.value === this.value
@@ -512,7 +501,7 @@ export class Menu {
   // and menu is closed
   private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
     switch (event.key) {
-      case " ": // COULD THIS AND ABOVE BE MOVED TO A SHARED FUNCTION WITH THE BIT ABOVE?
+      case " ":
       case "Enter":
         if ((event.target as HTMLElement).id !== "clear-button") {
           this.handleMenuChange(true);
@@ -552,7 +541,7 @@ export class Menu {
     this.menuOptionSelect.emit({ value, label });
     this.optionHighlighted = undefined;
 
-    if (this.multiple) {
+    if (this.isMultiSelect) {
       this.multiOptionClicked = value;
     } else {
       this.handleMenuChange(false);
@@ -614,6 +603,8 @@ export class Menu {
         this.keyboardNav = true;
         this.arrowBehaviour(event);
         if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the top of the menu
           this.setHighlightedOption(clickedMultiOptionIndex);
           this.multiOptionClicked = null;
         } else if (highlightedOptionIndex < menuOptions.length - 1) {
@@ -634,6 +625,8 @@ export class Menu {
         this.keyboardNav = true;
         this.arrowBehaviour(event);
         if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the bottom of the menu
           this.setHighlightedOption(clickedMultiOptionIndex);
           this.multiOptionClicked = null;
         } else if (
@@ -673,14 +666,13 @@ export class Menu {
         break;
       case "Enter":
         event.preventDefault();
-        // this.inputEl.focus();
         break;
       case "Shift":
       case "Tab":
         if (this.isSearchBar) {
           this.keyboardNav = true;
         }
-        if (!this.multiple) {
+        if (!this.isMultiSelect) {
           this.preventIncorrectTabOrder = true;
         }
         break;
@@ -732,6 +724,8 @@ export class Menu {
   };
 
   private emitSelectAll = () => {
+    // Select all if there is either no value or all options are not selected
+    // 'true' means select all, 'false' means clear all
     this.menuOptionSelectAll.emit({
       select:
         !this.value || !(this.value?.length === this.ungroupedOptions.length),
@@ -742,6 +736,9 @@ export class Menu {
     this.menuKeyPress.emit({ isNavKey: isNavKey, key: key });
   };
 
+  // Determines keyboard behaviour when selection is automatic 
+  // (i.e. you don't have to press Enter select an option - just focus on it)
+  // and menu is open
   private autoSetValueOnMenuKeyDown = (event: KeyboardEvent): void => {
     event.stopPropagation();
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
@@ -843,13 +840,13 @@ export class Menu {
         }
         break;
       case "Tab":
-        if (this.multiple && !event.shiftKey) {
+        if (this.isMultiSelect && !event.shiftKey) {
           event.preventDefault();
-          this.selectAllButton.focus(); // Move focus to select all button instead of focussed option
+          this.selectAllButton.focus(); // Move focus to select all button instead of focused option
           this.menu.tabIndex = -1;
           this.preventMenuFocus = true;
           this.preventClickOpen = true;
-          this.optionHighlighted = undefined;
+          this.optionHighlighted = undefined; // Stop any option focus states showing when focus moved to select all button
         }
         break;
       default:
@@ -910,6 +907,8 @@ export class Menu {
     }
   };
 
+  // Set 'ungroupedOptions' variable and emit its value
+  // - this is all the options with disabled options and group titles removed
   private loadUngroupedOptions = () => {
     if (this.options.length > 0 && this.options.map) {
       this.options.map((option) => {
@@ -1067,7 +1066,6 @@ export class Menu {
       open,
       inputEl,
       keyboardNav,
-      multiple,
     } = this;
 
     const selectAllButtonText = `${
@@ -1082,7 +1080,7 @@ export class Menu {
           small: small,
           [size]: true,
           open: open && options.length !== 0,
-          multiple: multiple,
+          multiple: this.isMultiSelect,
         }}
       >
         {options.length !== 0 && (
@@ -1091,7 +1089,7 @@ export class Menu {
             class="menu"
             role="listbox"
             aria-label={`${inputLabel} pop-up`}
-            aria-multiselectable={multiple ? "true" : "false"}
+            aria-multiselectable={this.isMultiSelect ? "true" : "false"}
             tabindex={
               open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
             }
@@ -1115,7 +1113,7 @@ export class Menu {
                       {option.children.map((childOption) =>
                         this.displayOption(
                           childOption,
-                          multiple
+                          this.isMultiSelect
                             ? value?.includes(childOption.value)
                             : childOption.value === value,
                           index,
@@ -1130,7 +1128,7 @@ export class Menu {
               } else {
                 return this.displayOption(
                   option,
-                  multiple
+                  this.isMultiSelect
                     ? value?.includes(option.value)
                     : option.value === value,
                   index
@@ -1139,7 +1137,7 @@ export class Menu {
             })}
           </ul>
         )}
-        {options.length !== 0 && multiple && !isLoading && (
+        {options.length !== 0 && this.isMultiSelect && !isLoading && (
           <div class="option-bar">
             <ic-typography>
               <p>{`${value ? value.length : 0}/${
@@ -1158,7 +1156,6 @@ export class Menu {
               {selectAllButtonText}
             </ic-button>
           </div>
-          // NOTE: MAKE SURE TO DOUBLE CHECK ALL WORKS WHEN VALUE IS UNDEFINED, EMPTY ARRAY ETC.
         )}
       </Host>
     );

@@ -812,10 +812,6 @@ export namespace Components {
          */
         "menuId": string;
         /**
-          * If `true`, multiple options can be selected.
-         */
-        "multiple"?: boolean;
-        /**
           * If `true`, the menu will be displayed open.
          */
         "open": boolean;
@@ -3188,10 +3184,6 @@ declare namespace LocalJSX {
           * The ID of the menu.
          */
         "menuId": string;
-        /**
-          * If `true`, multiple options can be selected.
-         */
-        "multiple"?: boolean;
         "onMenuKeyPress"?: (event: IcMenuCustomEvent<{ isNavKey: boolean; key: string }>) => void;
         "onMenuOptionId"?: (event: IcMenuCustomEvent<IcMenuOptionIdEventDetail>) => void;
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;

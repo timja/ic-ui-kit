@@ -451,31 +451,6 @@ export class Select {
     }
   };
 
-  // Get / convert to string if single select, string[] if multi select
-  // private getValue = (value: string | string[]): string | string[] => {
-  //   const isValueArray = Array.isArray(value);
-
-  //   let valueArray = [];
-  //   let newValue = value;
-
-  //   if (this.multiple) {
-  //     if (!isValueArray) {
-  //       valueArray.push(value)
-  //       newValue = valueArray;
-  //     }
-  //   } else {
-  //     if (isValueArray) {
-  //       newValue = value[0];
-  //     }
-  //   }
-
-  //   return value;
-  // }
-
-  // private getValueWithCorrectType = () => {
-  //   return this.multiple ? this.value as string[] : this.value as string;
-  // }
-
   private getLabelFromValue = (value: string): string | undefined => {
     return getLabelFromValue(value, this.options);
   };
@@ -533,7 +508,7 @@ export class Select {
   };
 
   // Handle option select for when a custom input box and menu is rendered
-  // (rather than native <select> - rendered when viewed on a small screen)
+  // (rather than native <select> - rendered when viewed on a mobile / tablet screen)
   private handleCustomSelectChange = (event: CustomEvent): void => {
     const value = event.detail.value;
 
@@ -600,12 +575,14 @@ export class Select {
     let newValue: string[];
 
     if (selectAllOptions) {
+      // Only emit icOptionSelect for all values that are newly selected
       const unselectedValues = allValues.filter(
         (value) => this.value && !(this.value as string[]).includes(value)
       );
       unselectedValues.forEach((value) => this.icOptionSelect.emit({ value }));
       newValue = allValues;
     } else {
+      // Only emit icOptionDeselect for values that were selected
       (this.value as string[]).forEach((value) =>
         this.icOptionDeselect.emit({ value })
       );
@@ -630,10 +607,6 @@ export class Select {
       this.handleCharacterKeyDown(ev.detail.key);
     }
   };
-
-  // private handleMenuValueChange = (ev: CustomEvent): void => {
-  //   this.value = ev.detail.value;
-  // };
 
   private handleFocusIndicatorDisplay = () => {
     const focusIndicator =
@@ -1026,7 +999,7 @@ export class Select {
 
     const inputValue = this.searchable ? this.hiddenInputValue : currValue;
 
-    // TYPE NEEDS FIXING
+    // TYPE NEEDS FIXING - IF IT'S A MULTI-SELECT, NEEDS TO BE 'as string[]', SO 'renderHiddenInput' NEEDS CHANGING TO ACCEPT THIS
     renderHiddenInput(true, this.host, name, inputValue as string, disabled);
 
     const invalid =
@@ -1037,10 +1010,6 @@ export class Select {
       helperText !== "",
       hasValidationStatus(this.validationStatus, this.disabled)
     ).trim();
-
-    // const multiSelectAriaLabel = `${this.value ? this.value.length : 0} of ${this.ungroupedOptions.length} selected${currValue ? `, ${this.getMultipleOptionsString(currValue as string[])}` : ""}`;
-
-    // TEST DEFAULT VALUE WITH GROUPED OPTIONS
 
     return (
       <Host
