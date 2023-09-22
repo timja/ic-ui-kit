@@ -694,6 +694,10 @@ export namespace Components {
          */
         "name"?: string;
         "newDialogLabel": boolean;
+        /**
+          * The date visible when the calendar opens. Used if no date is currently selected. In ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+         */
+        "openAtDate": string | Date;
         "openOnFirstLoad": boolean;
         /**
           * If `true`, the input will require a value.
@@ -3528,6 +3532,10 @@ declare namespace LocalJSX {
          */
         "name"?: string;
         "newDialogLabel"?: boolean;
+        /**
+          * The date visible when the calendar opens. Used if no date is currently selected. In ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+         */
+        "openAtDate"?: string | Date;
         "openOnFirstLoad"?: boolean;
         /**
           * If `true`, the input will require a value.
