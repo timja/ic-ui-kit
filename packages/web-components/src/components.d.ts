@@ -1321,7 +1321,7 @@ export namespace Components {
         /**
           * Sets the styling for the items in the pagination bar.
          */
-        "appearance"?: IcThemeForeground;
+        "appearance"?: IcThemeForeground1;
         /**
           * The label which will be used in place of 'items' if paginationType is data. Should be capitalised.
          */
@@ -4097,7 +4097,7 @@ declare namespace LocalJSX {
         /**
           * Sets the styling for the items in the pagination bar.
          */
-        "appearance"?: IcThemeForeground;
+        "appearance"?: IcThemeForeground1;
         /**
           * The label which will be used in place of 'items' if paginationType is data. Should be capitalised.
          */
