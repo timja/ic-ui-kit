@@ -53,7 +53,7 @@ export class PopoverMenu {
    * The MouseEvent.button values that can trigger an ic-popover-menu open.
    * Defaults to `IcPopoverMenuClickEnum.Right` only.
    */
-  @Prop() mouseEventOpenButtonPressVals: IcPopoverMenuClickEnum[] = [
+  @Prop() mouseButtonsOpenPopover: IcPopoverMenuClickEnum[] = [
     IcPopoverMenuClickEnum.Right,
   ];
 
@@ -61,7 +61,7 @@ export class PopoverMenu {
    * The MouseEvent.button values that can trigger an ic-popover-menu close.
    * Defaults to `IcPopoverMenuClickEnum.Left` only.
    */
-  @Prop() mouseEventCloseButtonPressVals: IcPopoverMenuClickEnum[] = [
+  @Prop() mouseButtonsClosePopover: IcPopoverMenuClickEnum[] = [
     IcPopoverMenuClickEnum.Left,
   ];
 
@@ -74,7 +74,7 @@ export class PopoverMenu {
    * If `true`, the ic-popover-menu will open when a MouseEvent button press occurs.
    * If the "anchor" property element id is defined, this will only happen when clicking
    * within the bounds of the anchor element.
-   * ButtonPressVals can be used to define which mouse buttons
+   * mouseButtonsOpenPopover can be used to define which mouse buttons
    * can trigger this behaviour: by default this is a left click.
    */
   @Prop({ reflect: true }) openOnMouseEventButtonPress: boolean = false;
@@ -153,7 +153,7 @@ export class PopoverMenu {
     if (
       this.open &&
       this.isNotPopoverMenuEl(ev) &&
-      this.mouseEventCloseButtonPressVals.includes(
+      this.mouseButtonsClosePopover.includes(
         ev.button as IcPopoverMenuClickEnum
       )
     ) {
@@ -164,7 +164,7 @@ export class PopoverMenu {
       this.openOnMouseEventButtonPress &&
       !this.open &&
       this.isClickEventEle(ev) &&
-      this.mouseEventOpenButtonPressVals.includes(
+      this.mouseButtonsOpenPopover.includes(
         ev.button as IcPopoverMenuClickEnum
       )
     ) {
@@ -277,7 +277,7 @@ export class PopoverMenu {
   componentDidRender(): void {
     if (this.open) {
       let anchorElRef;
-      if (this.renderX != null && this.renderY != null) {
+      if (this.renderX !== null && this.renderY !== null) {
         // use mouse pos
         anchorElRef = {
           getBoundingClientRect: this.generateBoundingClientRectForMouse(),
