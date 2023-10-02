@@ -34,6 +34,7 @@
  - [ic-data-entity](../ic-data-entity)
  - [ic-data-row](../ic-data-row)
  - [ic-data-table](../ic-data-table)
+ - [ic-data-table-title-bar](../ic-data-table-title-bar)
  - [ic-dialog](../ic-dialog)
  - [ic-empty-state](../ic-empty-state)
  - [ic-footer](../ic-footer)
@@ -60,7 +61,6 @@
  - [ic-switch](../ic-switch)
  - [ic-tab](../ic-tab)
  - [ic-text-field](../ic-text-field)
- - [ic-title-bar](../ic-title-bar)
  - [ic-toast](../ic-toast)
  - [ic-tooltip](../ic-tooltip)
  - [ic-top-navigation](../ic-top-navigation)
@@ -80,6 +80,7 @@ graph TD;
   ic-data-entity --> ic-typography
   ic-data-row --> ic-typography
   ic-data-table --> ic-typography
+  ic-data-table-title-bar --> ic-typography
   ic-dialog --> ic-typography
   ic-empty-state --> ic-typography
   ic-footer --> ic-typography
@@ -106,7 +107,6 @@ graph TD;
   ic-switch --> ic-typography
   ic-tab --> ic-typography
   ic-text-field --> ic-typography
-  ic-title-bar --> ic-typography
   ic-toast --> ic-typography
   ic-tooltip --> ic-typography
   ic-top-navigation --> ic-typography

@@ -35,7 +35,7 @@ import { getSlotContent, isSlotUsed } from "../../utils/helpers";
  * @slot empty-state - Content is slotted below the table header when there is no data and the table is not loading.
  * @slot {COLUMN_KEY}-{ROW_INDEX}[-icon] - Each cell should have its own slot, named using the column tag and the row index, allowing for custom elements to be displayed. Include `-icon` at the end for that cell's icon slot.
  * @slot {COLUMN_KEY}-column-icon - The icon slot for a column header.
- * @slot title-bar - A custom ic-title-bar can be slotted above the column headers to display additional information about the table.
+ * @slot title-bar - A custom ic-data-table-title-bar can be slotted above the column headers to display additional information about the table.
  */
 @Component({
   tag: "ic-data-table",
@@ -673,7 +673,10 @@ export class DataTable {
         const previousSortedButton = this.el.shadowRoot.querySelector(
           `#sort-button-${this.sortedColumn}`
         ) as HTMLIcButtonElement;
-        previousSortedButton.updateAriaLabel(this.getSortButtonLabel(column)); // Passing through unsorted column returns correct label for newly unsorted column
+        previousSortedButton.setAttribute(
+          "aria-label",
+          this.getSortButtonLabel(column)
+        ); // Passing through unsorted column returns correct label for newly unsorted column
       }
       this.sortedColumn = column;
       this.sortedColumnOrder = "unsorted";
@@ -687,7 +690,7 @@ export class DataTable {
 
     this.sortedColumnOrder = sortOrders[nextSortOrderIndex];
 
-    sortButton.updateAriaLabel(this.getSortButtonLabel(column));
+    sortButton.setAttribute("aria-label", this.getSortButtonLabel(column));
   };
 
   private updateScrollOffset = () => {

@@ -183,17 +183,6 @@ export class Tooltip {
     );
   }
 
-  /**
-   * Method to programmatically show/hide the tooltip without needing to interact with an anchor element
-   * @param show Whether to show or hide the tooltip
-   * @param persistTooltip Whether the tooltip should stay on the screen when actions are performed that would previously dismiss the tooltip, such as on hover
-   */
-  // @Method()
-  // async displayTooltip(show: boolean, persistTooltip?: boolean): Promise<void> {
-  //   this.persistTooltip = persistTooltip;
-  //   show ? this.show() : this.hide();
-  // }
-
   private getTooltipTranslate = (dialogEl: DOMRect) => {
     const child = this.el.children[0].getBoundingClientRect();
     let tooltipX;
@@ -259,114 +248,6 @@ export class Tooltip {
     this.toolTip.style.setProperty("--tooltip-translate-x", `${tooltipX}px`);
     this.toolTip.style.setProperty("--tooltip-translate-y", `${tooltipY}px`);
   };
-
-  // private show = () => {
-  //   this.toolTip.setAttribute("data-show", "");
-
-  //   if (this.onDialog) {
-  //     this.el.classList.add("on-dialog");
-  //     const dialogEl = this.icDialogEl.shadowRoot
-  //       .querySelector("dialog")
-  //       .getBoundingClientRect();
-
-  //     this.getTooltipTranslate(dialogEl);
-  //   }
-
-  //   this.popperInstance = createPopper(this.el, this.toolTip, {
-  //     placement: this.placement,
-  //     modifiers: [
-  //       {
-  //         name: "offset",
-  //         options: {
-  //           offset: [0, 10],
-  //         },
-  //       },
-  //       {
-  //         name: "arrow",
-  //         options: {
-  //           element: this.arrow,
-  //         },
-  //       },
-  //       {
-  //         name: "eventListeners",
-  //         options: { scroll: false, resize: false },
-  //       },
-  //     ],
-  //   });
-  // };
-
-  // private hide = () => {
-  //   this.toolTip.removeAttribute("data-show");
-  //   this.persistTooltip = false;
-  // };
-
-  // private checkCloseTooltip = () => {
-  //   setTimeout(() => {
-  //     if (!this.mouseOverTool && !this.persistTooltip) {
-  //       this.hide();
-  //     }
-  //   }, 100);
-  // };
-
-  // private mouseEnterTooltip = () => {
-  //   this.mouseOverTool = true;
-  // };
-
-  // private mouseLeaveTooltip = () => {
-  //   this.mouseOverTool = false;
-  //   this.checkCloseTooltip();
-  // };
-
-  // private handleKeyDown = (event: KeyboardEvent) => {
-  //   if (event.key === "Escape" && !this.persistTooltip) {
-  //     this.hide();
-  //   }
-  // };
-
-  // private manageEventListeners = (action: "add" | "remove") => {
-  //   const method =
-  //     action === "add" ? "addEventListener" : "removeEventListener";
-
-  //   this.showEvents.forEach((event) => {
-  //     this.el[method](event, this.show);
-  //     if (this.toolTip !== undefined) {
-  //       this.toolTip[method](event, this.mouseEnterTooltip);
-  //     }
-  //   });
-
-  //   if (!this.persistTooltip) {
-  //     this.instantHideEvents.forEach((event) => {
-  //       this.el[method](event, this.hide);
-  //     });
-  //   }
-
-  //   this.delayedHideEvents.forEach((event) => {
-  //     this.el[method](event, this.checkCloseTooltip);
-  //     if (this.toolTip !== undefined) {
-  //       this.toolTip[method](event, this.mouseLeaveTooltip);
-  //     }
-  //   });
-
-  //   document[method]("keydown", this.handleKeyDown);
-  // };
-
-  // this.manageEventListeners("add");
-
-  // onComponentRequiredPropUndefined(
-  //   [{ prop: this.label, propName: "label" }],
-  //   "Tooltip"
-  // );
-
-  // if (this.target !== undefined) {
-  //   const ariaDescribedBy = document.createElement("span");
-  //   ariaDescribedBy.id = `ic-tooltip-${this.target}`;
-  //   ariaDescribedBy.innerText = this.label;
-  //   ariaDescribedBy.classList.add("ic-tooltip-label");
-  //   Object.assign(ariaDescribedBy.style, this.screenReaderOnlyStyles);
-
-  //   this.el.insertAdjacentElement("beforebegin", ariaDescribedBy);
-  // }
-  // }
 
   /**
    * Method to programmatically show/hide the tooltip without needing to interact with an anchor element
