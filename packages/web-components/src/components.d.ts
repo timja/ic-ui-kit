@@ -11,7 +11,7 @@ import { IcButtonTooltipPlacement, IcButtonTypes, IcButtonVariants } from "./com
 import { IcChangeEventDetail } from "./components/ic-checkbox-group/ic-checkbox-group.types";
 import { IcChipAppearance } from "./components/ic-chip/ic-chip.types";
 import { IcProtectiveMarkings } from "./components/ic-classification-banner/ic-classification-banner.types";
-import { IcDataTableColumnObject, IcDataTableDensityOptions, IcDataTableSortOrderOptions } from "./components/ic-data-table/ic-data-table.types";
+import { IcDataTableColumnObject, IcDataTableDensityOptions, IcDataTableRowHeights, IcDataTableSortOrderOptions } from "./components/ic-data-table/ic-data-table.types";
 import { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationAlignmentOptions, IcPaginationControlTypes, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
 import { IcEmptyStateAlignment } from "./components/ic-empty-state/ic-empty-state.types";
 import { IcFooterBreakpoints } from "./components/ic-footer/ic-footer.types";
@@ -38,7 +38,7 @@ export { IcButtonTooltipPlacement, IcButtonTypes, IcButtonVariants } from "./com
 export { IcChangeEventDetail } from "./components/ic-checkbox-group/ic-checkbox-group.types";
 export { IcChipAppearance } from "./components/ic-chip/ic-chip.types";
 export { IcProtectiveMarkings } from "./components/ic-classification-banner/ic-classification-banner.types";
-export { IcDataTableColumnObject, IcDataTableDensityOptions, IcDataTableSortOrderOptions } from "./components/ic-data-table/ic-data-table.types";
+export { IcDataTableColumnObject, IcDataTableDensityOptions, IcDataTableRowHeights, IcDataTableSortOrderOptions } from "./components/ic-data-table/ic-data-table.types";
 export { IcChangeEventDetail as IcChangeEventDetail1, IcPaginationAlignmentOptions, IcPaginationControlTypes, IcPaginationTypes } from "./components/ic-pagination/ic-pagination.types";
 export { IcEmptyStateAlignment } from "./components/ic-empty-state/ic-empty-state.types";
 export { IcFooterBreakpoints } from "./components/ic-footer/ic-footer.types";
@@ -568,6 +568,13 @@ export namespace Components {
          */
         "embedded"?: boolean;
         /**
+          * Allows for custom setting of row heights on individual rows based on an individual value from the `data` prop and the row index. If the function returns `null`, that row's height will be set to the `rowHeight` property.
+         */
+        "getRowHeight"?: (parmas: {
+    [key: string]: any;
+    index: number;
+  }) => IcDataTableRowHeights | null;
+        /**
           * If `true`, column headers will not be visible.
          */
         "hideColumnHeaders"?: boolean;
@@ -603,6 +610,14 @@ export namespace Components {
     goToPageControl?: boolean;
     alignment?: IcPaginationAlignmentOptions;
   };
+        /**
+          * Resets the `rowHeight` prop to `40px` and sets the `getRowHeight` prop to `null`.
+         */
+        "resetRowHeights": () => Promise<void>;
+        /**
+          * Sets the row height on all rows in the table that aren't set using the getRowHeight method.
+         */
+        "rowHeight"?: IcDataTableRowHeights;
         /**
           * If `true`, adds a pagination bar to the bottom of the table.
          */
@@ -2300,6 +2315,10 @@ export interface IcChipCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcChipElement;
 }
+export interface IcDataTableCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLIcDataTableElement;
+}
 export interface IcDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDialogElement;
@@ -3350,6 +3369,13 @@ declare namespace LocalJSX {
          */
         "embedded"?: boolean;
         /**
+          * Allows for custom setting of row heights on individual rows based on an individual value from the `data` prop and the row index. If the function returns `null`, that row's height will be set to the `rowHeight` property.
+         */
+        "getRowHeight"?: (parmas: {
+    [key: string]: any;
+    index: number;
+  }) => IcDataTableRowHeights | null;
+        /**
           * If `true`, column headers will not be visible.
          */
         "hideColumnHeaders"?: boolean;
@@ -3375,6 +3401,10 @@ declare namespace LocalJSX {
          */
         "minimumLoadingDisplayDuration"?: number;
         /**
+          * Emitted when the `rowHeight` or `getRowHeight` properties change in the data table.
+         */
+        "onIcRowHeightChange"?: (event: IcDataTableCustomEvent<void>) => void;
+        /**
           * Sets the props for the pagination bar.
          */
         "paginationOptions"?: {
@@ -3385,6 +3415,10 @@ declare namespace LocalJSX {
     goToPageControl?: boolean;
     alignment?: IcPaginationAlignmentOptions;
   };
+        /**
+          * Sets the row height on all rows in the table that aren't set using the getRowHeight method.
+         */
+        "rowHeight"?: IcDataTableRowHeights;
         /**
           * If `true`, adds a pagination bar to the bottom of the table.
          */
