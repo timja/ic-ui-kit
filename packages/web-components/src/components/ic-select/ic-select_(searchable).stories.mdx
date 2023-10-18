@@ -17,6 +17,8 @@ export const defaultArgs = {
   ["full-width"]: false,
   ["helper-text"]: "Such as Arabica, Robusta or Liberica.",
   ["hide-label"]: false,
+  loading: false,
+  loadingLabel: "Loading...",
   label: "What is your favourite coffee?",
   placeholder: "Select an option",
   readonly: false,
@@ -24,6 +26,9 @@ export const defaultArgs = {
   size: "default",
   ["validation-status"]: "none",
   ["validation-text"]: "",
+  ["include-descriptions-in-search"]: false,
+  ["include-group-titles-in-search"]: false,
+  ["search-match-position"]: "anywhere",
 };
 
 ### Default
@@ -32,12 +37,12 @@ export const defaultArgs = {
   <Story name="Default">
     {(args) =>
       html`<ic-select
-          id="select-1"
+          id="select-default"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-1");
+          var select = document.querySelector("#select-default");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -48,7 +53,10 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
+          });
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("icOptionSelect: " + event.detail.value);
           });
         </script>`
     }
@@ -61,13 +69,13 @@ export const defaultArgs = {
   <Story name="Async default" parameters={{ loki: { skip: true } }}>
     {(args) =>
       html`<ic-select
-          id="select-2"
+          id="select-async"
           label="What is your favourite coffee?"
           searchable
           loading
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-2");
+          var select = document.querySelector("#select-async");
           select.options = [];
           select.addEventListener("icChange", function (event) {
             console.log(event.detail.value);
@@ -98,12 +106,12 @@ export const defaultArgs = {
   <Story name="Default value">
     {(args) =>
       html`<ic-select
-          id="select-3"
+          id="select-default-value"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-3");
+          var select = document.querySelector("#select-default-value");
           select.value = "Lat";
           select.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -128,13 +136,13 @@ export const defaultArgs = {
   <Story name="Filter by start of options">
     {(args) =>
       html`<ic-select
-          id="select-4"
+          id="select-filter-start"
           label="What is your favourite coffee?"
           searchable
           search-match-position="start"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-4");
+          var select = document.querySelector("#select-filter-start");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -158,12 +166,12 @@ export const defaultArgs = {
   <Story name="With descriptions">
     {(args) =>
       html`<ic-select
-          id="select-5"
+          id="select-descriptions"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-5");
+          var select = document.querySelector("#select-descriptions");
           select.options = [
             {
               label: "Cappuccino",
@@ -216,13 +224,13 @@ export const defaultArgs = {
   <Story name="With descriptions (included in search)">
     {(args) =>
       html`<ic-select
-          id="select-6"
+          id="select-descriptions-included"
           label="What is your favourite coffee?"
           searchable
           include-descriptions-in-search
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-6");
+          var select = document.querySelector("#select-descriptions-included");
           select.options = [
             {
               label: "Cappuccino",
@@ -275,13 +283,13 @@ export const defaultArgs = {
   <Story name="Helper text">
     {(args) =>
       html`<ic-select
-          id="select-7"
+          id="select-helper"
           label="What is your favourite coffee?"
           searchable
-          helper-text="Some helper text"
+          helper-text="Such as Arabica, Robusta or Liberica"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-7");
+          var select = document.querySelector("#select-helper");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -306,13 +314,13 @@ export const defaultArgs = {
     {(args) =>
       html`<div style="display: flex; flex-direction: column; gap: 16px;">
         <ic-select
-          id="select-8"
+          id="select-size-small"
           label="What is your favourite coffee?"
           searchable
           size="small"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-8");
+          var select = document.querySelector("#select-size-small");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -327,12 +335,12 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="select-9"
+          id="select-size-default"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-9");
+          var select = document.querySelector("#select-size-default");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -347,13 +355,13 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="select-10"
+          id="select-size-large"
           label="What is your favourite coffee?"
           searchable
           size="large"
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-10");
+          var select = document.querySelector("#select-size-large");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -378,13 +386,13 @@ export const defaultArgs = {
   <Story name="Disabled">
     {(args) =>
       html`<ic-select
-          id="select-11"
+          id="select-disabled"
           label="What is your favourite coffee?"
           searchable
           disabled
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-11");
+          var select = document.querySelector("#select-disabled");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -408,12 +416,12 @@ export const defaultArgs = {
   <Story name="Disabled options">
     {(args) =>
       html`<ic-select
-          id="select-12"
+          id="select-disabled-options"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-12");
+          var select = document.querySelector("#select-disabled-options");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -437,13 +445,13 @@ export const defaultArgs = {
   <Story name="Hidden label">
     {(args) =>
       html`<ic-select
-          id="select-13"
+          id="select-hidden-label"
           label="What is your favourite coffee?"
           searchable
           hide-label
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-13");
+          var select = document.querySelector("#select-hidden-label");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -467,13 +475,13 @@ export const defaultArgs = {
   <Story name="Required">
     {(args) =>
       html`<ic-select
-          id="select-14"
+          id="select-required"
           label="What is your favourite coffee?"
           searchable
           required
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-14");
+          var select = document.querySelector("#select-required");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -497,12 +505,12 @@ export const defaultArgs = {
   <Story name="Groups">
     {(args) =>
       html`<ic-select
-          id="select-15"
+          id="select-groups"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-15");
+          var select = document.querySelector("#select-groups");
           select.options = [
             {
               label: "Fancy",
@@ -533,13 +541,13 @@ export const defaultArgs = {
   <Story name="Groups (group titles included in search)">
     {(args) =>
       html`<ic-select
-          id="select-16"
+          id="select-groups-included"
           label="What is your favourite coffee?"
           searchable
           include-group-titles-in-search
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-16");
+          var select = document.querySelector("#select-groups-included");
           select.options = [
             {
               label: "Fancy",
@@ -570,12 +578,12 @@ export const defaultArgs = {
   <Story name="Recommended">
     {(args) =>
       html`<ic-select
-          id="select-17"
+          id="select-recommended"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-17");
+          var select = document.querySelector("#select-recommended");
           select.options = [
             { label: "Cappuccino", value: "Cappuccino" },
             { label: "Flat white", value: "Flat white", recommended: true },
@@ -599,14 +607,14 @@ export const defaultArgs = {
   <Story name="Validation">
     {(args) =>
       html`<ic-select
-          id="ic-select-18"
+          id="select-success"
           label="What is your favourite coffee?"
           validation-status="success"
-          validation-text="Success message"
+          validation-text="Good choice!"
           searchable
         ></ic-select>
         <script>
-          var select1 = document.querySelector("#ic-select-18");
+          var select1 = document.querySelector("#select-success");
           var option1 = "Cappuccino";
           select1.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -622,14 +630,14 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="ic-select-19"
+          id="select-warning"
           label="What is your favourite coffee?"
           validation-status="warning"
-          validation-text="Warning message"
+          validation-text="We are running low on this type of coffee"
           searchable
         ></ic-select>
         <script>
-          var select2 = document.querySelector("#ic-select-19");
+          var select2 = document.querySelector("#select-warning");
           var option2 = "Cappuccino";
           select2.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -645,14 +653,14 @@ export const defaultArgs = {
           });
         </script>
         <ic-select
-          id="ic-select-20"
+          id="select-error"
           label="What is your favourite coffee?"
           validation-status="error"
-          validation-text="Error message"
+          validation-text="Now it has really gone to (coffee) pot"
           searchable
         ></ic-select>
         <script>
-          var select3 = document.querySelector("#ic-select-20");
+          var select3 = document.querySelector("#select-error");
           var option3 = "Cappuccino";
           select3.options = [
             { label: "Cappuccino", value: "Cap" },
@@ -677,12 +685,12 @@ export const defaultArgs = {
   <Story name="Scroll behaviour">
     {(args) =>
       html`<ic-select
-          id="select-21"
+          id="select-scroll"
           label="What is your favourite coffee?"
           searchable
         ></ic-select>
         <script>
-          var select = document.querySelector("#select-21");
+          var select = document.querySelector("#select-scroll");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -714,7 +722,7 @@ export const defaultArgs = {
           searchable="true"
           debounce="300"
           disable-filter="true"
-          id="select-22"
+          id="select-external-filtering"
           timeout="1000"
         ></ic-select>
         <br />
@@ -762,7 +770,7 @@ export const defaultArgs = {
               }
             }
           }
-          var select = document.querySelector("#select-22");
+          var select = document.querySelector("#select-external-filtering");
           var selectedValue = "";
           select.addEventListener("icClear", function (event) {
             select.options = [];
@@ -779,7 +787,7 @@ export const defaultArgs = {
 
 ### In form
 
-This shows how the searchable select works within a form. The value will appear in the console.log on submit.
+This shows how the searchable select works within a form. The value will appear in the console on submit.
 
 <Canvas>
   <Story name="In form" parameters={{ loki: { skip: true } }}>
@@ -787,7 +795,7 @@ This shows how the searchable select works within a form. The value will appear 
       html`
         <form>
           <ic-select
-            id="select-23"
+            id="select-form"
             label="What is your favourite coffee?"
             searchable="true"
           ></ic-select>
@@ -797,8 +805,7 @@ This shows how the searchable select works within a form. The value will appear 
           <input type="reset" value="Reset" />
         </form>
         <script>
-          var select = document.querySelector("#select-23");
-          select.value = "Cap";
+          var select = document.querySelector("#select-form");
           select.options = [
             { label: "Cappuccino", value: "Cap" },
             { label: "Latte", value: "Lat" },
@@ -827,13 +834,13 @@ This shows how the searchable select works within a form. The value will appear 
     {(args) =>
       html`<ic-section-container>
           <ic-select
-            id="select-24"
+            id="select-external-request"
             searchable="true"
             label="What is your favourite coffee? (searchable)"
           ></ic-select>
         </ic-section-container>
         <script>
-          const searchSelect = document.getElementById("select-24");
+          const searchSelect = document.getElementById("select-external-request");
           let options = [];
           options.push({ label: "unknown", value: "unknown" });
           options.push({ label: "item 1", value: "item-1" });
@@ -865,14 +872,7 @@ This shows how the searchable select works within a form. The value will appear 
   <Story
     name="Playground"
     parameters={{ loki: { skip: true } }}
-    args={{
-      ...defaultArgs,
-      ["include-descriptions-in-search"]: false,
-      ["include-group-titles-in-search"]: false,
-      loading: false,
-      ["loading-label"]: "Loading...",
-      ["search-match-position"]: "anywhere",
-    }}
+    args={defaultArgs}
     argTypes={{
       ["search-match-position"]: {
         defaultValue: "anywhere",
@@ -892,7 +892,7 @@ This shows how the searchable select works within a form. The value will appear 
   >
     {(args) =>
       html` <ic-select
-          id="select-25"
+          id="select-playground"
           disabled=${args.disabled}
           full-width=${args["full-width"]}
           helper-text=${args["helper-text"]}
@@ -917,7 +917,7 @@ This shows how the searchable select works within a form. The value will appear 
         >
         </ic-select>
         <script>
-          var select = document.querySelector("#select-25");
+          var select = document.querySelector("#select-playground");
           select.options = [
             {
               label: "Cappuccino",
