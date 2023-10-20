@@ -45,6 +45,7 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
         "month-picker": true,
         // hidden: hidden,
       }}
+      role="list"
     >
       {monthNames.map((month, index) => {
         const current = monthInView === index;
@@ -57,6 +58,7 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
 
         return (
           <ic-button
+            role="listitem"
             class={{
               "month-button": true,
               selected: current,
@@ -69,7 +71,7 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
             size={buttonSize}
             tabIndex={focussed ? 0 : -1}
             aria-label={
-              current ? `${month} selected` : `choose ${month} ${yearInView}`
+              current ? `${month} selected` : `select ${month} ${yearInView}`
             }
             onClick={handleMonthClick}
             onKeyDown={onKeyDown}

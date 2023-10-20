@@ -736,7 +736,7 @@ export namespace Components {
          */
         "focusDayOnOpen"?: boolean;
         /**
-          * The helper text that will be displayed for additional field guidance. This will default to the `dateFormat` value.
+          * The helper text that will be displayed for additional field guidance. This will default to the text "Use format" along with the `dateFormat` value.
          */
         "helperText"?: string;
         /**
@@ -748,20 +748,19 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The latest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
+          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
          */
         "max"?: string | Date;
         /**
-          * The earliest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
+          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
          */
         "min"?: string | Date;
         /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
-        "newDialogLabel": boolean;
         /**
-          * The date visible when the calendar opens. Used if no date is currently selected. In ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+          * The date visible when the calendar opens. Used if no date is currently selected. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
          */
         "openAtDate": string | Date;
         "openOnFirstLoad": boolean;
@@ -798,7 +797,7 @@ export namespace Components {
          */
         "validationText"?: string;
         /**
-          * The value of the date picker - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+          * The value of the date picker. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
          */
         "value"?: string | Date;
     }
@@ -2476,6 +2475,10 @@ export interface IcDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDateInputElement;
 }
+export interface IcDatePickerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLIcDatePickerElement;
+}
 export interface IcDialogCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDialogElement;
@@ -3702,7 +3705,7 @@ declare namespace LocalJSX {
          */
         "focusDayOnOpen"?: boolean;
         /**
-          * The helper text that will be displayed for additional field guidance. This will default to the `dateFormat` value.
+          * The helper text that will be displayed for additional field guidance. This will default to the text "Use format" along with the `dateFormat` value.
          */
         "helperText"?: string;
         /**
@@ -3714,20 +3717,23 @@ declare namespace LocalJSX {
          */
         "label": string;
         /**
-          * The latest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
+          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
          */
         "max"?: string | Date;
         /**
-          * The earliest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
+          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
          */
         "min"?: string | Date;
         /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
-        "newDialogLabel"?: boolean;
         /**
-          * The date visible when the calendar opens. Used if no date is currently selected. In ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+          * Emitted when the value has changed.
+         */
+        "onIcChange"?: (event: IcDatePickerCustomEvent<{ value: Date }>) => void;
+        /**
+          * The date visible when the calendar opens. Used if no date is currently selected. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
          */
         "openAtDate"?: string | Date;
         "openOnFirstLoad"?: boolean;
@@ -3764,7 +3770,7 @@ declare namespace LocalJSX {
          */
         "validationText"?: string;
         /**
-          * The value of the date picker - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+          * The value of the date picker. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
          */
         "value"?: string | Date;
     }

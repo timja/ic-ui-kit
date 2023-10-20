@@ -150,6 +150,11 @@ ic-date-input {
   --min-width: var(--month-year-picker-button-width);
 }
 
+:host .month-picker-button::part(button):focus,
+:host .year-picker-button::part(button):focus {
+  background-color: var(--ic-architectural-white);
+}
+
 :host .month-button,
 :host .year-button,
 :host .decade-button {
@@ -166,6 +171,12 @@ ic-date-input {
 :host .month-button.disabled::part(button),
 :host .year-button.disabled::part(button) {
   text-decoration-line: line-through;
+}
+
+:host .month-button:not(.selected)::part(button):focus,
+:host .year-button:not(.selected)::part(button):focus,
+:host .decade-button:not(.selected)::part(button):focus {
+  background-color: var(--ic-architectural-white);
 }
 
 :host .year-picker-container {

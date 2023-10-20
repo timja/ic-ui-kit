@@ -4939,7 +4939,7 @@
           "mutable": false,
           "attr": "helper-text",
           "reflectToAttr": false,
-          "docs": "The helper text that will be displayed for additional field guidance. This will default to the `dateFormat` value.",
+          "docs": "The helper text that will be displayed for additional field guidance. This will default to the text \"Use format\" along with the `dateFormat` value.",
           "docsTags": [],
           "values": [
             {
@@ -5007,7 +5007,7 @@
           "mutable": false,
           "attr": "max",
           "reflectToAttr": false,
-          "docs": "The latest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.\nThe value of this prop is ignored if `disableFromNow` is set to `true`.",
+          "docs": "The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.\nThe value of this prop is ignored if `disableFromNow` is set to `true`.",
           "docsTags": [],
           "default": "\"\"",
           "values": [
@@ -5037,7 +5037,7 @@
           "mutable": false,
           "attr": "min",
           "reflectToAttr": false,
-          "docs": "The earliest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.\nThe value of this prop is ignored if `disableUntilNow` is set to `true`.",
+          "docs": "The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.\nThe value of this prop is ignored if `disableUntilNow` is set to `true`.",
           "docsTags": [],
           "default": "\"\"",
           "values": [
@@ -5088,7 +5088,7 @@
           "mutable": false,
           "attr": "open-at-date",
           "reflectToAttr": false,
-          "docs": "The date visible when the calendar opens. Used if no date is currently selected.\nIn ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.",
+          "docs": "The date visible when the calendar opens. Used if no date is currently selected.\nThe value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.",
           "docsTags": [],
           "default": "\"\"",
           "values": [
@@ -5351,7 +5351,7 @@
           "mutable": true,
           "attr": "value",
           "reflectToAttr": false,
-          "docs": "The value of the date picker - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.",
+          "docs": "The value of the date picker. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.",
           "docsTags": [],
           "default": "\"\"",
           "values": [
@@ -5367,7 +5367,27 @@
         }
       ],
       "methods": [],
-      "events": [],
+      "events": [
+        {
+          "event": "icChange",
+          "detail": "{ value: Date; }",
+          "bubbles": true,
+          "complexType": {
+            "original": "{ value: Date }",
+            "resolved": "{ value: Date; }",
+            "references": {
+              "Date": {
+                "location": "global",
+                "id": "global::Date"
+              }
+            }
+          },
+          "cancelable": true,
+          "composed": true,
+          "docs": "Emitted when the value has changed.",
+          "docsTags": []
+        }
+      ],
       "listeners": [
         {
           "event": "calendarButtonClicked",

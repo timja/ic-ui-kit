@@ -8,6 +8,8 @@ import {
   Listen,
   Watch,
   State,
+  Event,
+  EventEmitter,
   // Method,
 } from "@stencil/core";
 import {
@@ -16,6 +18,7 @@ import {
 } from "../../utils/helpers";
 import {
   IcWeekDays,
+  // IcDayNames,
   IcShortDayNames,
   IcDateInputMonths,
   IcDateFormat,
@@ -104,7 +107,7 @@ export class DatePicker {
   private todayButtonEl: HTMLIcButtonElement = null;
   private yearButtonEl: HTMLIcButtonElement;
 
-  @Element() host: HTMLIcDatePickerElement;
+  @Element() el: HTMLIcDatePickerElement;
 
   @State() calendarOpen: boolean = false;
   @State() currMonthView: Date[] = [];
@@ -176,7 +179,7 @@ export class DatePicker {
   @Prop() focusDayOnOpen?: boolean = true;
 
   /**
-   * The helper text that will be displayed for additional field guidance. This will default to the `dateFormat` value.
+   * The helper text that will be displayed for additional field guidance. This will default to the text "Use format" along with the `dateFormat` value.
    */
   @Prop() helperText?: string;
 
@@ -191,16 +194,42 @@ export class DatePicker {
   @Prop() label!: string;
 
   /**
-   * The latest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+   * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
    * The value of this prop is ignored if `disableFromNow` is set to `true`.
    */
   @Prop() max?: string | Date = "";
 
+  @Watch("max")
+  watchMaxHandler(): void {
+    if (this.disableFromNow) {
+      this.maxDate = new Date();
+    } else {
+      this.maxDate =
+        typeof this.max === "object"
+          ? this.max
+          : createDateFromISOString(this.max);
+    }
+  }
+
   /**
-   * The earliest date that will be allowed - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+   * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
    * The value of this prop is ignored if `disableUntilNow` is set to `true`.
    */
   @Prop() min?: string | Date = "";
+
+  @Watch("min")
+  watchMinHandler(): void {
+    if (this.disableUntilNow) {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      this.minDate = d;
+    } else {
+      this.minDate =
+        typeof this.min === "object"
+          ? this.min
+          : createDateFromISOString(this.min);
+    }
+  }
 
   /**
    * The name of the control, which is submitted with the form data.
@@ -209,7 +238,7 @@ export class DatePicker {
 
   /**
    * The date visible when the calendar opens. Used if no date is currently selected.
-   * In ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+   * The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
    */
   @Prop() openAtDate: string | Date = "";
 
@@ -217,11 +246,6 @@ export class DatePicker {
    * @internal If `true`, calendar will initially be open. Used for visual regression testing
    */
   @Prop() openOnFirstLoad: boolean = false;
-
-  /**
-   * @internal use different format dialog label
-   */
-  @Prop() newDialogLabel: boolean = false;
 
   /**
    * If `true`, the input will require a value.
@@ -265,7 +289,7 @@ export class DatePicker {
   @Prop() validationText?: string = "";
 
   /**
-   * The value of the date picker - in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
+   * The value of the date picker. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
    */
   @Prop({ mutable: true }) value?: string | Date = "";
 
@@ -314,32 +338,6 @@ export class DatePicker {
     }
   }
 
-  @Watch("max")
-  watchMaxHandler(): void {
-    if (this.disableFromNow) {
-      this.maxDate = new Date();
-    } else {
-      this.maxDate =
-        typeof this.max === "object"
-          ? this.max
-          : createDateFromISOString(this.max);
-    }
-  }
-
-  @Watch("min")
-  watchMinHandler(): void {
-    if (this.disableUntilNow) {
-      const d = new Date();
-      d.setDate(d.getDate() - 1);
-      this.minDate = d;
-    } else {
-      this.minDate =
-        typeof this.min === "object"
-          ? this.min
-          : createDateFromISOString(this.min);
-    }
-  }
-
   @Watch("monthInView")
   watchMonthInViewHandler(): void {
     this.focussedMonth = this.monthInView;
@@ -373,6 +371,11 @@ export class DatePicker {
     this.focusDay = true;
   }
 
+  /**
+   * Emitted when the value has changed.
+   */
+  @Event() icChange: EventEmitter<{ value: Date }>;
+
   componentWillLoad(): void {
     onComponentRequiredPropUndefined(
       [{ prop: this.label, propName: "label" }],
@@ -396,7 +399,24 @@ export class DatePicker {
 
   // componentWillRender(): void {}
 
-  // componentDidLoad(): void {}
+  componentDidLoad(): void {
+    if (this.inputEl && this.inputEl.shadowRoot !== null) {
+      const calenderBtnTooltip = this.inputEl.shadowRoot
+        .querySelector("#calendar-button")
+        .shadowRoot.querySelector(
+          "#ic-tooltip-ic-button-with-tooltip-calendar-button"
+        )
+        .shadowRoot.querySelector(".ic-tooltip-container");
+      (calenderBtnTooltip as HTMLElement).setAttribute("aria-hidden", "true");
+      const clearBtnTooltip = this.inputEl.shadowRoot
+        .querySelector("#clear-button")
+        .shadowRoot.querySelector(
+          "#ic-tooltip-ic-button-with-tooltip-clear-button"
+        )
+        .shadowRoot.querySelector(".ic-tooltip-container");
+      (clearBtnTooltip as HTMLElement).setAttribute("aria-hidden", "true");
+    }
+  }
 
   @Listen("calendarButtonClicked")
   localCalendarButtonClickHandler(ev: CustomEvent): void {
@@ -561,21 +581,19 @@ export class DatePicker {
   ): void => {
     const buttonSize = this.size === "large" ? "default" : "small";
     return (
-      <div aria-hidden="true">
-        <ic-button
-          id={id}
-          disableTooltip={true}
-          disabled={disabled}
-          onClick={this.monthYearNavClickHandler}
-          class={{ flip: flip }}
-          variant="icon"
-          innerHTML={chevron}
-          size={buttonSize}
-          tabIndex={-1}
-          aria-hidden="true"
-          onMouseDown={this.navButtonMouseDownHandler}
-        />
-      </div>
+      <ic-button
+        id={id}
+        disableTooltip={true}
+        disabled={disabled}
+        onClick={this.monthYearNavClickHandler}
+        class={{ flip: flip }}
+        variant="icon"
+        innerHTML={chevron}
+        size={buttonSize}
+        tabIndex={-1}
+        aria-hidden="true"
+        onMouseDown={this.navButtonMouseDownHandler}
+      />
     );
   };
 
@@ -715,14 +733,16 @@ export class DatePicker {
 
   private monthPickerKeyDownHandler = (ev: KeyboardEvent): void => {
     let handled = true;
-    const adjust = this.size === "small" ? 2 : 3;
+    // const adjust = this.size === "small" ? 2 : 3;
     switch (ev.key) {
       case "ArrowUp":
-        this.updateFocussedMonth(-adjust);
+        // this.updateFocussedMonth(-adjust);
+        this.updateFocussedMonth(-1);
         break;
 
       case "ArrowDown":
-        this.updateFocussedMonth(adjust);
+        // this.updateFocussedMonth(adjust);
+        this.updateFocussedMonth(1);
         break;
 
       case "ArrowLeft":
@@ -762,14 +782,17 @@ export class DatePicker {
 
   private yearPickerKeyDownHandler = (ev: KeyboardEvent): void => {
     let handled = true;
-    const adjust = this.size === "small" ? 2 : 3;
+    // console.log("yearPickerKeyDownHandler")
+    // const adjust = this.size === "small" ? 2 : 3;
     switch (ev.key) {
       case "ArrowUp":
-        this.updateFocussedYear(-adjust);
+        // this.updateFocussedYear(-adjust);
+        this.updateFocussedYear(-1);
         break;
 
       case "ArrowDown":
-        this.updateFocussedYear(adjust);
+        // this.updateFocussedYear(adjust);
+        this.updateFocussedYear(1);
         break;
 
       case "ArrowLeft":
@@ -802,10 +825,12 @@ export class DatePicker {
   private monthButtonKeyDownHandler = (ev: KeyboardEvent): void => {
     switch (ev.key) {
       case "ArrowLeft":
+      case "ArrowUp":
         this.gotoPreviousMonth();
         break;
 
       case "ArrowRight":
+      case "ArrowDown":
         this.gotoNextMonth();
         break;
 
@@ -831,10 +856,12 @@ export class DatePicker {
   private yearButtonKeyDownHandler = (ev: KeyboardEvent): void => {
     switch (ev.key) {
       case "ArrowLeft":
+      case "ArrowUp":
         this.gotoPreviousYear();
         break;
 
       case "ArrowRight":
+      case "ArrowDown":
         this.gotoNextYear();
         break;
 
@@ -1108,26 +1135,40 @@ export class DatePicker {
       maxDate,
       showPickerClearButton,
       showPickerTodayButton,
+      selectedDate,
     } = this;
 
     const headerButtonSize = size === "large" ? "default" : "small";
 
-    let monthButtonText = `${monthNames[monthInView]} ${yearInView} selected. `;
+    // const dayNames = stringEnumToArray(IcDayNames);
+    // const months = stringEnumToArray(IcDateInputMonths);
+
+    let dialogDesc = `${monthNames[monthInView]} ${yearInView} in view. `;
+    if (selectedDate === null) {
+      dialogDesc += "No date selected. ";
+    }
+    // } else {
+    //   dialogDesc += `${
+    //     dayNames[selectedDate.getDay()]
+    //   }, ${selectedDate.getDate()} ${
+    //     months[selectedDate.getMonth()]
+    //   } ${selectedDate.getFullYear()} selected. `;
+    // }
+    dialogDesc +=
+      "Use arrow keys to change day. Press enter or space to select a date or press escape to close the picker";
+
+    let monthButtonText = "";
     if (monthPickerVisible) {
-      monthButtonText +=
-        "Use the tab key to focus month picker view or use the left and right arrow keys to change month.";
+      monthButtonText = `Month picker view open. ${monthNames[monthInView]} ${yearInView} selected. Use the left and right arrow keys to change the selected month. To return to day picker view, press Enter or Space to select a month, or press Escape.`;
     } else {
-      monthButtonText +=
-        "Click to open month picker view or use the left and right arrow keys to change month.";
+      monthButtonText = `${monthNames[monthInView]} ${yearInView} selected. Press Enter or Space to open month picker view or use the left and right arrow keys to change month.`;
     }
 
-    let yearButtonText = `${yearInView} selected. `;
+    let yearButtonText = "";
     if (yearPickerVisible) {
-      yearButtonText +=
-        "Use the tab key to focus year picker view or use the left and right arrow keys to change year.";
+      yearButtonText = `Year picker view open. ${yearInView} selected. Use the left and right arrow keys to change the selected year. To return to day picker view, press Enter or Space to select a year, or press Escape.`;
     } else {
-      yearButtonText +=
-        "Click to open year picker view or use the left and right arrow keys to change year.";
+      yearButtonText = `${yearInView} selected. Press Enter or Space to open year picker view or use the left and right arrow keys to change the selected year.`;
     }
     // const disableYear =
     //   minDate !== null &&
@@ -1138,9 +1179,7 @@ export class DatePicker {
 
     this.setDateInputProps();
 
-    const dialogLabel = this.newDialogLabel
-      ? `${monthNames[monthInView]} ${yearInView}`
-      : "choose date";
+    const dialogLabel = "choose date";
 
     return (
       <Host onKeyDown={this.keyDownHandler} class={size}>
@@ -1150,22 +1189,32 @@ export class DatePicker {
             {...dateInputProps}
           ></ic-date-input>
         </div>
+        {calendarOpen && (
+          <span id="dialog-description" class="sr-only">
+            {dialogDesc}
+            {/* {monthNames[monthInView]} {yearInView} in view. Please select a day.
+            Use arrow keys to change day. Press enter or space to select a date
+            or press escape to close the picker */}
+          </span>
+        )}
         <div
           role="dialog"
           aria-modal="true"
           aria-label={dialogLabel}
+          aria-describedBy="dialog-description"
+          aria-hidden={!calendarOpen}
           class={{
             "calendar-container": true,
             open: calendarOpen,
           }}
           onClick={this.handleCalenderClick}
         >
-          {!monthPickerVisible && !yearPickerVisible && (
+          {/* {!monthPickerVisible && !yearPickerVisible && (
             <span class="sr-only" aria-live="polite">
               {monthNames[monthInView]} {yearInView} in view. Please select a
               day.
             </span>
-          )}
+          )} */}
           <div
             class={{
               "month-year-nav-container": true,
@@ -1173,11 +1222,6 @@ export class DatePicker {
           >
             <div class="month-year-nav">
               {this.previousMonthButton()}
-              {monthPickerVisible && (
-                <span class="sr-only" aria-live="polite">
-                  {monthNames[monthInView]} {yearInView} selected
-                </span>
-              )}
               <span id="select-month-hint" aria-hidden="true">
                 {monthButtonText}
               </span>
@@ -1186,11 +1230,15 @@ export class DatePicker {
                 id="month-picker-button"
                 size={headerButtonSize}
                 class="month-picker-button"
-                aria-pressed={monthPickerVisible ? "true" : "false"}
+                aria-expanded={monthPickerVisible ? "true" : "false"}
                 // disabled={disableMonth}
                 full-width="true"
                 variant="tertiary"
-                aria-label={`select month`}
+                aria-label={
+                  monthPickerVisible
+                    ? "Return to day picker view"
+                    : "Change to select month view"
+                }
                 aria-describedby="select-month-hint"
                 onKeyDown={this.monthButtonKeyDownHandler}
                 onClick={this.monthButtonClickHandler}
@@ -1198,14 +1246,14 @@ export class DatePicker {
                 {monthNames[monthInView]}
               </ic-button>
               {this.nextMonthButton()}
+              {monthPickerVisible && (
+                <span class="sr-only" aria-live="polite">
+                  {monthNames[monthInView]} {yearInView} selected
+                </span>
+              )}
             </div>
             <div class="month-year-nav">
               {this.previousYearButton()}
-              {yearPickerVisible && (
-                <span class="sr-only" aria-live="polite">
-                  {yearInView} selected
-                </span>
-              )}
               <span id="select-year-hint" aria-hidden="true">
                 {yearButtonText}
               </span>
@@ -1214,11 +1262,16 @@ export class DatePicker {
                 id="year-picker-button"
                 size={headerButtonSize}
                 class="year-picker-button"
-                aria-pressed={yearPickerVisible ? "true" : "false"}
+                // aria-pressed={yearPickerVisible ? "true" : "false"}
+                aria-expanded={yearPickerVisible ? "true" : "false"}
                 // disabled={disableYear}
                 full-width="true"
                 variant="tertiary"
-                aria-label="select year"
+                aria-label={
+                  yearPickerVisible
+                    ? "Return to day picker view"
+                    : "Change to select year view"
+                }
                 aria-describedby="select-year-hint"
                 onKeyDown={this.yearButtonKeyDownHandler}
                 onClick={this.yearButtonClickHandler}
@@ -1226,6 +1279,11 @@ export class DatePicker {
                 {this.yearInView}
               </ic-button>
               {this.nextYearButton()}
+              {yearPickerVisible && (
+                <span class="sr-only" aria-live="polite">
+                  {yearInView} selected
+                </span>
+              )}
             </div>
           </div>
           {!(monthPickerVisible || yearPickerVisible) && (
