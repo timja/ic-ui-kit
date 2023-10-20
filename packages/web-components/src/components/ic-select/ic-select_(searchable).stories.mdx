@@ -840,7 +840,9 @@ This shows how the searchable select works within a form. The value will appear 
           ></ic-select>
         </ic-section-container>
         <script>
-          const searchSelect = document.getElementById("select-external-request");
+          const searchSelect = document.getElementById(
+            "select-external-request"
+          );
           let options = [];
           options.push({ label: "unknown", value: "unknown" });
           options.push({ label: "item 1", value: "item-1" });

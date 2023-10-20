@@ -41,7 +41,7 @@ export class Menu {
   private firstRender: boolean = true;
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
-  private isLoading: boolean = false
+  private isLoading: boolean = false;
   private isMultiSelect: boolean = false;
   private isSearchBar: boolean = false;
   private isSearchableSelect: boolean = false;
@@ -262,7 +262,7 @@ export class Menu {
 
         if (highlightedEl) {
           this.menu.tabIndex = -1; // Ensure element with role="listbox" is not focusable
-          this.menu.setAttribute("aria-activedescendant", highlightedEl.id); // Aria-activedescendant can control / affect focus 
+          this.menu.setAttribute("aria-activedescendant", highlightedEl.id); // Aria-activedescendant can control / affect focus
           highlightedEl.focus();
         }
       } else if (
@@ -467,7 +467,7 @@ export class Menu {
         menuOptions[highlightedIndex].value || undefined);
   };
 
-  // Determines keyboard behaviour when selection is automatic 
+  // Determines keyboard behaviour when selection is automatic
   // (i.e. you don't have to press Enter select an option - just focus on it)
   // and menu is closed
   private autoSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
@@ -736,7 +736,7 @@ export class Menu {
     this.menuKeyPress.emit({ isNavKey: isNavKey, key: key });
   };
 
-  // Determines keyboard behaviour when selection is automatic 
+  // Determines keyboard behaviour when selection is automatic
   // (i.e. you don't have to press Enter select an option - just focus on it)
   // and menu is open
   private autoSetValueOnMenuKeyDown = (event: KeyboardEvent): void => {

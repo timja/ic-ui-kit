@@ -227,6 +227,7 @@ export class Select {
       this.loading = false;
       clearTimeout(this.timeoutTimer);
       if (this.isExternalFiltering()) {
+        // When searchable select
         if (this.options.length > 0) {
           this.setOptionsValuesFromLabels();
           this.noOptions = null;
@@ -275,6 +276,7 @@ export class Select {
     if (this.value !== this.currValue) {
       if (this.value && this.multiple) {
         this.currValue = this.getValueSortedByOptions(this.value as string[]);
+        // this.updateMultiSelectSelectedCount();
       } else {
         this.currValue = this.value;
       }
@@ -967,6 +969,20 @@ export class Select {
     }
   };
 
+  // private updateMultiSelectSelectedCount = (): void => {
+  //   const multiSelectSelectedCountEl = this.host.shadowRoot.querySelector(
+  //     ".multi-select-selected-count"
+  //   ) as HTMLDivElement;
+
+  //   if (multiSelectSelectedCountEl) {
+  //     if (this.currValue) {
+  //       multiSelectSelectedCountEl.innerText = `${this.currValue.length} of ${this.ungroupedOptions.length} selected`;
+  //     } else {
+  //       multiSelectSelectedCountEl.innerText = "";
+  //     }
+  //   }
+  // };
+
   render() {
     const {
       size,
@@ -977,6 +993,7 @@ export class Select {
       hideLabel,
       label,
       menuId,
+      multiple,
       name,
       options,
       placeholder,
@@ -1046,12 +1063,12 @@ export class Select {
             {readonly ? (
               <ic-typography>
                 <p>
-                  {this.multiple
+                  {multiple
                     ? this.getMultipleOptionsString(currValue as string[])
                     : this.getLabelFromValue(currValue as string)}
                 </p>
               </ic-typography>
-            ) : isMobileOrTablet() && !this.multiple ? (
+            ) : isMobileOrTablet() && !multiple ? (
               <select
                 ref={(el) => (this.nativeSelectElement = el)}
                 disabled={disabled}
@@ -1173,9 +1190,14 @@ export class Select {
                   ref={(el) => (this.customSelectElement = el)}
                   id={this.inputId}
                   aria-label={`${label}, ${
-                    this.multiple
-                      ? this.getMultipleOptionsString(currValue as string[])
-                      : this.getLabelFromValue(currValue as string)
+                    (multiple && currValue
+                      ? `${currValue.length} of ${
+                          options.length
+                        } selected, ${this.getMultipleOptionsString(
+                          currValue as string[]
+                        )}`
+                      : this.getLabelFromValue(currValue as string)) ||
+                    placeholder
                   }${required ? ", required" : ""}`}
                   aria-describedby={describedBy}
                   aria-invalid={invalid}
@@ -1196,11 +1218,11 @@ export class Select {
                       "value-text": true,
                       "with-clear-button": currValue && this.showClearButton,
                       placeholder:
-                        !this.value || (this.multiple && this.value.length < 1),
+                        !this.value || (multiple && this.value.length < 1),
                     }}
                   >
                     <p>
-                      {(this.multiple
+                      {(multiple
                         ? this.getMultipleOptionsString(currValue as string[])
                         : this.getLabelFromValue(currValue as string)) ||
                         placeholder}
@@ -1219,6 +1241,11 @@ export class Select {
                       aria-hidden="true"
                     />
                   </div>
+                  {/* <div
+                    aria-live="polite"
+                    role="status"
+                    class="multi-select-selected-count"
+                  ></div> */}
                 </button>
                 {currValue && showClearButton && (
                   <ic-button
@@ -1241,7 +1268,7 @@ export class Select {
               </div>
             )}
           </ic-input-component-container>
-          {(!isMobileOrTablet() || this.multiple) && (
+          {(!isMobileOrTablet() || multiple) && (
             <ic-menu
               class={{
                 "no-results": noOptionSelect,
@@ -1269,10 +1296,19 @@ export class Select {
               parentEl={this.host}
               onTimeoutBlur={this.onTimeoutBlur}
               activationType={
-                this.searchable || this.multiple ? "manual" : "automatic"
+                this.searchable || multiple ? "manual" : "automatic"
               }
-              closeOnSelect={!this.multiple}
+              closeOnSelect={!multiple}
             ></ic-menu>
+          )}
+          {this.multiple && (
+            <div
+              // aria-live="polite"
+              // role="status"
+              class="multi-select-selected-count"
+            >
+              {currValue && `${currValue.length} of ${options.length} selected`}
+            </div>
           )}
           {hasValidationStatus(this.validationStatus, this.disabled) && (
             <ic-input-validation
