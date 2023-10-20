@@ -1,8 +1,8 @@
 {
-  "timestamp": "2023-10-19T10:56:19",
+  "timestamp": "2023-10-20T11:35:59",
   "compiler": {
     "name": "@stencil/core",
-    "version": "4.3.0",
+    "version": "4.2.1",
     "typescriptVersion": "5.1.6"
   },
   "components": [
@@ -9356,6 +9356,82 @@
           "required": false
         },
         {
+          "name": "clickEventEle",
+          "type": "string",
+          "complexType": {
+            "original": "string",
+            "resolved": "string",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "click-event-ele",
+          "reflectToAttr": false,
+          "docs": "The ID of the element that can open the popover menu if mouseAnchor is set to `true`.\nIf `null`, then use the root element.",
+          "docsTags": [],
+          "default": "document.documentElement.id",
+          "values": [
+            {
+              "type": "string"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
+          "name": "mouseButtonsClosePopover",
+          "type": "IcPopoverMenuClickEnum[]",
+          "complexType": {
+            "original": "IcPopoverMenuClickEnum[]",
+            "resolved": "IcPopoverMenuClickEnum[]",
+            "references": {
+              "IcPopoverMenuClickEnum": {
+                "location": "import",
+                "path": "./ic-popover-menu.types",
+                "id": "src/components/ic-popover-menu/ic-popover-menu.types.tsx::IcPopoverMenuClickEnum"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "The MouseEvent.button values that can trigger an ic-popover-menu close.\nDefaults to `IcPopoverMenuClickEnum.Left` only.",
+          "docsTags": [],
+          "default": "[\n    IcPopoverMenuClickEnum.Left,\n  ]",
+          "values": [
+            {
+              "type": "IcPopoverMenuClickEnum[]"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
+          "name": "mouseButtonsOpenPopover",
+          "type": "IcPopoverMenuClickEnum[]",
+          "complexType": {
+            "original": "IcPopoverMenuClickEnum[]",
+            "resolved": "IcPopoverMenuClickEnum[]",
+            "references": {
+              "IcPopoverMenuClickEnum": {
+                "location": "import",
+                "path": "./ic-popover-menu.types",
+                "id": "src/components/ic-popover-menu/ic-popover-menu.types.tsx::IcPopoverMenuClickEnum"
+              }
+            }
+          },
+          "mutable": false,
+          "reflectToAttr": false,
+          "docs": "The MouseEvent.button values that can trigger an ic-popover-menu open.\nDefaults to `IcPopoverMenuClickEnum.Right` only.",
+          "docsTags": [],
+          "default": "[\n    IcPopoverMenuClickEnum.Right,\n  ]",
+          "values": [
+            {
+              "type": "IcPopoverMenuClickEnum[]"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
           "name": "open",
           "type": "boolean",
           "complexType": {
@@ -9372,6 +9448,72 @@
           "values": [
             {
               "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
+          "name": "openOnMouseEventButtonPress",
+          "type": "boolean",
+          "complexType": {
+            "original": "boolean",
+            "resolved": "boolean",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "open-on-mouse-event-button-press",
+          "reflectToAttr": true,
+          "docs": "If `true`, the ic-popover-menu will open when a MouseEvent button press occurs.\nIf the \"anchor\" property element id is defined, this will only happen when clicking\nwithin the bounds of the anchor element.\nmouseButtonsOpenPopover can be used to define which mouse buttons\ncan trigger this behaviour: by default this is a left click.",
+          "docsTags": [],
+          "default": "false",
+          "values": [
+            {
+              "type": "boolean"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
+          "name": "renderX",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "render-x",
+          "reflectToAttr": false,
+          "docs": "Absolute screen X co-ordinate for popover menu render position.",
+          "docsTags": [],
+          "default": "null",
+          "values": [
+            {
+              "type": "number"
+            }
+          ],
+          "optional": false,
+          "required": false
+        },
+        {
+          "name": "renderY",
+          "type": "number",
+          "complexType": {
+            "original": "number",
+            "resolved": "number",
+            "references": {}
+          },
+          "mutable": false,
+          "attr": "render-y",
+          "reflectToAttr": false,
+          "docs": "Absolute screen Y co-ordinate for popover menu render position.",
+          "docsTags": [],
+          "default": "null",
+          "values": [
+            {
+              "type": "number"
             }
           ],
           "optional": false,
@@ -9414,6 +9556,12 @@
         },
         {
           "event": "click",
+          "target": "document",
+          "capture": false,
+          "passive": false
+        },
+        {
+          "event": "contextmenu",
           "target": "document",
           "capture": false,
           "passive": false
@@ -16761,6 +16909,11 @@
       "declaration": "export type IcPaginationItemType = \"page\" | \"ellipsis\" | \"simple-current\";",
       "docstring": "",
       "path": "src/components/ic-pagination-item/ic-pagination-item.types.ts"
+    },
+    "src/components/ic-popover-menu/ic-popover-menu.types.tsx::IcPopoverMenuClickEnum": {
+      "declaration": "export enum IcPopoverMenuClickEnum {\n  Left = 0,\n  Middle = 1,\n  Right = 2,\n  Back = 3,\n  Forward = 4,\n}",
+      "docstring": "",
+      "path": "src/components/ic-popover-menu/ic-popover-menu.types.tsx"
     },
     "src/utils/types.ts::IcOrientation": {
       "declaration": "export type IcOrientation = \"horizontal\" | \"vertical\";",
