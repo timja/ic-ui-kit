@@ -223,7 +223,7 @@ export class Select {
 
   @Watch("options")
   watchOptionsHandler(): void {
-    if (!this.hasTimedOut) {
+    if (!this.hasTimedOut && this.options !== this.noOptions) {
       this.loading = false;
       clearTimeout(this.timeoutTimer);
       if (this.isExternalFiltering()) {
@@ -411,6 +411,8 @@ export class Select {
       } else {
         this.value = value;
       }
+    } else {
+      this.value = value;
     }
 
     clearTimeout(this.debounceIcChange);
@@ -1007,12 +1009,11 @@ export class Select {
     } = this;
 
     const noOptionSelect =
-      searchable &&
-      (this.loading ||
-        this.hasTimedOut ||
-        (this.noOptions !== null &&
-          this.noOptions[0] &&
-          this.noOptions[0].label === this.emptyOptionListText));
+      this.loading ||
+      this.hasTimedOut ||
+      (this.noOptions !== null &&
+        this.noOptions[0] &&
+        this.noOptions[0].label === this.emptyOptionListText);
 
     const inputValue = this.searchable ? this.hiddenInputValue : currValue;
 

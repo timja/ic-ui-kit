@@ -415,21 +415,21 @@ export const playgroundOptions = [
             validationStatus="success"
             validationText="Good choice!"
             options={options}
-            onIcChange={(event) => setValue1(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
           <IcSelect
             label="What is your favourite coffee?"
             validationStatus="warning"
             validationText="We are running low on this type of coffee"
             options={options}
-            onIcChange={(event) => setValue2(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
           <IcSelect
             label="What is your favourite coffee?"
             validationStatus="error"
             validationText="Now it has really gone to (coffee) pot"
             options={options}
-            onIcChange={(event) => setValue3(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
         </div>
       );

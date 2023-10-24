@@ -434,7 +434,7 @@ export const DefaultValue = () => {
             validationText="Good choice!"
             options={options}
             searchable
-            onIcChange={(event) => setValue1(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
           <IcSelect
             label="What is your favourite coffee?"
@@ -442,7 +442,7 @@ export const DefaultValue = () => {
             validationText="We are running low on this type of coffee"
             options={options}
             searchable
-            onIcChange={(event) => setValue2(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
           <IcSelect
             label="What is your favourite coffee?"
@@ -450,7 +450,7 @@ export const DefaultValue = () => {
             validationText="Now it has really gone to (coffee) pot"
             options={options}
             searchable
-            onIcChange={(event) => setValue3(event.detail.value)}
+            onIcChange={(event) => console.log(event.detail.value)}
           ></IcSelect>
         </div>
       );

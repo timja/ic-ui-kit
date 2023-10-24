@@ -606,6 +606,30 @@ export const defaultArgs = {
   </Story>
 </Canvas>
 
+### Loading with error
+
+<Canvas>
+  <Story name="Loading with error">
+    {(args) =>
+      html`<ic-select
+          id="select-loading"
+          label="What is your favourite coffee?"
+          loading="true"
+          timeout="1000"
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-loading");
+          select.addEventListener("icChange", function (event) {
+            console.log(event.detail.value);
+          });
+          select.addEventListener("icRetryLoad", function (event) {
+            select.loading = "true";
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
+
 ### In form
 
 This shows how the single select works within a form. The value will appear in the console on submit.

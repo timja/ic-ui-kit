@@ -39,7 +39,8 @@ export const defaultArgs = {
       html`<ic-select
           id="select-default"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
+          loading="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-default");
@@ -71,7 +72,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-async"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           loading
         ></ic-select>
         <script>
@@ -108,7 +109,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-default-value"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-default-value");
@@ -138,7 +139,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-filter-start"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           search-match-position="start"
         ></ic-select>
         <script>
@@ -168,7 +169,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-descriptions"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-descriptions");
@@ -226,7 +227,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-descriptions-included"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           include-descriptions-in-search
         ></ic-select>
         <script>
@@ -285,7 +286,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-helper"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           helper-text="Such as Arabica, Robusta or Liberica"
         ></ic-select>
         <script>
@@ -316,7 +317,7 @@ export const defaultArgs = {
         <ic-select
           id="select-size-small"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           size="small"
         ></ic-select>
         <script>
@@ -337,7 +338,7 @@ export const defaultArgs = {
         <ic-select
           id="select-size-default"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-size-default");
@@ -357,7 +358,7 @@ export const defaultArgs = {
         <ic-select
           id="select-size-large"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           size="large"
         ></ic-select>
         <script>
@@ -388,7 +389,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-disabled"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           disabled
         ></ic-select>
         <script>
@@ -418,7 +419,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-disabled-options"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-disabled-options");
@@ -447,7 +448,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-hidden-label"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           hide-label
         ></ic-select>
         <script>
@@ -477,7 +478,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-required"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           required
         ></ic-select>
         <script>
@@ -507,7 +508,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-groups"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-groups");
@@ -543,7 +544,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-groups-included"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
           include-group-titles-in-search
         ></ic-select>
         <script>
@@ -580,7 +581,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-recommended"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-recommended");
@@ -611,7 +612,7 @@ export const defaultArgs = {
           label="What is your favourite coffee?"
           validation-status="success"
           validation-text="Good choice!"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select1 = document.querySelector("#select-success");
@@ -634,7 +635,7 @@ export const defaultArgs = {
           label="What is your favourite coffee?"
           validation-status="warning"
           validation-text="We are running low on this type of coffee"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select2 = document.querySelector("#select-warning");
@@ -657,7 +658,7 @@ export const defaultArgs = {
           label="What is your favourite coffee?"
           validation-status="error"
           validation-text="Now it has really gone to (coffee) pot"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select3 = document.querySelector("#select-error");
@@ -687,7 +688,7 @@ export const defaultArgs = {
       html`<ic-select
           id="select-scroll"
           label="What is your favourite coffee?"
-          searchable
+          searchable="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-scroll");

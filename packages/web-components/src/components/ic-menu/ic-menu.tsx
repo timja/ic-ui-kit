@@ -1137,26 +1137,29 @@ export class Menu {
             })}
           </ul>
         )}
-        {options.length !== 0 && this.isMultiSelect && !isLoading && (
-          <div class="option-bar">
-            <ic-typography>
-              <p>{`${value ? value.length : 0}/${
-                this.ungroupedOptions.length
-              } selected`}</p>
-            </ic-typography>
-            <ic-button
-              class="select-all-button"
-              aria-label={`${selectAllButtonText} options for ${inputLabel}`}
-              ref={(el) => (this.selectAllButton = el)}
-              variant="tertiary"
-              onClick={this.handleSelectAllClick}
-              onBlur={this.handleSelectAllBlur}
-              size={size === "small" ? "small" : "default"}
-            >
-              {selectAllButtonText}
-            </ic-button>
-          </div>
-        )}
+        {options.length !== 0 &&
+          this.isMultiSelect &&
+          !isLoading &&
+          !hasTimedOut && (
+            <div class="option-bar">
+              <ic-typography>
+                <p>{`${value ? value.length : 0}/${
+                  this.ungroupedOptions.length
+                } selected`}</p>
+              </ic-typography>
+              <ic-button
+                class="select-all-button"
+                aria-label={`${selectAllButtonText} options for ${inputLabel}`}
+                ref={(el) => (this.selectAllButton = el)}
+                variant="tertiary"
+                onClick={this.handleSelectAllClick}
+                onBlur={this.handleSelectAllBlur}
+                size={size === "small" ? "small" : "default"}
+              >
+                {selectAllButtonText}
+              </ic-button>
+            </div>
+          )}
       </Host>
     );
   }
