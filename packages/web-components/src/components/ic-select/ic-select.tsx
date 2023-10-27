@@ -1017,7 +1017,8 @@ export class Select {
 
     const inputValue = this.searchable ? this.hiddenInputValue : currValue;
 
-    // TYPE NEEDS FIXING - IF IT'S A MULTI-SELECT, NEEDS TO BE 'as string[]', SO 'renderHiddenInput' NEEDS CHANGING TO ACCEPT THIS
+    // HTML inputs only accept 'string'
+    // Does not cause errors when it is a multi-select - sets value to a comma-separated string
     renderHiddenInput(true, this.host, name, inputValue as string, disabled);
 
     const invalid =
