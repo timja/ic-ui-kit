@@ -2,11 +2,13 @@
 
 /**
  * @prop --input-width: Width of the input field
+ * @prop --menu-width: Width of the dropdown menu
  * @prop --ic-z-index-menu: z-index of select menu
  */
 
 :host {
   position: relative;
+  --menu-max-height: 100px;
 }
 
 :host(.full-width) {
@@ -114,6 +116,25 @@ select:not([disabled]) {
   cursor: auto;
 }
 
+.select-input.with-clear-button {
+  padding-right: 0;
+}
+
+.value-text {
+  max-width: calc(100% - (var(--ic-space-lg) + var(--ic-space-xxs)));
+  box-sizing: border-box;
+}
+
+.value-text.with-clear-button {
+  padding-right: calc(var(--ic-space-xl) + var(--ic-space-xs));
+}
+
+.value-text p {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .searchable-select-container {
   align-items: center;
   display: flex;
@@ -123,7 +144,7 @@ select:not([disabled]) {
 
 .expand-icon {
   height: var(--ic-space-lg);
-  padding-left: var(--ic-space-xs);
+  padding-left: var(--ic-space-xxs);
   color: var(--ic-action-dark);
 }
 
@@ -139,7 +160,7 @@ select:not([disabled]) {
 }
 
 :host(.searchable) .expand-icon {
-  padding-left: var(--ic-space-xxs);
+  padding-left: 0;
   height: 2.25rem;
 }
 
@@ -153,10 +174,6 @@ select:not([disabled]) {
 }
 
 .expand-icon-open {
-  color: var(--ic-action-dark);
-}
-
-.expand-icon-filled {
   color: var(--ic-action-dark);
 }
 
@@ -177,12 +194,6 @@ select:not([disabled]) {
 
 .clear-button-container {
   display: flex;
-  gap: var(--ic-space-xxs);
-  padding-left: 2.375rem;
-}
-
-:host(.small) .clear-button-container {
-  padding-left: 1.875rem;
 }
 
 .divider {
@@ -197,9 +208,13 @@ select:not([disabled]) {
   height: var(--ic-space-md);
 }
 
+:host(.large) .divider {
+  height: var(--ic-space-xl);
+}
+
 .clear-button {
   position: absolute;
-  right: 2.75rem;
+  right: 34px;
   border-radius: var(--ic-border-radius);
   transition: box-shadow var(--ic-easing-transition),
     border-radius var(--ic-easing-transition);
@@ -215,7 +230,12 @@ select:not([disabled]) {
   fill: white;
 }
 
-.searchable-select-results-status {
+.clear-button.searchable {
+  position: static;
+}
+
+.searchable-select-results-status,
+.multi-select-selected-count {
   border: 0;
   clip: rect(0, 0, 0, 0, 0);
   height: var(--ic-space-1px);

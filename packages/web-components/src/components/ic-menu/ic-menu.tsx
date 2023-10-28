@@ -16,11 +16,14 @@ import { createPopper, Instance as PopperInstance } from "@popperjs/core";
 import {
   IcActivationTypes,
   IcMenuOption,
-  IcSizesNoLarge,
+  IcSizes,
   IcValueEventDetail,
 } from "../../utils/types";
 import Check from "../../assets/check-icon.svg";
-import { onComponentRequiredPropUndefined } from "../../utils/helpers";
+import {
+  isMacDevice,
+  onComponentRequiredPropUndefined,
+} from "../../utils/helpers";
 import {
   IcOptionSelectEventDetail,
   IcMenuChangeEventDetail,
@@ -40,12 +43,15 @@ export class Menu {
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
   private isLoading: boolean = false;
+  private isMultiSelect: boolean = false;
   private isSearchBar: boolean = false;
   private isSearchableSelect: boolean = false;
   private menu: HTMLUListElement;
+  private multiOptionClicked: string = null;
   private popperInstance: PopperInstance;
-  // Prevents menu re-opening immediately after it is closed on blur when clicking input.
-  private preventClickOpen: boolean = false;
+  private preventClickOpen: boolean = false; // Prevents menu re-opening immediately after it is closed on blur when clicking input.
+  private preventMenuFocus: boolean = false; // (When multiple) ensures focus moves straight to select all button from menu.
+  private selectAllButton: HTMLIcButtonElement;
   private ungroupedOptions: IcMenuOption[] = [];
 
   @Element() el: HTMLIcMenuElement;
@@ -70,6 +76,11 @@ export class Menu {
    * @internal If `true`, autofocus will be applied on selected item when menu is open.
    */
   @Prop() autoFocusOnSelected: boolean = true;
+
+  /**
+   *  If `true`, the menu will close when an option is selected.
+   */
+  @Prop() closeOnSelect: boolean = true;
 
   /**
    *  If `true`, the menu will fill the width of the container.
@@ -112,9 +123,9 @@ export class Menu {
   @Prop() searchMode?: IcSearchBarSearchModes = "navigation";
 
   /**
-   * The size of the menu component.
+   * The size of the menu.
    */
-  @Prop() size?: IcSizesNoLarge = "default";
+  @Prop() size?: IcSizes = "default";
 
   /**
    * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
@@ -135,14 +146,9 @@ export class Menu {
   }
 
   /**
-   * The value of the currently selected option.
+   * The value of the currently selected option - or array of values (if multiple options allowed).
    */
-  @Prop({ mutable: true }) value!: string;
-
-  @Watch("value")
-  watchValueHandler(): void {
-    this.menuValueChange.emit({ value: this.value });
-  }
+  @Prop({ mutable: true }) value!: string | string[];
 
   /**
    * The custom name for the value field for IcMenuOption.
@@ -155,7 +161,7 @@ export class Menu {
   @Event() menuKeyPress: EventEmitter<{ isNavKey: boolean; key: string }>;
 
   /**
-   * @internal Emitted when an option has been highlighted
+   * @internal Emitted when an option has been highlighted.
    */
   @Event() menuOptionId: EventEmitter<IcMenuOptionIdEventDetail>;
 
@@ -165,22 +171,22 @@ export class Menu {
   @Event() menuOptionSelect!: EventEmitter<IcOptionSelectEventDetail>;
 
   /**
+   * @internal Emitted when all options are selected or deselected.
+   */
+  @Event() menuOptionSelectAll!: EventEmitter<{ select: boolean }>;
+
+  /**
    * @internal Emitted when state of menu changes (i.e. open or close).
    */
   @Event() menuStateChange!: EventEmitter<IcMenuChangeEventDetail>;
 
   /**
-   * @internal Emitted when menu value changes.
-   */
-  @Event() menuValueChange: EventEmitter<IcValueEventDetail>;
-
-  /**
-   * @internal Emitted when the retry button is clicked
+   * @internal Emitted when the retry button is clicked.
    */
   @Event() retryButtonClicked: EventEmitter<IcValueEventDetail>;
 
   /**
-   * @internal Emitted when the timeout menu loses focus
+   * @internal Emitted when the timeout menu loses focus.
    */
   @Event() timeoutBlur: EventEmitter<{ ev: FocusEvent }>;
 
@@ -247,7 +253,7 @@ export class Menu {
       this.optionHighlighted !== undefined &&
       this.optionHighlighted !== "";
 
-    if (this.open && this.options.length !== 0) {
+    if (this.open && this.options.length !== 0 && !this.preventMenuFocus) {
       if (
         this.value &&
         this.keyboardNav &&
@@ -256,11 +262,6 @@ export class Menu {
         !this.isSearchableSelect
       ) {
         this.scrollToSelected(this.menu);
-      } else if (
-        this.inputEl.tagName !== "IC-TEXT-FIELD" &&
-        this.inputEl.tagName !== "INPUT"
-      ) {
-        this.menu.focus();
       } else if (
         optionHighlightedIsSet &&
         !this.focusFromSearchKeypress &&
@@ -271,10 +272,19 @@ export class Menu {
         ) as HTMLElement;
 
         if (highlightedEl) {
+          this.menu.tabIndex = -1; // Ensure element with role="listbox" is not focusable
+          this.menu.setAttribute("aria-activedescendant", highlightedEl.id); // Aria-activedescendant can control / affect focus
           highlightedEl.focus();
         }
+      } else if (
+        this.inputEl.tagName !== "IC-TEXT-FIELD" &&
+        this.inputEl.tagName !== "INPUT"
+      ) {
+        this.menu.tabIndex = 0;
+        this.menu.focus();
       }
     }
+    this.preventMenuFocus = false;
   }
 
   componentDidRender(): void {
@@ -302,11 +312,11 @@ export class Menu {
 
       if (adjust) {
         this.popperInstance = createPopper(this.anchorEl, this.el, {
-          placement: "top",
+          placement: "top-start",
         });
       } else {
         this.popperInstance = createPopper(this.anchorEl, this.el, {
-          placement: "bottom",
+          placement: "bottom-start",
           modifiers: [
             {
               name: "offset",
@@ -354,10 +364,10 @@ export class Menu {
   async handleKeyboardOpen(event: KeyboardEvent): Promise<void> {
     this.keyboardNav = false;
 
-    if (this.activationType === "automatic") {
-      this.autoSetInputValueKeyboardOpen(event);
+    if (this.isManualMode) {
+      this.manualSetInputValueKeyboardOpen(event);
     } else {
-      this.manSetInputValueKeyboardOpen(event);
+      this.autoSetInputValueKeyboardOpen(event);
     }
   }
 
@@ -384,9 +394,16 @@ export class Menu {
   private handleMenuChange = (open: boolean, focusInput?: boolean): void => {
     this.menuStateChange.emit({ open, focusInput });
 
-    if (!open && focusInput !== false) {
-      this.inputEl.focus();
-      this.preventClickOpen = false;
+    if (!open) {
+      if (focusInput !== false) {
+        this.inputEl.focus();
+        this.preventClickOpen = false;
+      }
+
+      // Reset optionHighlighted so previously highlighted option doesn't get reselected when Enter pressed
+      if (this.isMultiSelect) {
+        this.optionHighlighted = undefined;
+      }
     }
   };
 
@@ -432,25 +449,33 @@ export class Menu {
   private getParentEl = (parent: HTMLElement) => {
     if (parent.tagName === "IC-SEARCH-BAR") {
       this.isSearchBar = true;
-    } else if (
-      parent.tagName === "IC-SELECT" &&
-      parent.getAttribute("searchable") !== null &&
-      parent.getAttribute("searchable") !== undefined
-    ) {
-      this.isSearchableSelect = true;
+    } else if (parent.tagName === "IC-SELECT") {
+      if (
+        parent.getAttribute("searchable") !== null &&
+        parent.getAttribute("searchable") !== undefined
+      ) {
+        this.isSearchableSelect = true;
+      } else if (
+        parent.getAttribute("multiple") !== null &&
+        parent.getAttribute("multiple") !== undefined
+      ) {
+        this.isMultiSelect = true;
+      }
     }
   };
 
+  // Open menu when up or down arrow keys are pressed
   private arrowBehaviour = (event: KeyboardEvent): void => {
     event.preventDefault();
     this.handleMenuChange(true);
   };
 
-  private setMenuOptions = () =>
+  private getMenuOptions = () =>
     this.isSearchBar ? this.options : this.ungroupedOptions;
 
+  // Set option that is focused and so should show focus state
   private setHighlightedOption = (highlightedIndex: number): void => {
-    const menuOptions = this.setMenuOptions();
+    const menuOptions = this.getMenuOptions();
 
     menuOptions[highlightedIndex] &&
       !menuOptions[highlightedIndex].timedOut &&
@@ -458,6 +483,9 @@ export class Menu {
         menuOptions[highlightedIndex][this.valueField] || undefined);
   };
 
+  // Determines keyboard behaviour when selection is automatic
+  // (i.e. you don't have to press Enter select an option - just focus on it)
+  // and menu is closed
   private autoSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
       (option) => option[this.valueField] === this.value
@@ -485,13 +513,102 @@ export class Menu {
     }
   };
 
-  private manSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
-    const menuOptions = this.setMenuOptions();
+  // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
+  // and menu is closed
+  private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
+    switch (event.key) {
+      case " ":
+      case "Enter":
+        if ((event.target as HTMLElement).id !== "clear-button") {
+          this.handleMenuChange(true);
+        }
+        break;
+      default:
+        this.handleManualKeyboardNavigation(event);
+        break;
+    }
+  };
+
+  private setInputValue = (highlightedOptionIndex: number) => {
+    const menuOptions = this.getMenuOptions();
+
+    if (menuOptions[highlightedOptionIndex] !== undefined) {
+      this.menuOptionSelect.emit({
+        value: menuOptions[highlightedOptionIndex]?.value,
+      });
+
+      if (this.closeOnSelect) {
+        this.optionHighlighted = undefined;
+        this.menuOptionId.emit({ optionId: undefined });
+      }
+    }
+
+    if (this.closeOnSelect) {
+      if (!this.hasTimedOut) {
+        this.handleMenuChange(false);
+      } else {
+        (this.parentEl as HTMLIcSearchBarElement).setFocus();
+      }
+    }
+  };
+
+  private handleOptionClick = (event: Event): void => {
+    const { value, label } = (event.target as HTMLLIElement).dataset;
+    this.menuOptionSelect.emit({ value, label });
+    this.optionHighlighted = undefined;
+
+    if (this.isMultiSelect) {
+      this.multiOptionClicked = value;
+    } else {
+      this.handleMenuChange(false);
+    }
+  };
+
+  private handleRetry = (): void => {
+    this.retryButtonClicked.emit({ value: this.value });
+  };
+
+  private handleRetryKeyDown = (ev: KeyboardEvent): void => {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      this.retryButtonClicked.emit({ value: this.value, keyPressed: ev.key });
+    }
+  };
+
+  private handleBlur = (event: FocusEvent): void => {
+    if (event.relatedTarget !== this.inputEl) {
+      if (
+        !(
+          this.menu.contains(event.relatedTarget as HTMLElement) ||
+          event.relatedTarget === this.selectAllButton
+        )
+      ) {
+        this.handleMenuChange(false, this.hasPreviouslyBlurred);
+      }
+    } else {
+      this.handleMenuChange(false);
+      this.preventClickOpen = true;
+    }
+    if (!this.isSearchBar) this.hasPreviouslyBlurred = !!event.relatedTarget;
+  };
+
+  private handleMouseDown = (event: Event): void => {
+    event.preventDefault();
+  };
+
+  // Manual keyboard behaviour which occurs both when menu is closed and open
+  // i.e. for keys that do the same thing when pressed on either input box (once menu is open) or menu
+  private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
+    const menuOptions = this.getMenuOptions();
 
     this.keyboardNav = false;
 
     const highlightedOptionIndex = menuOptions.findIndex(
       (option) => option[this.valueField] === this.optionHighlighted
+    );
+
+    const clickedMultiOptionIndex = menuOptions.findIndex(
+      (option) => option.value === this.multiOptionClicked
     );
 
     const getOptionId = (index: number): string =>
@@ -501,7 +618,12 @@ export class Menu {
       case "ArrowDown":
         this.keyboardNav = true;
         this.arrowBehaviour(event);
-        if (highlightedOptionIndex < menuOptions.length - 1) {
+        if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the top of the menu
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (highlightedOptionIndex < menuOptions.length - 1) {
           this.setHighlightedOption(highlightedOptionIndex + 1);
           this.menuOptionId.emit({
             optionId: getOptionId(highlightedOptionIndex + 1),
@@ -518,7 +640,12 @@ export class Menu {
       case "ArrowUp":
         this.keyboardNav = true;
         this.arrowBehaviour(event);
-        if (
+        if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the bottom of the menu
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (
           highlightedOptionIndex <= 0 ||
           highlightedOptionIndex > menuOptions.length + 1
         ) {
@@ -555,35 +682,16 @@ export class Menu {
         break;
       case "Enter":
         event.preventDefault();
-        if (highlightedOptionIndex >= 0) {
-          if (menuOptions[highlightedOptionIndex] !== undefined) {
-            if (
-              this.isSearchBar &&
-              menuOptions[highlightedOptionIndex].disabled === true
-            ) {
-              this.disabledOptionSelected = true;
-            } else {
-              this.setInputValue(highlightedOptionIndex);
-              this.value = menuOptions[highlightedOptionIndex][this.valueField];
-            }
-          }
-        } else {
-          this.setInputValue(highlightedOptionIndex);
-        }
-        break;
-      case "Escape":
-        if (this.open) {
-          event.stopImmediatePropagation();
-        }
-        this.handleMenuChange(false);
-        this.menuOptionId.emit({ optionId: undefined });
+        // LEAVE THIS AS INCOMING CHANGE
         break;
       case "Shift":
       case "Tab":
         if (this.isSearchBar) {
           this.keyboardNav = true;
         }
-        this.preventIncorrectTabOrder = true;
+        if (!this.isMultiSelect) {
+          this.preventIncorrectTabOrder = true;
+        }
         break;
       case "Backspace":
         if (this.isSearchBar) {
@@ -595,80 +703,61 @@ export class Menu {
         this.focusFromSearchKeypress = true;
         break;
       default:
-        if (event.key !== "Tab") {
-          if (this.isSearchBar) {
-            (this.parentEl as HTMLIcSearchBarElement).setFocus();
-            if (this.searchMode === "navigation") this.setHighlightedOption(0);
-          } else if (this.isSearchableSelect) {
-            (this.parentEl as HTMLIcSelectElement).setFocus();
-          }
-          this.focusFromSearchKeypress = true;
+        if (this.isSearchBar) {
+          (this.parentEl as HTMLIcSearchBarElement).setFocus();
+          if (this.searchMode === "navigation") this.setHighlightedOption(0);
+        } else if (this.isSearchableSelect) {
+          (this.parentEl as HTMLIcSelectElement).setFocus();
         }
+        this.focusFromSearchKeypress = true;
         break;
     }
   };
 
-  private setInputValue = (highlightedOptionIndex: number) => {
-    const menuOptions = this.setMenuOptions();
-
-    if (menuOptions[highlightedOptionIndex] !== undefined) {
-      this.menuOptionSelect.emit({
-        value: menuOptions[highlightedOptionIndex][this.valueField],
-      });
-      this.optionHighlighted = undefined;
-      this.menuOptionId.emit({ optionId: undefined });
-    }
-    if (!this.hasTimedOut) this.handleMenuChange(false);
-    else (this.parentEl as HTMLIcSearchBarElement).setFocus();
-  };
-
-  private handleOptionClick = (event: Event): void => {
-    const { value, label } = (event.target as HTMLLIElement).dataset;
-    this.menuOptionSelect.emit({ value, label });
-    this.handleMenuChange(false);
-  };
-
-  private handleRetry = (): void => {
-    this.retryButtonClicked.emit({ value: this.value });
-  };
-
-  private handleRetryKeyDown = (ev: KeyboardEvent): void => {
-    if (ev.key === "Enter" || ev.key === " ") {
-      ev.preventDefault();
-      this.retryButtonClicked.emit({ value: this.value, keyPressed: ev.key });
-    }
-  };
-
-  private handleBlur = (event: FocusEvent): void => {
-    if (event.relatedTarget !== this.inputEl) {
-      if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
-        this.handleMenuChange(false, this.hasPreviouslyBlurred);
-      }
-    } else {
-      this.handleMenuChange(false);
-      this.preventClickOpen = true;
-    }
-    if (!this.isSearchBar) this.hasPreviouslyBlurred = !!event.relatedTarget;
-  };
-
-  private handleMouseDown = (event: Event): void => {
-    event.preventDefault();
-  };
-
   private handleMenuKeyDown = (event: KeyboardEvent) => {
-    if (this.activationType === "automatic") {
+    if (this.isManualMode) {
+      this.manualSetValueOnMenuKeyDown(event);
+    } else {
       this.autoSetValueOnMenuKeyDown(event);
-    } else if (this.activationType === "manual" && this.isSearchableSelect) {
-      this.manSetInputValueKeyboardOpen(event);
     }
+  };
+
+  private handleMenuKeyUp = (event: KeyboardEvent): void => {
+    if (event.key === "Tab" && event.shiftKey) {
+      this.preventClickOpen = false;
+    }
+  };
+
+  private handleSelectAllClick = () => {
+    this.menu.tabIndex = 0;
+    this.menu.focus();
+    this.emitSelectAll();
+  };
+
+  private handleSelectAllBlur = (event: FocusEvent) => {
+    if (!this.menu.contains(event.relatedTarget as HTMLElement)) {
+      this.handleMenuChange(false, false);
+    }
+  };
+
+  private emitSelectAll = () => {
+    // Select all if there is either no value or all options are not selected
+    // 'true' means select all, 'false' means clear all
+    this.menuOptionSelectAll.emit({
+      select:
+        !this.value || !(this.value?.length === this.ungroupedOptions.length),
+    });
   };
 
   private emitMenuKeyPress = (isNavKey: boolean, key: string) => {
     this.menuKeyPress.emit({ isNavKey: isNavKey, key: key });
   };
 
+  // Determines keyboard behaviour when selection is automatic
+  // (i.e. you don't have to press Enter select an option - just focus on it)
+  // and menu is open
   private autoSetValueOnMenuKeyDown = (event: KeyboardEvent): void => {
-    event.cancelBubble = true;
+    event.stopPropagation();
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
       (option) => option[this.valueField] === this.value
     );
@@ -735,9 +824,71 @@ export class Menu {
     this.emitMenuKeyPress(this.keyboardNav, event.key);
   };
 
-  private handleMenuKeyUp = (event: KeyboardEvent): void => {
-    if (event.key === "Tab" && event.shiftKey) {
-      this.preventClickOpen = false;
+  // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
+  // and menu is open
+  private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
+    event.stopPropagation();
+    const menuOptions = this.getMenuOptions();
+
+    const highlightedOptionIndex = menuOptions.findIndex(
+      (option) => option.value === this.optionHighlighted
+    );
+
+    switch (event.key) {
+      case " ":
+      case "Enter":
+        event.preventDefault();
+        // if (this.optionHighlighted) {
+        //   this.setInputValue(highlightedOptionIndex);
+        // } else {
+        //   this.handleMenuChange(false); // DOES THIS NEED !this.hasTimedOut && ... AT THE START?
+        // }
+        // break;
+        if (highlightedOptionIndex >= 0) {
+          if (menuOptions[highlightedOptionIndex] !== undefined) {
+            if (
+              this.isSearchBar &&
+              menuOptions[highlightedOptionIndex].disabled === true
+            ) {
+              this.disabledOptionSelected = true;
+            } else {
+              this.setInputValue(highlightedOptionIndex);
+              this.value = menuOptions[highlightedOptionIndex][this.valueField];
+            }
+          }
+        } else {
+          this.setInputValue(highlightedOptionIndex);
+        }
+      case "Escape":
+        if (this.open) {
+          event.stopImmediatePropagation();
+        }
+        this.handleMenuChange(false);
+        this.menuOptionId.emit({ optionId: undefined });
+        break;
+      case "a":
+        // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
+        // Otherwise, if a different OS, checks Ctrl key
+        if (
+          (isMacDevice() && event.metaKey) ||
+          (!isMacDevice() && event.ctrlKey)
+        ) {
+          this.emitSelectAll();
+        }
+        break;
+      case "Tab":
+        if (this.isMultiSelect && !event.shiftKey) {
+          event.preventDefault();
+          this.selectAllButton.focus(); // Move focus to select all button instead of focused option
+          this.menu.tabIndex = -1;
+          this.preventMenuFocus = true;
+          this.preventClickOpen = true;
+          this.optionHighlighted = undefined; // Stop any option focus states showing when focus moved to select all button
+        }
+        break;
+      default:
+        this.handleManualKeyboardNavigation(event);
+        break;
     }
     if (event.key === "Enter" && this.disabledOptionSelected) {
       this.disabledOptionSelected = false;
@@ -795,10 +946,14 @@ export class Menu {
       ) {
         menu.scrollTop = selectedOption.offsetTop;
       }
+      this.menu.tabIndex = -1;
+      this.menu.setAttribute("aria-activedescendant", selectedOption.id);
       selectedOption.focus();
     }
   };
 
+  // Set 'ungroupedOptions' variable and emit its value
+  // - this is all the options with disabled options and group titles removed
   private loadUngroupedOptions = () => {
     if (this.options.length > 0 && this.options.map) {
       this.options.map((option) => {
@@ -830,7 +985,7 @@ export class Menu {
     this.timeoutBlur.emit({ ev });
   };
 
-  private optionContent = (option: IcMenuOption) => {
+  private optionContent = (option: IcMenuOption, selected: boolean) => {
     return (
       <Fragment>
         {option.loading && <ic-loading-indicator size="icon" />}
@@ -866,8 +1021,8 @@ export class Menu {
           )}
         </div>
         {!!option[this.valueField] &&
-          !!this.value &&
-          option[this.valueField].toLowerCase() === this.value?.toLowerCase() &&
+          !!this.value && // SHOULD 'selected' BE BASED ON .toLowerCase() OF OPTION VALUE?
+          selected &&
           this.parentEl.tagName !== "IC-SEARCH-BAR" && (
             <span class="check-icon" innerHTML={Check} />
           )}
@@ -877,12 +1032,12 @@ export class Menu {
 
   private displayOption = (
     option: IcMenuOption,
+    selected: boolean,
     index?: number,
     parentOption?: IcMenuOption
   ): HTMLLIElement => {
     const {
       open,
-      value,
       keyboardNav,
       isManualMode,
       initialOptionsListRender,
@@ -898,7 +1053,7 @@ export class Menu {
           "focused-option": isManualMode
             ? (keyboardNav || initialOptionsListRender) &&
               option[this.valueField] === optionHighlighted
-            : keyboardNav && option[this.valueField] === value,
+            : keyboardNav && selected,
           "last-recommended-option":
             option.recommended &&
             options[index + 1] &&
@@ -910,14 +1065,13 @@ export class Menu {
         role="option"
         tabindex={
           open &&
-          (option[this.valueField] === value ||
-            option[this.valueField] === optionHighlighted) &&
+          (selected || option.value === optionHighlighted) &&
           keyboardNav
             ? "0"
             : "-1"
         }
         aria-label={this.getOptionAriaLabel(option, parentOption)}
-        aria-selected={option[this.valueField] === value}
+        aria-selected={selected ? "true" : "false"}
         aria-disabled={option.disabled ? "true" : "false"}
         onClick={!option.timedOut && !option.loading && this.handleOptionClick}
         onBlur={this.handleBlur}
@@ -955,7 +1109,7 @@ export class Menu {
             </ic-button>
           </Fragment>
         ) : (
-          this.optionContent(option)
+          this.optionContent(option, selected)
         )}
       </li>
     );
@@ -970,20 +1124,26 @@ export class Menu {
       fullWidth,
       hasTimedOut,
       isLoading,
-      small,
       size,
+      small,
       open,
       inputEl,
       keyboardNav,
     } = this;
+
+    const selectAllButtonText = `${
+      value?.length === this.ungroupedOptions.length ? "Clear" : "Select"
+    } all`;
 
     return (
       <Host
         class={{
           "full-width": fullWidth,
           "no-focus": inputEl?.tagName === "INPUT" || hasTimedOut || isLoading,
-          small: small || size === "small",
-          open: open,
+          small: small,
+          [size]: true,
+          open: open && options.length !== 0,
+          multiple: this.isMultiSelect,
         }}
       >
         {options.length !== 0 && (
@@ -991,10 +1151,8 @@ export class Menu {
             id={menuId}
             class="menu"
             role="listbox"
-            aria-label={inputLabel}
-            aria-activedescendant={
-              value != null && value !== "" ? this.getOptionId(value) : ""
-            }
+            aria-label={`${inputLabel} pop-up`}
+            aria-multiselectable={this.isMultiSelect ? "true" : "false"}
             tabindex={
               open && !keyboardNav && inputEl?.tagName !== "INPUT" ? "0" : "-1"
             }
@@ -1016,7 +1174,14 @@ export class Menu {
                         <p>{option[this.labelField]}</p>
                       </ic-typography>
                       {option.children.map((childOption) =>
-                        this.displayOption(childOption, index, option)
+                        this.displayOption(
+                          childOption,
+                          this.isMultiSelect
+                            ? value?.includes(childOption[this.valueField])
+                            : childOption[this.valueField] === value,
+                          index,
+                          option
+                        )
                       )}
                     </div>
                   );
@@ -1024,11 +1189,40 @@ export class Menu {
                   return null;
                 }
               } else {
-                return this.displayOption(option, index);
+                return this.displayOption(
+                  option,
+                  this.isMultiSelect
+                    ? value?.includes(option[this.valueField])
+                    : option[this.valueField] === value,
+                  index
+                );
               }
             })}
           </ul>
         )}
+        {options.length !== 0 &&
+          this.isMultiSelect &&
+          !isLoading &&
+          !hasTimedOut && (
+            <div class="option-bar">
+              <ic-typography>
+                <p>{`${value ? value.length : 0}/${
+                  this.ungroupedOptions.length
+                } selected`}</p>
+              </ic-typography>
+              <ic-button
+                class="select-all-button"
+                aria-label={`${selectAllButtonText} options for ${inputLabel}`}
+                ref={(el) => (this.selectAllButton = el)}
+                variant="tertiary"
+                onClick={this.handleSelectAllClick}
+                onBlur={this.handleSelectAllBlur}
+                size={size === "small" ? "small" : "default"}
+              >
+                {selectAllButtonText}
+              </ic-button>
+            </div>
+          )}
       </Host>
     );
   }

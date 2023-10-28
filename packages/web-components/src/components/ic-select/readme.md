@@ -29,6 +29,7 @@
 | `loading`                     | `loading`                        | If `true`, the loading state will be triggered when fetching options asyncronously.                                                                                                                                                                                        | `boolean`                                 | `false`              |
 | `loadingErrorLabel`           | `loading-error-label`            | The message displayed when external loading times out.                                                                                                                                                                                                                     | `string`                                  | `"Loading Error"`    |
 | `loadingLabel`                | `loading-label`                  | The message displayed whilst the options are being loaded externally.                                                                                                                                                                                                      | `string`                                  | `"Loading..."`       |
+| `multiple`                    | `multiple`                       | If `true`, multiple options can be selected.                                                                                                                                                                                                                               | `boolean`                                 | `false`              |
 | `name`                        | `name`                           | The name of the control, which is submitted with the form data.                                                                                                                                                                                                            | `string`                                  | `this.inputId`       |
 | `options`                     | --                               | The possible selection options.                                                                                                                                                                                                                                            | `IcMenuOption[]`                          | `[]`                 |
 | `placeholder`                 | `placeholder`                    | The placeholder value to be displayed.                                                                                                                                                                                                                                     | `string`                                  | `"Select an option"` |
@@ -37,25 +38,26 @@
 | `searchMatchPosition`         | `search-match-position`          | Whether the search string of the searchable select should match the start of or anywhere in the options. Only applies to built in filtering.                                                                                                                               | `"anywhere" \| "start"`                   | `"anywhere"`         |
 | `searchable`                  | `searchable`                     | If `true`, a searchable variant of the select will be displayed which can be typed in to filter options.                                                                                                                                                                   | `boolean`                                 | `false`              |
 | `showClearButton`             | `show-clear-button`              | If `true`, a button which clears the select input when clicked will be displayed. The button will always appear on the searchable select.                                                                                                                                  | `boolean`                                 | `false`              |
-| `size`                        | `size`                           | The size of the select component.                                                                                                                                                                                                                                          | `"default" \| "small"`                    | `"default"`          |
+| `size`                        | `size`                           | The size of the select.                                                                                                                                                                                                                                                    | `"default" \| "large" \| "small"`         | `"default"`          |
 | `small`                       | `small`                          | <span style="color:red">**[DEPRECATED]**</span> This prop should not be used anymore. Set prop `size` to "small" instead.<br/><br/>                                                                                                                                        | `boolean`                                 | `false`              |
 | `timeout`                     | `timeout`                        | If using external filtering, set a timeout for when loading takes too long.                                                                                                                                                                                                | `number`                                  | `undefined`          |
 | `validationStatus`            | `validation-status`              | The validation status - e.g. 'error' \| 'warning' \| 'success'.                                                                                                                                                                                                            | `"" \| "error" \| "success" \| "warning"` | `""`                 |
 | `validationText`              | `validation-text`                | The text to display as the validation message.                                                                                                                                                                                                                             | `string`                                  | `""`                 |
-| `value`                       | `value`                          | The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.                                                                                                               | `string`                                  | `undefined`          |
+| `value`                       | `value`                          | The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.                                                                                                               | `string \| string[]`                      | `undefined`          |
 
 
 ## Events
 
-| Event            | Description                                                                                                                                                | Type                                     |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| `icBlur`         | Emitted when the select loses focus.                                                                                                                       | `CustomEvent<void>`                      |
-| `icChange`       | Emitted when the value changes.                                                                                                                            | `CustomEvent<IcValueEventDetail>`        |
-| `icClear`        | Emitted when the clear button is clicked.                                                                                                                  | `CustomEvent<void>`                      |
-| `icFocus`        | Emitted when the select gains focus.                                                                                                                       | `CustomEvent<void>`                      |
-| `icInput`        | Emitted when a keyboard input occurred.                                                                                                                    | `CustomEvent<IcValueEventDetail>`        |
-| `icOptionSelect` | Emitted when an option is highlighted within the menu. Highlighting a menu item will also trigger an `icChange/onIcChange` due to the value being updated. | `CustomEvent<IcOptionSelectEventDetail>` |
-| `icRetryLoad`    | Emitted when the 'retry loading' button is clicked for a searchable variant.                                                                               | `CustomEvent<IcValueEventDetail>`        |
+| Event              | Description                                                                                                                        | Type                                     |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `icBlur`           | Emitted when the select loses focus.                                                                                               | `CustomEvent<void>`                      |
+| `icChange`         | Emitted when the value changes.                                                                                                    | `CustomEvent<IcValueEventDetail>`        |
+| `icClear`          | Emitted when the clear button is clicked.                                                                                          | `CustomEvent<void>`                      |
+| `icFocus`          | Emitted when the select gains focus.                                                                                               | `CustomEvent<void>`                      |
+| `icInput`          | Emitted when a keyboard input occurred.                                                                                            | `CustomEvent<IcValueEventDetail>`        |
+| `icOptionDeselect` | Emitted when `multiple` is `true` and an option is deselected.                                                                     | `CustomEvent<IcOptionSelectEventDetail>` |
+| `icOptionSelect`   | Emitted when an option is selected. Selecting an option will also trigger an `icChange/onIcChange` due to the value being updated. | `CustomEvent<IcOptionSelectEventDetail>` |
+| `icRetryLoad`      | Emitted when the 'retry loading' button is clicked for a searchable variant.                                                       | `CustomEvent<IcValueEventDetail>`        |
 
 
 ## Methods
@@ -73,10 +75,11 @@ Type: `Promise<void>`
 
 ## CSS Custom Properties
 
-| Name                | Description              |
-| ------------------- | ------------------------ |
-| `--ic-z-index-menu` | z-index of select menu   |
-| `--input-width`     | Width of the input field |
+| Name                | Description                |
+| ------------------- | -------------------------- |
+| `--ic-z-index-menu` | z-index of select menu     |
+| `--input-width`     | Width of the input field   |
+| `--menu-width`      | Width of the dropdown menu |
 
 
 ## Dependencies
