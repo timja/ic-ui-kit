@@ -40,7 +40,6 @@ export const defaultArgs = {
           id="select-default"
           label="What is your favourite coffee?"
           searchable="true"
-          loading="true"
         ></ic-select>
         <script>
           var select = document.querySelector("#select-default");
@@ -53,6 +52,9 @@ export const defaultArgs = {
             { label: "Mocha", value: "Moc" },
             { label: "Macchiato", value: "Mac" },
           ];
+          select.addEventListener("icInput", function (event) {
+            console.log("icInput: " + event.detail.value);
+          });
           select.addEventListener("icChange", function (event) {
             console.log("icChange: " + event.detail.value);
           });
@@ -733,8 +735,8 @@ export const defaultArgs = {
         </ic-typography>
         <br />
         <ic-typography>
-          The IcChange event will trigger 300ms after you finish typing. 1
-          second later, the options in the select menu will be updated.
+          The IcInput event will trigger 300ms after you finish typing. 1 second
+          later, the options in the select menu will be updated.
         </ic-typography>
         <script>
           var mockData = [
@@ -761,7 +763,7 @@ export const defaultArgs = {
                   return new Promise((resolve) =>
                     setTimeout(
                       () => resolve(filteredResults),
-                      event.type === "icChange" ? 2000 : 900
+                      event.type === "icInput" ? 2000 : 900
                     )
                   );
                 };
@@ -779,7 +781,7 @@ export const defaultArgs = {
           select.addEventListener("icOptionSelect", function (event) {
             selectedValue = event.detail.value;
           });
-          select.addEventListener("icChange", handleFilter);
+          select.addEventListener("icInput", handleFilter);
           select.addEventListener("icRetryLoad", handleFilter);
         </script>`
     }

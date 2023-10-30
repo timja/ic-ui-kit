@@ -158,6 +158,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           options={options}
           searchable
+          onIcInput={(event) => console.log(`icInput: ${event.detail.value}`)}
           onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
           onIcOptionSelect={(event) =>
             console.log(`icOptionSelect: ${event.detail.value}`)
@@ -168,26 +169,22 @@ export const playgroundOptions = [
   </Story>
 </Canvas>
 
-export const DefaultValue = () => {
-  return (
-    <IcSelect
-      label="What is your favourite coffee?"
-      required
-      value="Lat"
-      options={options}
-      onIcChange={(event) => console.log(e.detail.value)}
-      searchable
-      showClearButton
-    />
-  );
-};
-
 ### Default value
 
 <Canvas>
   <Story name="Default value">
     {() => {
-      return <DefaultValue />;
+      return (
+        <IcSelect
+          label="What is your favourite coffee?"
+          required
+          value="Lat"
+          options={options}
+          onIcChange={(event) => console.log(e.detail.value)}
+          searchable
+          showClearButton
+        />
+      );
     }}
   </Story>
 </Canvas>
@@ -530,7 +527,7 @@ export const ExternalFiltering = () => {
           return new Promise((resolve) =>
             setTimeout(
               () => resolve(filteredResults),
-              event.type === "icChange" ? 2000 : 500
+              event.type === "icInput" ? 2000 : 500
             )
           );
         };
@@ -540,7 +537,7 @@ export const ExternalFiltering = () => {
       }
     }
   }, [event]);
-  const handleChange = (event) => {
+  const handleInput = (event) => {
     console.log(event.detail.value);
     setEvent(event);
   };
@@ -560,8 +557,8 @@ export const ExternalFiltering = () => {
       disableFilter
       options={results}
       onIcOptionSelect={handleOptionSelect}
-      onIcChange={handleChange}
-      onIcRetryLoad={handleChange}
+      onIcChange={handleInput}
+      onIcRetryLoad={handleInput}
       onIcClear={handleClear}
     />
   );

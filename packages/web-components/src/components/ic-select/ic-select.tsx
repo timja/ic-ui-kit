@@ -439,18 +439,12 @@ export class Select {
 
   private emitIcChange = (value: string | string[]) => {
     if (!this.searchable) {
-      if (this.multiple) {
-        // If "Select all" button clicked, replace value with new value (array of all option values)
-        if (Array.isArray(value)) {
-          this.value = value;
-        } else {
-          this.handleMultipleSelectChange(value as string);
-        }
+      // If "Select all" button clicked, replace value with new value (array of all option values)
+      if (this.multiple && !Array.isArray(value)) {
+        this.handleMultipleSelectChange(value as string);
       } else {
         this.value = value;
       }
-    } else {
-      this.value = value;
     }
 
     clearTimeout(this.debounceIcChange);
