@@ -467,7 +467,11 @@ export class Menu {
   // Open menu when up or down arrow keys are pressed
   private arrowBehaviour = (event: KeyboardEvent): void => {
     event.preventDefault();
-    this.handleMenuChange(true);
+    
+    // Prevent unnecessary handleMenuChange calls - instead only when menu is closed
+    if (!this.open) {
+      this.handleMenuChange(true);
+    }
   };
 
   private getMenuOptions = () =>
@@ -534,7 +538,7 @@ export class Menu {
 
     if (menuOptions[highlightedOptionIndex] !== undefined) {
       this.menuOptionSelect.emit({
-        value: menuOptions[highlightedOptionIndex]?.value,
+        value: menuOptions[highlightedOptionIndex][this.valueField],
       });
 
       if (this.closeOnSelect) {
@@ -838,12 +842,6 @@ export class Menu {
       case " ":
       case "Enter":
         event.preventDefault();
-        // if (this.optionHighlighted) {
-        //   this.setInputValue(highlightedOptionIndex);
-        // } else {
-        //   this.handleMenuChange(false); // DOES THIS NEED !this.hasTimedOut && ... AT THE START?
-        // }
-        // break;
         if (highlightedOptionIndex >= 0) {
           if (menuOptions[highlightedOptionIndex] !== undefined) {
             if (
@@ -859,6 +857,7 @@ export class Menu {
         } else {
           this.setInputValue(highlightedOptionIndex);
         }
+        break;
       case "Escape":
         if (this.open) {
           event.stopImmediatePropagation();
