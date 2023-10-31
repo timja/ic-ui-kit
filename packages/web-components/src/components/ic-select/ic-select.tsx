@@ -449,14 +449,14 @@ export class Select {
 
     clearTimeout(this.debounceIcChange);
     this.debounceIcChange = window.setTimeout(() => {
-      this.icChange.emit({ value: this.value });
+      this.icChange.emit({ value });
     }, this.currDebounce);
   };
 
   private emitImmediateIcChange = (value: string) => {
     this.value = value;
     clearTimeout(this.debounceIcChange);
-    this.icChange.emit({ value: value });
+    this.icChange.emit({ value });
   };
 
   /**

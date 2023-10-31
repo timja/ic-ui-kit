@@ -735,7 +735,7 @@ export const defaultArgs = {
         </ic-typography>
         <br />
         <ic-typography>
-          The IcInput event will trigger 300ms after you finish typing. 1 second
+          The IcChange event will trigger 300ms after you finish typing. 1 second
           later, the options in the select menu will be updated.
         </ic-typography>
         <script>
@@ -763,7 +763,7 @@ export const defaultArgs = {
                   return new Promise((resolve) =>
                     setTimeout(
                       () => resolve(filteredResults),
-                      event.type === "icInput" ? 2000 : 900
+                      event.type === "icChange" ? 2000 : 900
                     )
                   );
                 };
@@ -781,7 +781,7 @@ export const defaultArgs = {
           select.addEventListener("icOptionSelect", function (event) {
             selectedValue = event.detail.value;
           });
-          select.addEventListener("icInput", handleFilter);
+          select.addEventListener("icChange", handleFilter);
           select.addEventListener("icRetryLoad", handleFilter);
         </script>`
     }

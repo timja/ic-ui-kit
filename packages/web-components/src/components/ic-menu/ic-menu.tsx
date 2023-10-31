@@ -468,10 +468,7 @@ export class Menu {
   private arrowBehaviour = (event: KeyboardEvent): void => {
     event.preventDefault();
 
-    // Prevent unnecessary handleMenuChange calls - instead only when menu is closed
-    if (!this.open) {
-      this.handleMenuChange(true);
-    }
+    this.handleMenuChange(true);
   };
 
   private getMenuOptions = () =>
