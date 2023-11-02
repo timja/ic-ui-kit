@@ -6,31 +6,42 @@ exports[`ic-date-picker should render 1`] = `
     <div class="date-input-container">
       <ic-date-input label="Date picker label" showcalendarbutton="" showclearbutton="" value=""></ic-date-input>
     </div>
-    <div aria-describedby="dialog-description" aria-hidden="" aria-label="choose date" aria-modal="true" class="calendar-container" role="dialog">
+    <span class="sr-only" id="dialog-description">
+      undefined undefined in view. No date selected. Use arrow keys to change day. Press enter or space to select a date or press escape to close the picker
+    </span>
+    <div aria-label="choose date" aria-modal="true" class="calendar-container" role="dialog">
       <div class="month-year-nav-container">
         <div class="month-year-nav">
-          <ic-button aria-hidden="true" class="flip" disabletooltip="" id="previous-month-button" size="small" tabindex="-1" variant="icon">
-            svg
-          </ic-button>
+          <div aria-hidden="true">
+            <ic-button aria-hidden="true" class="flip" disabletooltip="" id="previous-month-button" size="small" tabindex="-1" variant="icon">
+              svg
+            </ic-button>
+          </div>
           <span aria-hidden="true" id="select-month-hint">
             undefined undefined selected. Press Enter or Space to open month picker view or use the left and right arrow keys to change month.
           </span>
-          <ic-button aria-describedby="select-month-hint" aria-expanded="false" aria-haspopup="menu" aria-label="Open select month view" class="month-picker-button" full-width="true" id="month-picker-button" size="small" variant="tertiary"></ic-button>
-          <ic-button aria-hidden="true" disabletooltip="" id="next-month-button" size="small" tabindex="-1" variant="icon">
-            svg
-          </ic-button>
+          <ic-button aria-describedby="select-month-hint" aria-expanded="false" aria-haspopup="menu" aria-label="Open month picker" class="month-picker-button" full-width="true" id="month-picker-button" size="small" variant="tertiary"></ic-button>
+          <div aria-hidden="true">
+            <ic-button aria-hidden="true" disabletooltip="" id="next-month-button" size="small" tabindex="-1" variant="icon">
+              svg
+            </ic-button>
+          </div>
         </div>
         <div class="month-year-nav">
-          <ic-button aria-hidden="true" class="flip" disabletooltip="" id="previous-year-button" size="small" tabindex="-1" variant="icon">
-            svg
-          </ic-button>
+          <div aria-hidden="true">
+            <ic-button aria-hidden="true" class="flip" disabletooltip="" id="previous-year-button" size="small" tabindex="-1" variant="icon">
+              svg
+            </ic-button>
+          </div>
           <span aria-hidden="true" id="select-year-hint">
             undefined selected. Press Enter or Space to open year picker view or use the left and right arrow keys to change the selected year.
           </span>
-          <ic-button aria-describedby="select-year-hint" aria-expanded="false" aria-haspopup="menu" aria-label="Open select year view" class="year-picker-button" full-width="true" id="year-picker-button" size="small" variant="tertiary"></ic-button>
-          <ic-button aria-hidden="true" disabletooltip="" id="next-year-button" size="small" tabindex="-1" variant="icon">
-            svg
-          </ic-button>
+          <ic-button aria-describedby="select-year-hint" aria-expanded="false" aria-haspopup="menu" aria-label="Open year picker" class="year-picker-button" full-width="true" id="year-picker-button" size="small" variant="tertiary"></ic-button>
+          <div aria-hidden="true">
+            <ic-button aria-hidden="true" disabletooltip="" id="next-year-button" size="small" tabindex="-1" variant="icon">
+              svg
+            </ic-button>
+          </div>
         </div>
       </div>
       <div aria-label="undefined undefined" class="calendar">

@@ -593,19 +593,21 @@ export class DatePicker {
   ): void => {
     const buttonSize = this.size === "large" ? "default" : "small";
     return (
-      <ic-button
-        id={id}
-        disableTooltip={true}
-        disabled={disabled}
-        onClick={this.monthYearNavClickHandler}
-        class={{ flip: flip }}
-        variant="icon"
-        innerHTML={chevron}
-        size={buttonSize}
-        tabIndex={-1}
-        aria-hidden="true"
-        onMouseDown={this.navButtonMouseDownHandler}
-      />
+      <div aria-hidden="true">
+        <ic-button
+          id={id}
+          disableTooltip={true}
+          disabled={disabled}
+          onClick={this.monthYearNavClickHandler}
+          class={{ flip: flip }}
+          variant="icon"
+          innerHTML={chevron}
+          size={buttonSize}
+          tabIndex={-1}
+          aria-hidden="true"
+          onMouseDown={this.navButtonMouseDownHandler}
+        />
+      </div>
     );
   };
 
@@ -1193,6 +1195,12 @@ export class DatePicker {
 
     const dialogLabel = "choose date";
 
+    const monthLabel =
+      monthNames && monthNames[monthInView]
+        ? monthNames[monthInView]
+        : "Open month picker";
+    const yearLabel = this.yearInView ? this.yearInView : "Open year picker";
+
     return (
       <Host onKeyDown={this.keyDownHandler} class={size}>
         <div class="date-input-container">
@@ -1201,20 +1209,22 @@ export class DatePicker {
             {...dateInputProps}
           ></ic-date-input>
         </div>
-        {calendarOpen && (
-          <span id="dialog-description" class="sr-only">
-            {dialogDesc}
-            {/* {monthNames[monthInView]} {yearInView} in view. Please select a day.
-            Use arrow keys to change day. Press enter or space to select a date
-            or press escape to close the picker */}
-          </span>
-        )}
+        <span
+          id="dialog-description"
+          class="sr-only"
+          // aria-hidden={calendarOpen ? "false" : "true"}
+        >
+          {dialogDesc}
+          {/* {monthNames[monthInView]} {yearInView} in view. Please select a day.
+        Use arrow keys to change day. Press enter or space to select a date
+        or press escape to close the picker */}
+        </span>
         <div
           role="dialog"
           aria-modal="true"
           aria-label={dialogLabel}
-          aria-describedBy="dialog-description"
-          aria-hidden={!calendarOpen}
+          aria-describedBy={calendarOpen ? "dialog-description" : undefined}
+          // aria-hidden={calendarOpen ? "false" : "true"}
           class={{
             "calendar-container": true,
             open: calendarOpen,
@@ -1222,11 +1232,11 @@ export class DatePicker {
           onClick={this.handleCalenderClick}
         >
           {/* {!monthPickerVisible && !yearPickerVisible && (
-            <span class="sr-only" aria-live="polite">
-              {monthNames[monthInView]} {yearInView} in view. Please select a
-              day.
-            </span>
-          )} */}
+        <span class="sr-only" aria-live="polite">
+          {monthNames[monthInView]} {yearInView} in view. Please select a
+          day.
+        </span>
+      )} */}
           <div
             class={{
               "month-year-nav-container": true,
@@ -1247,11 +1257,12 @@ export class DatePicker {
                 // disabled={disableMonth}
                 full-width="true"
                 variant="tertiary"
-                aria-label={
-                  monthPickerVisible
-                    ? "Return to day picker view"
-                    : "Open select month view"
-                }
+                // aria-label={
+                //   monthPickerVisible
+                //     ? "Return to day picker view"
+                //     : "Open select month view"
+                // }
+                aria-label={monthLabel}
                 aria-describedby="select-month-hint"
                 onKeyDown={this.monthButtonKeyDownHandler}
                 onClick={this.monthButtonClickHandler}
@@ -1281,11 +1292,13 @@ export class DatePicker {
                 // disabled={disableYear}
                 full-width="true"
                 variant="tertiary"
-                aria-label={
-                  yearPickerVisible
-                    ? "Return to day picker view"
-                    : "Open select year view"
-                }
+                // aria-label={this.yearInView}
+                // aria-label={
+                //   yearPickerVisible
+                //     ? "Return to day picker view"
+                //     : "Open select year view"
+                // }
+                aria-label={yearLabel}
                 aria-describedby="select-year-hint"
                 onKeyDown={this.yearButtonKeyDownHandler}
                 onClick={this.yearButtonClickHandler}

@@ -179,7 +179,44 @@ ic-date-input {
   background-color: var(--ic-architectural-white);
 }
 
-:host .year-picker-container {
+:host .new-year-picker-container {
+  padding: var(--ic-space-xs) var(--ic-space-xs) var(--ic-space-xs)
+    var(--ic-space-sm);
+  display: flex;
+  position: relative;
+}
+
+:host(.small) .new-year-picker-container {
+  padding: var(--ic-space-xs) var(--ic-space-md) var(--ic-space-xs)
+    var(--ic-space-lg);
+}
+
+:host(.large) .new-year-picker-container {
+  padding: var(--ic-space-xs) var(--ic-space-xxs);
+}
+
+:host .new-year-picker-container .prev-decade {
+  position: absolute;
+}
+
+:host .new-year-picker-container .next-decade {
+  position: absolute;
+  right: var(--ic-space-sm);
+  bottom: var(--ic-space-xs);
+}
+
+:host .years-list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--ic-space-xs);
+  row-gap: var(--ic-space-xs);
+}
+
+:host .years-list ic-button:first-child {
+  margin-left: 96px;
+}
+
+/* :host .year-picker-container {
   flex-wrap: wrap;
   display: inline-flex;
   padding: var(--ic-space-xs) var(--ic-space-xs) var(--ic-space-xs)
@@ -187,16 +224,16 @@ ic-date-input {
   align-items: center;
   column-gap: var(--ic-space-xs);
   row-gap: var(--ic-space-xs);
-}
+} */
 
-:host(.small) .year-picker-container {
+/* :host(.small) .year-picker-container {
   padding: var(--ic-space-xs) var(--ic-space-md) var(--ic-space-xs)
     var(--ic-space-lg);
-}
+} */
 
-:host(.large) .year-picker-container {
+/* :host(.large) .year-picker-container {
   padding: var(--ic-space-xs) var(--ic-space-xxs);
-}
+} */
 
 :host .bottom-buttons {
   padding-top: var(--ic-space-md);
