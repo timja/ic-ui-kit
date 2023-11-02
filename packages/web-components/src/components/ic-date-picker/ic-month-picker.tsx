@@ -70,9 +70,8 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
             data-month={index}
             size={buttonSize}
             tabIndex={focussed ? 0 : -1}
-            aria-label={
-              current ? `${month} selected` : `select ${month} ${yearInView}`
-            }
+            aria-current={current ? "true" : "false"}
+            aria-label={current ? "" : `select ${month}`}
             onClick={handleMonthClick}
             onKeyDown={onKeyDown}
             ref={(el: HTMLIcButtonElement) => {

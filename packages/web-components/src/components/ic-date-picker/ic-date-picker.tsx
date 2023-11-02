@@ -504,12 +504,18 @@ export class DatePicker {
     this.yearPickerVisible = false;
     this.focusDay = false;
     this.monthPickerVisible = !this.monthPickerVisible;
+    if (this.monthPickerVisible) {
+      setTimeout(() => this.focussedMonthEl.setFocus(), FOCUS_TIMER);
+    }
   };
 
   private yearButtonClickHandler = () => {
     this.monthPickerVisible = false;
     this.focusDay = false;
     this.yearPickerVisible = !this.yearPickerVisible;
+    if (this.yearPickerVisible) {
+      setTimeout(() => this.focussedYearEl.setFocus(), FOCUS_TIMER);
+    }
   };
 
   private todayButtonClickHandler = () => {
@@ -528,8 +534,14 @@ export class DatePicker {
 
   private clearButtonClickHandler = () => {
     this.setSelectedDate(null);
-    this.focusFocussedDay();
-    // this.focusFirstElement();
+
+    if (this.monthPickerVisible) {
+      this.focussedMonthEl.setFocus();
+    } else if (this.yearPickerVisible) {
+      this.focussedYearEl.setFocus();
+    } else {
+      this.focusFocussedDay();
+    }
   };
 
   private clearButtonKeyDownHandler = (ev: KeyboardEvent) => {
@@ -1230,6 +1242,7 @@ export class DatePicker {
                 id="month-picker-button"
                 size={headerButtonSize}
                 class="month-picker-button"
+                aria-haspopup="menu"
                 aria-expanded={monthPickerVisible ? "true" : "false"}
                 // disabled={disableMonth}
                 full-width="true"
@@ -1237,7 +1250,7 @@ export class DatePicker {
                 aria-label={
                   monthPickerVisible
                     ? "Return to day picker view"
-                    : "Change to select month view"
+                    : "Open select month view"
                 }
                 aria-describedby="select-month-hint"
                 onKeyDown={this.monthButtonKeyDownHandler}
@@ -1262,6 +1275,7 @@ export class DatePicker {
                 id="year-picker-button"
                 size={headerButtonSize}
                 class="year-picker-button"
+                aria-haspopup="menu"
                 // aria-pressed={yearPickerVisible ? "true" : "false"}
                 aria-expanded={yearPickerVisible ? "true" : "false"}
                 // disabled={disableYear}
@@ -1270,7 +1284,7 @@ export class DatePicker {
                 aria-label={
                   yearPickerVisible
                     ? "Return to day picker view"
-                    : "Change to select year view"
+                    : "Open select year view"
                 }
                 aria-describedby="select-year-hint"
                 onKeyDown={this.yearButtonKeyDownHandler}
