@@ -1028,48 +1028,6 @@ describe("ic-date-input component", () => {
     });
   });
 
-  describe("splitStringDate", () => {
-    it("should create an array of the day, month and year of a date if there's more than one slash in the date string", async () => {
-      const { componentInstance } = await createDateInputEnv();
-
-      expect(componentInstance.splitStringDate(DATE_1970)).toEqual([
-        "1970",
-        "01",
-        "01",
-      ]);
-    });
-    it("should create an array of the day, month and year of a date if there's more than one hyphen in the date string", async () => {
-      const { componentInstance } = await createDateInputEnv();
-
-      expect(componentInstance.splitStringDate("31-12-2000")).toEqual([
-        "2000",
-        "12",
-        "31",
-      ]);
-    });
-  });
-
-  describe("convertToDoubleDigits", () => {
-    it("should convert single digit days and months into double digits ", async () => {
-      const { componentInstance } = await createDateInputEnv();
-
-      expect(componentInstance.convertToDoubleDigits("4")).toMatch("04");
-
-      expect(componentInstance.convertToDoubleDigits(5)).toMatch("05");
-    });
-  });
-
-  describe("isDateOrEpoch", () => {
-    it("should return true if a date is in the Date format otherwise it should return false", async () => {
-      const { componentInstance } = await createDateInputEnv();
-
-      expect(componentInstance.isDateOrEpoch(DATE_1970)).toBe(false);
-      expect(componentInstance.isDateOrEpoch(new Date(500000000000))).toBe(
-        true
-      );
-    });
-  });
-
   describe("setValidationMessage", () => {
     it("should set invalidDateText if date (day) is not valid", async () => {
       const { componentInstance } = await createDateInputEnv();
@@ -1273,36 +1231,11 @@ describe("ic-date-input component", () => {
 
       componentInstance.setDate(new Date(500000000000));
 
-      const day = componentInstance.convertToDoubleDigits(
-        new Date(500000000000).getDate()
-      );
-
-      const month = componentInstance.convertToDoubleDigits(
-        new Date(500000000000).getMonth() + 1
-      );
-
-      const year = componentInstance.convertToDoubleDigits(
-        new Date(500000000000).getFullYear().toString()
-      );
-
-      expect(componentInstance.isDateOrEpoch(new Date(500000000000))).toBe(
-        true
-      );
-
-      expect(componentInstance.day).toMatch(day);
-      expect(componentInstance.month).toMatch(month);
-      expect(componentInstance.year).toMatch(year);
-
       expect(spySetValidationMessage).toHaveBeenCalled();
     });
 
     it("should set a date in string format and call setValidationMessage", async () => {
       const { componentInstance } = await createDateInputEnv();
-
-      const spySplitStringDate = jest.spyOn(
-        componentInstance,
-        "splitStringDate"
-      );
 
       const spySetValidationMessage = jest.spyOn(
         componentInstance,
@@ -1311,10 +1244,8 @@ describe("ic-date-input component", () => {
 
       componentInstance.setDate(DATE_1970);
 
-      expect(componentInstance.isDateOrEpoch(DATE_1970)).toBe(false);
       expect(componentInstance.year).toMatch("1970");
 
-      expect(spySplitStringDate).toHaveBeenCalled();
       expect(spySetValidationMessage).toHaveBeenCalled();
     });
     it("should set the Zulu ISOString into the correct date variables", async () => {
