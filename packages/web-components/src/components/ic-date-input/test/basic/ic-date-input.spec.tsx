@@ -1066,10 +1066,10 @@ describe("ic-date-input component", () => {
 
       expect(componentInstance.invalidDateText).toBe("");
     });
-    it("should set invalidDateText to dateUntilNowMessage if date is in past", async () => {
+    it("should set invalidDateText to disablePastMessage if date is in past", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
-      component.disableUntilNow = true;
+      component.disablePast = true;
 
       componentInstance.day = "10";
       componentInstance.month = "8";
@@ -1078,13 +1078,13 @@ describe("ic-date-input component", () => {
       componentInstance.setValidationMessage();
 
       expect(componentInstance.invalidDateText).toBe(
-        componentInstance.dateUntilNowMessage
+        componentInstance.disablePastMessage
       );
     });
-    it("should set invalidDateText to dateFromNowMessage if date is in future", async () => {
+    it("should set invalidDateText to disableFutureMessage if date is in future", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
-      component.disableFromNow = true;
+      component.disableFuture = true;
 
       componentInstance.day = "31";
       componentInstance.month = "8";
@@ -1093,13 +1093,13 @@ describe("ic-date-input component", () => {
       componentInstance.setValidationMessage();
 
       expect(componentInstance.invalidDateText).toBe(
-        componentInstance.dateFromNowMessage
+        componentInstance.disableFutureMessage
       );
     });
     it("should set invalidDateText empty string if date valid", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
-      component.disableFromNow = true;
+      component.disableFuture = true;
 
       componentInstance.day = "1";
       componentInstance.month = "1";
@@ -1140,10 +1140,10 @@ describe("ic-date-input component", () => {
         "Please enter a date after 2023/07/10."
       );
     });
-    it("should set invalidDateText to dateUntilNowMessage if both dateUntilNow and min prop have been set", async () => {
+    it("should set invalidDateText to disablePastMessage if both dateUntilNow and min prop have been set", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
-      component.disableUntilNow = true;
+      component.disablePast = true;
       component.min = "30-07-2024";
 
       componentInstance.day = "1";
@@ -1153,7 +1153,7 @@ describe("ic-date-input component", () => {
       componentInstance.setValidationMessage();
 
       expect(componentInstance.invalidDateText).toBe(
-        componentInstance.dateUntilNowMessage
+        componentInstance.disablePastMessage
       );
     });
     it("should set invalidDateText to max message if date is after max date", async () => {
@@ -1187,10 +1187,10 @@ describe("ic-date-input component", () => {
         "Please enter a date before 2023/07/10."
       );
     });
-    it("should set invalidDateText to dateFromNowMessage if both dateFromNow and max prop have been set", async () => {
+    it("should set invalidDateText to disableFutureMessage if both dateFromNow and max prop have been set", async () => {
       const { component, componentInstance } = await createDateInputEnv();
 
-      component.disableFromNow = true;
+      component.disableFuture = true;
       component.max = "30-07-2023";
 
       componentInstance.day = "1";
@@ -1200,7 +1200,7 @@ describe("ic-date-input component", () => {
       componentInstance.setValidationMessage();
 
       expect(componentInstance.invalidDateText).toBe(
-        componentInstance.dateFromNowMessage
+        componentInstance.disableFutureMessage
       );
     });
     it("should set invalidDateText to disableDays message if date is on a disabled weekday", async () => {

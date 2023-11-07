@@ -109,18 +109,6 @@ export class DateInput {
   @Prop() dateFormat?: IcDateFormat = "DD/MM/YYYY";
 
   /**
-   * The text to display as the validation message when `disableFromNow` is true and a disabled date is entered.
-   */
-  @Prop() dateFromNowMessage?: string =
-    "Dates in the future are not allowed. Please select a date in the past.";
-
-  /**
-   * The text to display as the validation message when `disableUntilNow` is true and a disabled date is entered.
-   */
-  @Prop() dateUntilNowMessage?: string =
-    "Dates in the past are not allowed. Please select a date in the future.";
-
-  /**
    * If `true`, the disabled state will be set.
    */
   @Prop() disabled?: boolean = false;
@@ -137,14 +125,26 @@ export class DateInput {
     "The date you have selected is on a day of the week that is not allowed. Please select another date.";
 
   /**
-   * If `true`, the user cannot select dates from now. A validation message will appear if they enter a disabled date.
+   * If `true`, dates in the future are not allowed. A validation message will appear if a date in the future is entered.
    */
-  @Prop() disableFromNow?: boolean = false;
+  @Prop() disableFuture?: boolean = false;
 
   /**
-   * If `true`, the user cannot select dates until now. A validation message will appear if they enter a disabled date.
+   * The text to display as the validation message when `disableFuture` is true and a date in the future is entered.
    */
-  @Prop() disableUntilNow?: boolean = false;
+  @Prop() disableFutureMessage?: string =
+    "Dates in the future are not allowed. Please select a date in the past.";
+
+  /**
+   * If `true`, dates in the past are not allowed. A validation message will appear if a date in the past is entered.
+   */
+  @Prop() disablePast?: boolean = false;
+
+  /**
+   * The text to display as the validation message when `disablePast` is true and a date in the past is entered.
+   */
+  @Prop() disablePastMessage?: string =
+    "Dates in the past are not allowed. Please select a date in the future.";
 
   /**
    * The helper text that will be displayed for additional field guidance. This will default to the text "Use format" along with the `dateFormat` value.
@@ -163,13 +163,13 @@ export class DateInput {
 
   /**
    * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
-   * The value of this prop is ignored if `disableFromNow` is set to `true`.
+   * The value of this prop is ignored if `disableFuture` is set to `true`.
    */
   @Prop() max?: string | Date = "";
 
   @Watch("max")
   watchMaxHandler(): void {
-    if (this.disableFromNow) {
+    if (this.disableFuture) {
       this.maxDate = new Date();
     } else {
       this.maxDate = createDate(this.max, this.dateFormat);
@@ -178,13 +178,13 @@ export class DateInput {
 
   /**
    * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object.
-   * The value of this prop is ignored if `disableUntilNow` is set to `true`.
+   * The value of this prop is ignored if `disablePast` is set to `true`.
    */
   @Prop() min?: string | Date = "";
 
   @Watch("min")
   watchMinHandler(): void {
-    if (this.disableUntilNow) {
+    if (this.disablePast) {
       this.minDate = new Date();
     } else {
       this.minDate = createDate(this.min, this.dateFormat);
@@ -817,16 +817,16 @@ export class DateInput {
       this.invalidDateText = "Please enter a valid date.";
     } else if (this.isDisabledDate && this.selectedDate !== null) {
       if (this.isBeforeMin) {
-        if (this.disableUntilNow) {
-          this.invalidDateText = this.dateUntilNowMessage;
+        if (this.disablePast) {
+          this.invalidDateText = this.disablePastMessage;
         } else {
           this.invalidDateText = `Please enter a date after ${this.formatMinMax(
             this.minDate
           )}.`;
         }
       } else if (this.isAfterMax) {
-        if (this.disableFromNow) {
-          this.invalidDateText = this.dateFromNowMessage;
+        if (this.disableFuture) {
+          this.invalidDateText = this.disableFutureMessage;
         } else {
           this.invalidDateText = `Please enter a date before ${this.formatMinMax(
             this.maxDate
@@ -835,11 +835,11 @@ export class DateInput {
       } else if (this.disableDays.length !== 0) {
         this.invalidDateText = this.disableDaysMessage;
       } else {
-        if (this.disableUntilNow) {
-          this.invalidDateText = this.dateUntilNowMessage;
+        if (this.disablePast) {
+          this.invalidDateText = this.disablePastMessage;
         }
-        if (this.disableFromNow) {
-          this.invalidDateText = this.dateFromNowMessage;
+        if (this.disableFuture) {
+          this.invalidDateText = this.disableFutureMessage;
         }
       }
     } else {
@@ -1032,7 +1032,7 @@ export class DateInput {
     }
   };
 
-  // Get whether date has been disabled using disableFromNow or disableUntilNow prop, but always allow current day
+  // Get whether date has been disabled using disableFuture or disablePast prop, but always allow current day
   // Consider using dateClamp and inDateRange
   private isSelectedDateDisabled = () => {
     const currentDate = new Date();
@@ -1058,8 +1058,8 @@ export class DateInput {
     }
 
     if (
-      ((this.disableUntilNow && this.selectedDate < currentDate) ||
-        (this.disableFromNow && this.selectedDate > currentDate)) &&
+      ((this.disablePast && this.selectedDate < currentDate) ||
+        (this.disableFuture && this.selectedDate > currentDate)) &&
       isNotToday
     ) {
       disabled = true;

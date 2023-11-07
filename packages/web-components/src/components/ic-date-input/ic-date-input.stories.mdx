@@ -256,14 +256,14 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
-### Default date / Disabled dates (until-now)
+### Default date / Disabled past dates
 
 <Canvas>
-  <Story name="Default date / Disabled dates (until-now)">
+  <Story name="Default date / Disabled past dates">
     {html`<ic-date-input
         id="date-input-default-date-string"
         label="When would you like to collect your coffee?"
-        disable-until-now
+        disable-past
       ></ic-date-input>
       <script>
         var dateInputString = document.querySelector(
@@ -274,14 +274,14 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
-### Default date / Disabled dates (from-now)
+### Default date / Disabled future dates
 
 <Canvas>
-  <Story name="Default date / Disabled dates (from-now)">
+  <Story name="Default date / Disabled future dates">
     {html`<ic-date-input
         id="date-input-default-date-string"
         label="When would you like to collect your coffee?"
-        disable-from-now
+        disable-future
       ></ic-date-input>
       <script>
         var dateInputString = document.querySelector(
@@ -310,13 +310,13 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
-### Dates until now disabled
+### Dates in past disabled
 
 <Canvas>
-  <Story name="Dates until now disabled" parameters={{ loki: { skip: true } }}>
+  <Story name="Dates in past disabled" parameters={{ loki: { skip: true } }}>
     {html`<ic-date-input
         label="When would you like to collect your coffee?"
-        disable-until-now
+        disable-past
       ></ic-date-input>
       <ic-typography>Enter a date in the past</ic-typography> `}
   </Story>
@@ -328,7 +328,7 @@ import readme from "./readme.md";
   <Story name="Dates from now disabled" parameters={{ loki: { skip: true } }}>
     {html`<ic-date-input
         label="When would you like to collect your coffee?"
-        disable-from-now
+        disable-future
       ></ic-date-input>
       <ic-typography>Enter a date in the future</ic-typography> `}
   </Story>
@@ -405,7 +405,7 @@ import readme from "./readme.md";
       ></ic-alert>
       <ic-date-input
         label="When would you like to collect your coffee?"
-        disable-from-now
+        disable-future
         required
       ></ic-date-input>
       <ic-button>Submit</ic-button>
@@ -435,18 +435,15 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
-### a11y: disabled dates (until now)
+### a11y: disabled past dates
 
 <Canvas>
-  <Story
-    name="a11y: disabled dates (until now)"
-    parameters={{ loki: { skip: true } }}
-  >
+  <Story name="a11y: disabled past dates" parameters={{ loki: { skip: true } }}>
     {(args) =>
       html` <ic-date-input
           label="When would you like to collect your coffee?"
           helper-text="Enter date in the past"
-          disable-until-now
+          disable-past
         ></ic-date-input>
         <br />
         <ic-button>Submit</ic-button>`
@@ -454,18 +451,18 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
-### a11y: default dates - disabled dates (until now)
+### a11y: default dates - disabled past dates
 
 <Canvas>
   <Story
-    name="a11y: default dates - disabled dates (until now)"
+    name="a11y: default dates - disabled past dates"
     parameters={{ loki: { skip: true } }}
   >
     {(args) =>
       html` <ic-date-input
           label="When would you like to collect your coffee?"
           helper-text="Enter date in the past"
-          disable-until-now
+          disable-past
           value="1/1/1990"
         ></ic-date-input>
         <br />

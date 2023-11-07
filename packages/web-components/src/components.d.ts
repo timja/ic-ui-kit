@@ -564,14 +564,6 @@ export namespace Components {
          */
         "dateFormat"?: IcDateFormat;
         /**
-          * The text to display as the validation message when `disableFromNow` is true and a disabled date is entered.
-         */
-        "dateFromNowMessage"?: string;
-        /**
-          * The text to display as the validation message when `disableUntilNow` is true and a disabled date is entered.
-         */
-        "dateUntilNowMessage"?: string;
-        /**
           * The days of the week to disable.
          */
         "disableDays"?: IcWeekDays[];
@@ -580,13 +572,21 @@ export namespace Components {
          */
         "disableDaysMessage"?: string;
         /**
-          * If `true`, the user cannot select dates from now. A validation message will appear if they enter a disabled date.
+          * If `true`, dates in the future are not allowed. A validation message will appear if a date in the future is entered.
          */
-        "disableFromNow"?: boolean;
+        "disableFuture"?: boolean;
         /**
-          * If `true`, the user cannot select dates until now. A validation message will appear if they enter a disabled date.
+          * The text to display as the validation message when `disableFuture` is true and a date in the future is entered.
          */
-        "disableUntilNow"?: boolean;
+        "disableFutureMessage"?: string;
+        /**
+          * If `true`, dates in the past are not allowed. A validation message will appear if a date in the past is entered.
+         */
+        "disablePast"?: boolean;
+        /**
+          * The text to display as the validation message when `disablePast` is true and a date in the past is entered.
+         */
+        "disablePastMessage"?: string;
         /**
           * If `true`, the disabled state will be set.
          */
@@ -609,11 +609,11 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
+          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFuture` is set to `true`.
          */
         "max"?: string | Date;
         /**
-          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
+          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disablePast` is set to `true`.
          */
         "min"?: string | Date;
         /**
@@ -3361,14 +3361,6 @@ declare namespace LocalJSX {
          */
         "dateFormat"?: IcDateFormat;
         /**
-          * The text to display as the validation message when `disableFromNow` is true and a disabled date is entered.
-         */
-        "dateFromNowMessage"?: string;
-        /**
-          * The text to display as the validation message when `disableUntilNow` is true and a disabled date is entered.
-         */
-        "dateUntilNowMessage"?: string;
-        /**
           * The days of the week to disable.
          */
         "disableDays"?: IcWeekDays[];
@@ -3377,13 +3369,21 @@ declare namespace LocalJSX {
          */
         "disableDaysMessage"?: string;
         /**
-          * If `true`, the user cannot select dates from now. A validation message will appear if they enter a disabled date.
+          * If `true`, dates in the future are not allowed. A validation message will appear if a date in the future is entered.
          */
-        "disableFromNow"?: boolean;
+        "disableFuture"?: boolean;
         /**
-          * If `true`, the user cannot select dates until now. A validation message will appear if they enter a disabled date.
+          * The text to display as the validation message when `disableFuture` is true and a date in the future is entered.
          */
-        "disableUntilNow"?: boolean;
+        "disableFutureMessage"?: string;
+        /**
+          * If `true`, dates in the past are not allowed. A validation message will appear if a date in the past is entered.
+         */
+        "disablePast"?: boolean;
+        /**
+          * The text to display as the validation message when `disablePast` is true and a date in the past is entered.
+         */
+        "disablePastMessage"?: string;
         /**
           * If `true`, the disabled state will be set.
          */
@@ -3401,11 +3401,11 @@ declare namespace LocalJSX {
          */
         "label": string;
         /**
-          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFromNow` is set to `true`.
+          * The latest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableFuture` is set to `true`.
          */
         "max"?: string | Date;
         /**
-          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disableUntilNow` is set to `true`.
+          * The earliest date that will be allowed. The value can be in any format supported as `dateFormat`, in ISO 8601 date string format (`yyyy-mm-dd`) or as a JavaScript `Date` object. The value of this prop is ignored if `disablePast` is set to `true`.
          */
         "min"?: string | Date;
         /**
