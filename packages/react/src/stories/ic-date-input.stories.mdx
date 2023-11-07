@@ -192,14 +192,14 @@ export const DateInputWithValue = () => {
   </Story>
 </Canvas>
 
-### Default date (until-now)
+### Default date (past disabled)
 
 <Canvas>
-  <Story name="Default date (until now)">
+  <Story name="Default date (past disabled)">
     <IcDateInput
       label="When would you like to collect your coffee?"
       value="25-05-2005"
-      disableUntilNow
+      disablePast
     />
   </Story>
 </Canvas>
@@ -216,28 +216,28 @@ export const DateInputWithValue = () => {
   </Story>
 </Canvas>
 
-### Dates until now disabled
+### Dates in past disabled
 
 <Canvas>
-  <Story name="Dates until now disabled">
+  <Story name="Dates in past disabled">
     <>
       <IcDateInput
         label="When would you like to collect your coffee?"
-        disableUntilNow
+        disablePast
       />
       <IcTypography>Enter a date in the past</IcTypography>
     </>
   </Story>
 </Canvas>
 
-### Dates from now disabled
+### Dates in future disabled
 
 <Canvas>
-  <Story name="Dates from now disabled">
+  <Story name="Dates in future disabled">
     <>
       <IcDateInput
         label="When would you like to collect your coffee?"
-        disableFromNow
+        disableFuture
       />
       <IcTypography>Enter a date in the future</IcTypography>
     </>
