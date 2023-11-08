@@ -25,6 +25,7 @@
 ### Used by
 
  - [ic-checkbox-group](../ic-checkbox-group)
+ - [ic-date-input](../ic-date-input)
  - [ic-radio-group](../ic-radio-group)
  - [ic-select](../ic-select)
  - [ic-switch](../ic-switch)
@@ -39,6 +40,7 @@
 graph TD;
   ic-input-label --> ic-typography
   ic-checkbox-group --> ic-input-label
+  ic-date-input --> ic-input-label
   ic-radio-group --> ic-input-label
   ic-select --> ic-input-label
   ic-switch --> ic-input-label

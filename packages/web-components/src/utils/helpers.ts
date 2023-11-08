@@ -22,6 +22,22 @@ import {
 const DARK_MODE_THRESHOLD = 133.3505;
 
 /**
+ * converts an enum of strings into an array of strings
+ */
+export const stringEnumToArray = (
+  theEnum: Record<string, string | number>
+): string[] => {
+  const arr: string[] = [];
+  Object.values(theEnum).forEach((val) => {
+    if (isNaN(Number(val))) {
+      const str = val as string;
+      arr.push(str);
+    }
+  });
+  return arr;
+};
+
+/**
  * Used to inherit global attributes set on the host. Called in componentWillLoad and assigned
  * to a variable that is later used in the render function.
  *
@@ -86,7 +102,7 @@ export const renderHiddenInput = (
   always: boolean,
   container: HTMLElement,
   name: string,
-  value: string | undefined | null,
+  value: string | Date | undefined | null,
   disabled: boolean
 ): void => {
   if (name !== undefined && (always || hasShadowDom(container))) {
@@ -103,7 +119,12 @@ export const renderHiddenInput = (
     }
     input.disabled = disabled;
     input.name = name;
-    input.value = value || "";
+
+    if (value instanceof Date) {
+      input.value = value ? value.toISOString() : null;
+    } else {
+      input.value = value || "";
+    }
   }
 };
 
@@ -555,4 +576,8 @@ export const removeDisabledFalse = (
   if (!disabled) {
     element.removeAttribute("disabled");
   }
+};
+
+export const isNumeric = (value: string) => {
+  return /^-?\d+$/.test(value);
 };
