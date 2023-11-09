@@ -1490,7 +1490,7 @@ describe("ic-select searchable", () => {
     await page.waitForChanges();
   });
 
-  it("should test menus opens and closes when enter pressed - external filtering", async () => {
+  it("should test menus open and closes when enter pressed - external filtering", async () => {
     const page = await newSpecPage({
       components: [Select, Menu, InputComponentContainer],
       html: `<ic-select label="IC Select Test" searchable="true" disable-filter="true" debounce="300"></ic-select>`,

@@ -72,7 +72,7 @@ describe("ic-input-component-container", () => {
     });
 
     expect(page.root).toEqualHtml(`
-    <ic-input-component-container class="default small fullwidth multiline" small="true" full-width="true" multi-line="true">
+    <ic-input-component-container class="small fullwidth multiline" full-width="true" multi-line="true" size="small">
       <div class="focus-indicator">
         content
       </div>

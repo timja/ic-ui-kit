@@ -1141,7 +1141,8 @@ export class Select {
           <ic-input-component-container
             ref={(el) => (this.anchorEl = el)}
             class={{ "menu-open": this.open }}
-            small={small || size === "small"}
+            small={small}
+            size={size}
             fullWidth={fullWidth}
             disabled={disabled}
             readonly={readonly}
@@ -1376,11 +1377,12 @@ export class Select {
               }
               inputLabel={label}
               anchorEl={this.anchorEl}
-              small={small || size === "small"}
+              small={small}
+              size={size}
               menuId={menuId}
               open={this.open}
               options={searchable ? this.filteredOptions : this.uniqueOptions}
-              value={currValue as string} // CHECK THE TYPE
+              value={multiple ? currValue as string[] : currValue as string}
               fullWidth={fullWidth}
               onMenuStateChange={this.handleMenuChange}
               onMenuOptionSelect={this.handleCustomSelectChange}
