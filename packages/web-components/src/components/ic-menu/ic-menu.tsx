@@ -727,6 +727,10 @@ export class Menu {
     if (event.key === "Tab" && event.shiftKey) {
       this.preventClickOpen = false;
     }
+    if (event.key === "Enter" && this.disabledOptionSelected) {
+      this.disabledOptionSelected = false;
+      event.stopImmediatePropagation();
+    }
   };
 
   private handleSelectAllClick = () => {
@@ -837,6 +841,10 @@ export class Menu {
 
     switch (event.key) {
       case " ":
+        if (this.isSearchableSelect) {
+          this.handleManualKeyboardNavigation(event);
+          break;
+        }
       case "Enter":
         event.preventDefault();
         if (highlightedOptionIndex >= 0) {
@@ -885,10 +893,6 @@ export class Menu {
       default:
         this.handleManualKeyboardNavigation(event);
         break;
-    }
-    if (event.key === "Enter" && this.disabledOptionSelected) {
-      this.disabledOptionSelected = false;
-      event.stopImmediatePropagation();
     }
   };
 
