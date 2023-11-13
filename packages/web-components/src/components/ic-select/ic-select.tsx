@@ -449,7 +449,7 @@ export class Select {
 
     clearTimeout(this.debounceIcChange);
     this.debounceIcChange = window.setTimeout(() => {
-      this.icChange.emit({ value });
+      this.icChange.emit({ value: this.value });
     }, this.currDebounce);
   };
 
