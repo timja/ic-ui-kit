@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-08T14:46:44",
+  "timestamp": "2023-11-13T12:24:20",
   "compiler": {
     "name": "@stencil/core",
     "version": "3.4.2",
@@ -6066,13 +6066,7 @@
       ],
       "events": [],
       "listeners": [],
-      "styles": [
-        {
-          "name": "--ic-z-index-menu",
-          "annotation": "prop",
-          "docs": "z-index of menu"
-        }
-      ],
+      "styles": [],
       "slots": [],
       "parts": [],
       "dependents": [

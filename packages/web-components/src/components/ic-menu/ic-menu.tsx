@@ -364,10 +364,10 @@ export class Menu {
   async handleKeyboardOpen(event: KeyboardEvent): Promise<void> {
     this.keyboardNav = false;
 
-    if (this.isManualMode) {
-      this.manualSetInputValueKeyboardOpen(event);
-    } else {
+    if (this.activationType === "automatic") {
       this.autoSetInputValueKeyboardOpen(event);
+    } else {
+      this.manualSetInputValueKeyboardOpen(event);
     }
   }
 
@@ -515,19 +515,171 @@ export class Menu {
   };
 
   // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
-  // and menu is closed
   private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
+    console.log(this.isSearchableSelect + "HELLO");
+    const menuOptions = this.getMenuOptions();
+
+    this.keyboardNav = false;
+
+    const highlightedOptionIndex = menuOptions.findIndex(
+      (option) => option[this.valueField] === this.optionHighlighted
+    );
+
+    const clickedMultiOptionIndex = menuOptions.findIndex(
+      (option) => option.value === this.multiOptionClicked
+    );
+
+    const getOptionId = (index: number): string =>
+      Array.from(this.el.querySelectorAll("li"))[index]?.id;
+
     switch (event.key) {
-      case " ":
+      case "ArrowDown":
+        this.keyboardNav = true;
+        this.arrowBehaviour(event);
+        if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the top of the menu when user switches to using keyboard
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (highlightedOptionIndex < menuOptions.length - 1) {
+          this.setHighlightedOption(highlightedOptionIndex + 1);
+          this.menuOptionId.emit({
+            optionId: getOptionId(highlightedOptionIndex + 1),
+          });
+        } else {
+          this.setHighlightedOption(0);
+          this.menuOptionId.emit({
+            optionId: getOptionId(0),
+          });
+        }
+        this.preventIncorrectTabOrder = false;
+        this.focusFromSearchKeypress = false;
+        break;
+      case "ArrowUp":
+        this.keyboardNav = true;
+        this.arrowBehaviour(event);
+        if (this.multiOptionClicked) {
+          // Set focus to option last clicked
+          // Prevents it resetting to the bottom of the menu when user switches to using keyboard
+          this.setHighlightedOption(clickedMultiOptionIndex);
+          this.multiOptionClicked = null;
+        } else if (
+          highlightedOptionIndex <= 0 ||
+          highlightedOptionIndex > menuOptions.length + 1
+        ) {
+          this.setHighlightedOption(menuOptions.length - 1);
+          this.menuOptionId.emit({
+            optionId: getOptionId(menuOptions.length - 1),
+          });
+        } else {
+          this.setHighlightedOption(highlightedOptionIndex - 1);
+          this.menuOptionId.emit({
+            optionId: getOptionId(highlightedOptionIndex - 1),
+          });
+        }
+        this.preventIncorrectTabOrder = false;
+        this.focusFromSearchKeypress = false;
+        break;
+      case "Home":
+        this.keyboardNav = true;
+        event.preventDefault();
+        this.arrowBehaviour(event);
+        this.setHighlightedOption(0);
+        this.menuOptionId.emit({
+          optionId: getOptionId(0),
+        });
+        break;
+      case "End":
+        this.keyboardNav = true;
+        event.preventDefault();
+        this.arrowBehaviour(event);
+        this.setHighlightedOption(menuOptions.length - 1);
+        this.menuOptionId.emit({
+          optionId: getOptionId(menuOptions.length - 1),
+        });
+        break;
       case "Enter":
-        if ((event.target as HTMLElement).id !== "clear-button") {
-          this.handleMenuChange(true);
+        event.preventDefault();
+        if (highlightedOptionIndex >= 0) {
+          if (menuOptions[highlightedOptionIndex] !== undefined) {
+            if (
+              this.isSearchBar &&
+              menuOptions[highlightedOptionIndex].disabled === true
+            ) {
+              this.disabledOptionSelected = true;
+            } else {
+              this.setInputValue(highlightedOptionIndex);
+              this.value = menuOptions[highlightedOptionIndex][this.valueField];
+            }
+          }
+        } else {
+          this.setInputValue(highlightedOptionIndex);
         }
         break;
+      case "Escape":
+        if (this.open) {
+          event.stopImmediatePropagation();
+        }
+        this.handleMenuChange(false);
+        this.menuOptionId.emit({ optionId: undefined });
+        break;
+      case "a":
+        // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
+        // Otherwise, if a different OS, checks Ctrl key
+        if (
+          (isMacDevice() && event.metaKey) ||
+          (!isMacDevice() && event.ctrlKey)
+        ) {
+          this.emitSelectAll();
+        }
+        break;
+      case "Shift":
+      case "Tab":
+        if (this.isSearchBar) {
+          this.keyboardNav = true;
+        }
+        if (this.isMultiSelect && !event.shiftKey) {
+          event.preventDefault();
+          this.selectAllButton.focus(); // Move focus to select all button instead of focused option
+          this.menu.tabIndex = -1;
+          this.preventMenuFocus = true;
+          this.preventClickOpen = true;
+          this.optionHighlighted = undefined; // Stop any option focus states showing when focus moved to select all button
+        }
+        this.preventIncorrectTabOrder = true;
+        break;
+      case "Backspace":
+        if (this.isSearchBar) {
+          (this.parentEl as HTMLIcSearchBarElement).setFocus();
+          if (this.searchMode === "navigation") this.setHighlightedOption(0);
+        } else if (this.isSearchableSelect) {
+          (this.parentEl as HTMLIcSelectElement).setFocus();
+        }
+        this.focusFromSearchKeypress = true;
+        break;
       default:
-        this.handleManualKeyboardNavigation(event);
+        if (this.isSearchBar) {
+          (this.parentEl as HTMLIcSearchBarElement).setFocus();
+          if (this.searchMode === "navigation") this.setHighlightedOption(0);
+        } else if (this.isSearchableSelect) {
+          (this.parentEl as HTMLIcSelectElement).setFocus();
+        }
+        this.focusFromSearchKeypress = true;
         break;
     }
+
+    // switch (event.key) {
+    //   case " ":
+    //   case "Enter":
+    //     if ((event.target as HTMLElement).id !== "clear-button") {
+    //       this.handleMenuChange(true);
+    //     }
+    //     break;
+    //   default:
+    //     this.handleManualKeyboardNavigation(event);
+    //     break;
+    // }
+
   };
 
   private setInputValue = (highlightedOptionIndex: number) => {
@@ -599,127 +751,127 @@ export class Menu {
 
   // Manual keyboard behaviour which occurs both when menu is closed and open
   // i.e. for keys that do the same thing when pressed on either input box (once menu is open) or menu
-  private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
-    const menuOptions = this.getMenuOptions();
+  // private handleManualKeyboardNavigation = (event: KeyboardEvent) => {
+  //   const menuOptions = this.getMenuOptions();
 
-    this.keyboardNav = false;
+  //   this.keyboardNav = false;
 
-    const highlightedOptionIndex = menuOptions.findIndex(
-      (option) => option[this.valueField] === this.optionHighlighted
-    );
+  //   const highlightedOptionIndex = menuOptions.findIndex(
+  //     (option) => option[this.valueField] === this.optionHighlighted
+  //   );
 
-    const clickedMultiOptionIndex = menuOptions.findIndex(
-      (option) => option.value === this.multiOptionClicked
-    );
+  //   const clickedMultiOptionIndex = menuOptions.findIndex(
+  //     (option) => option.value === this.multiOptionClicked
+  //   );
 
-    const getOptionId = (index: number): string =>
-      Array.from(this.el.querySelectorAll("li"))[index]?.id;
+  //   const getOptionId = (index: number): string =>
+  //     Array.from(this.el.querySelectorAll("li"))[index]?.id;
 
-    switch (event.key) {
-      case "ArrowDown":
-        this.keyboardNav = true;
-        this.arrowBehaviour(event);
-        if (this.multiOptionClicked) {
-          // Set focus to option last clicked
-          // Prevents it resetting to the top of the menu
-          this.setHighlightedOption(clickedMultiOptionIndex);
-          this.multiOptionClicked = null;
-        } else if (highlightedOptionIndex < menuOptions.length - 1) {
-          this.setHighlightedOption(highlightedOptionIndex + 1);
-          this.menuOptionId.emit({
-            optionId: getOptionId(highlightedOptionIndex + 1),
-          });
-        } else {
-          this.setHighlightedOption(0);
-          this.menuOptionId.emit({
-            optionId: getOptionId(0),
-          });
-        }
-        this.preventIncorrectTabOrder = false;
-        this.focusFromSearchKeypress = false;
-        break;
-      case "ArrowUp":
-        this.keyboardNav = true;
-        this.arrowBehaviour(event);
-        if (this.multiOptionClicked) {
-          // Set focus to option last clicked
-          // Prevents it resetting to the bottom of the menu
-          this.setHighlightedOption(clickedMultiOptionIndex);
-          this.multiOptionClicked = null;
-        } else if (
-          highlightedOptionIndex <= 0 ||
-          highlightedOptionIndex > menuOptions.length + 1
-        ) {
-          this.setHighlightedOption(menuOptions.length - 1);
-          this.menuOptionId.emit({
-            optionId: getOptionId(menuOptions.length - 1),
-          });
-        } else {
-          this.setHighlightedOption(highlightedOptionIndex - 1);
-          this.menuOptionId.emit({
-            optionId: getOptionId(highlightedOptionIndex - 1),
-          });
-        }
-        this.preventIncorrectTabOrder = false;
-        this.focusFromSearchKeypress = false;
-        break;
-      case "Home":
-        this.keyboardNav = true;
-        event.preventDefault();
-        this.arrowBehaviour(event);
-        this.setHighlightedOption(0);
-        this.menuOptionId.emit({
-          optionId: getOptionId(0),
-        });
-        break;
-      case "End":
-        this.keyboardNav = true;
-        event.preventDefault();
-        this.arrowBehaviour(event);
-        this.setHighlightedOption(menuOptions.length - 1);
-        this.menuOptionId.emit({
-          optionId: getOptionId(menuOptions.length - 1),
-        });
-        break;
-      case "Enter":
-        event.preventDefault();
-        // LEAVE THIS AS INCOMING CHANGE
-        break;
-      case "Shift":
-      case "Tab":
-        if (this.isSearchBar) {
-          this.keyboardNav = true;
-        }
-        if (!this.isMultiSelect) {
-          this.preventIncorrectTabOrder = true;
-        }
-        break;
-      case "Backspace":
-        if (this.isSearchBar) {
-          (this.parentEl as HTMLIcSearchBarElement).setFocus();
-          if (this.searchMode === "navigation") this.setHighlightedOption(0);
-        } else if (this.isSearchableSelect) {
-          (this.parentEl as HTMLIcSelectElement).setFocus();
-        }
-        this.focusFromSearchKeypress = true;
-        break;
-      default:
-        if (this.isSearchBar) {
-          (this.parentEl as HTMLIcSearchBarElement).setFocus();
-          if (this.searchMode === "navigation") this.setHighlightedOption(0);
-        } else if (this.isSearchableSelect) {
-          (this.parentEl as HTMLIcSelectElement).setFocus();
-        }
-        this.focusFromSearchKeypress = true;
-        break;
-    }
-  };
+  //   switch (event.key) {
+  //     case "ArrowDown":
+  //       this.keyboardNav = true;
+  //       this.arrowBehaviour(event);
+  //       if (this.multiOptionClicked) {
+  //         // Set focus to option last clicked
+  //         // Prevents it resetting to the top of the menu
+  //         this.setHighlightedOption(clickedMultiOptionIndex);
+  //         this.multiOptionClicked = null;
+  //       } else if (highlightedOptionIndex < menuOptions.length - 1) {
+  //         this.setHighlightedOption(highlightedOptionIndex + 1);
+  //         this.menuOptionId.emit({
+  //           optionId: getOptionId(highlightedOptionIndex + 1),
+  //         });
+  //       } else {
+  //         this.setHighlightedOption(0);
+  //         this.menuOptionId.emit({
+  //           optionId: getOptionId(0),
+  //         });
+  //       }
+  //       this.preventIncorrectTabOrder = false;
+  //       this.focusFromSearchKeypress = false;
+  //       break;
+  //     case "ArrowUp":
+  //       this.keyboardNav = true;
+  //       this.arrowBehaviour(event);
+  //       if (this.multiOptionClicked) {
+  //         // Set focus to option last clicked
+  //         // Prevents it resetting to the bottom of the menu
+  //         this.setHighlightedOption(clickedMultiOptionIndex);
+  //         this.multiOptionClicked = null;
+  //       } else if (
+  //         highlightedOptionIndex <= 0 ||
+  //         highlightedOptionIndex > menuOptions.length + 1
+  //       ) {
+  //         this.setHighlightedOption(menuOptions.length - 1);
+  //         this.menuOptionId.emit({
+  //           optionId: getOptionId(menuOptions.length - 1),
+  //         });
+  //       } else {
+  //         this.setHighlightedOption(highlightedOptionIndex - 1);
+  //         this.menuOptionId.emit({
+  //           optionId: getOptionId(highlightedOptionIndex - 1),
+  //         });
+  //       }
+  //       this.preventIncorrectTabOrder = false;
+  //       this.focusFromSearchKeypress = false;
+  //       break;
+  //     case "Home":
+  //       this.keyboardNav = true;
+  //       event.preventDefault();
+  //       this.arrowBehaviour(event);
+  //       this.setHighlightedOption(0);
+  //       this.menuOptionId.emit({
+  //         optionId: getOptionId(0),
+  //       });
+  //       break;
+  //     case "End":
+  //       this.keyboardNav = true;
+  //       event.preventDefault();
+  //       this.arrowBehaviour(event);
+  //       this.setHighlightedOption(menuOptions.length - 1);
+  //       this.menuOptionId.emit({
+  //         optionId: getOptionId(menuOptions.length - 1),
+  //       });
+  //       break;
+  //     case "Enter":
+  //       event.preventDefault();
+  //       // LEAVE THIS AS INCOMING CHANGE
+  //       break;
+  //     case "Shift": // WORK OUT WHAT THIS DOES AND WHERE IT GOES
+  //     case "Tab":
+  //       if (this.isSearchBar) {
+  //         this.keyboardNav = true;
+  //       }
+  //       if (!this.isMultiSelect) {
+  //         this.preventIncorrectTabOrder = true;
+  //       }
+  //       break;
+  //     case "Backspace":
+  //       if (this.isSearchBar) {
+  //         (this.parentEl as HTMLIcSearchBarElement).setFocus();
+  //         if (this.searchMode === "navigation") this.setHighlightedOption(0);
+  //       } else if (this.isSearchableSelect) {
+  //         (this.parentEl as HTMLIcSelectElement).setFocus();
+  //       }
+  //       this.focusFromSearchKeypress = true;
+  //       break;
+  //     default:
+  //       if (this.isSearchBar) {
+  //         (this.parentEl as HTMLIcSearchBarElement).setFocus();
+  //         if (this.searchMode === "navigation") this.setHighlightedOption(0);
+  //       } else if (this.isSearchableSelect) {
+  //         (this.parentEl as HTMLIcSelectElement).setFocus();
+  //       }
+  //       this.focusFromSearchKeypress = true;
+  //       break;
+  //   }
+  // };
 
   private handleMenuKeyDown = (event: KeyboardEvent) => {
-    if (this.isManualMode) {
-      this.manualSetValueOnMenuKeyDown(event);
-    } else {
+    if (this.activationType === "automatic") {
       this.autoSetValueOnMenuKeyDown(event);
+    } else {
+      this.manualSetInputValueKeyboardOpen(event);
     }
   };
 
@@ -760,9 +912,9 @@ export class Menu {
 
   // Determines keyboard behaviour when selection is automatic
   // (i.e. you don't have to press Enter select an option - just focus on it)
-  // and menu is open
+  // and menu is focused
   private autoSetValueOnMenuKeyDown = (event: KeyboardEvent): void => {
-    event.stopPropagation();
+    event.cancelBubble = true;
     const selectedOptionIndex = this.ungroupedOptions.findIndex(
       (option) => option[this.valueField] === this.value
     );
@@ -831,70 +983,70 @@ export class Menu {
 
   // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
   // and menu is open
-  private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
-    event.stopPropagation();
-    const menuOptions = this.getMenuOptions();
+  // private manualSetValueOnMenuKeyDown = (event: KeyboardEvent) => {
+  //   event.stopPropagation();
+  //   const menuOptions = this.getMenuOptions();
 
-    const highlightedOptionIndex = menuOptions.findIndex(
-      (option) => option.value === this.optionHighlighted
-    );
+  //   const highlightedOptionIndex = menuOptions.findIndex(
+  //     (option) => option.value === this.optionHighlighted
+  //   );
 
-    switch (event.key) {
-      case " ":
-        if (this.isSearchableSelect) {
-          this.handleManualKeyboardNavigation(event);
-          break;
-        }
-      case "Enter":
-        event.preventDefault();
-        if (highlightedOptionIndex >= 0) {
-          if (menuOptions[highlightedOptionIndex] !== undefined) {
-            if (
-              this.isSearchBar &&
-              menuOptions[highlightedOptionIndex].disabled === true
-            ) {
-              this.disabledOptionSelected = true;
-            } else {
-              this.setInputValue(highlightedOptionIndex);
-              this.value = menuOptions[highlightedOptionIndex][this.valueField];
-            }
-          }
-        } else {
-          this.setInputValue(highlightedOptionIndex);
-        }
-        break;
-      case "Escape":
-        if (this.open) {
-          event.stopImmediatePropagation();
-        }
-        this.handleMenuChange(false);
-        this.menuOptionId.emit({ optionId: undefined });
-        break;
-      case "a":
-        // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
-        // Otherwise, if a different OS, checks Ctrl key
-        if (
-          (isMacDevice() && event.metaKey) ||
-          (!isMacDevice() && event.ctrlKey)
-        ) {
-          this.emitSelectAll();
-        }
-        break;
-      case "Tab":
-        if (this.isMultiSelect && !event.shiftKey) {
-          event.preventDefault();
-          this.selectAllButton.focus(); // Move focus to select all button instead of focused option
-          this.menu.tabIndex = -1;
-          this.preventMenuFocus = true;
-          this.preventClickOpen = true;
-          this.optionHighlighted = undefined; // Stop any option focus states showing when focus moved to select all button
-        }
-        break;
-      default:
-        this.handleManualKeyboardNavigation(event);
-        break;
-    }
-  };
+  //   switch (event.key) {
+  //     case " ":
+  //       if (this.isSearchableSelect) {
+  //         this.handleManualKeyboardNavigation(event);
+  //         break;
+  //       }
+  //     case "Enter":
+  //       event.preventDefault();
+  //       if (highlightedOptionIndex >= 0) {
+  //         if (menuOptions[highlightedOptionIndex] !== undefined) {
+  //           if (
+  //             this.isSearchBar &&
+  //             menuOptions[highlightedOptionIndex].disabled === true
+  //           ) {
+  //             this.disabledOptionSelected = true;
+  //           } else {
+  //             this.setInputValue(highlightedOptionIndex);
+  //             this.value = menuOptions[highlightedOptionIndex][this.valueField];
+  //           }
+  //         }
+  //       } else {
+  //         this.setInputValue(highlightedOptionIndex);
+  //       }
+  //       break;
+  //     case "Escape":
+  //       if (this.open) {
+  //         event.stopImmediatePropagation();
+  //       }
+  //       this.handleMenuChange(false);
+  //       this.menuOptionId.emit({ optionId: undefined });
+  //       break;
+  //     case "a":
+  //       // Checks if Cmd (meta) key is pressed if Mac device (while excluding meta key on Windows)
+  //       // Otherwise, if a different OS, checks Ctrl key
+  //       if (
+  //         (isMacDevice() && event.metaKey) ||
+  //         (!isMacDevice() && event.ctrlKey)
+  //       ) {
+  //         this.emitSelectAll();
+  //       }
+  //       break;
+  //     case "Tab":
+  //       if (this.isMultiSelect && !event.shiftKey) {
+  //         event.preventDefault();
+  //         this.selectAllButton.focus(); // Move focus to select all button instead of focused option
+  //         this.menu.tabIndex = -1;
+  //         this.preventMenuFocus = true;
+  //         this.preventClickOpen = true;
+  //         this.optionHighlighted = undefined; // Stop any option focus states showing when focus moved to select all button
+  //       }
+  //       break;
+  //     default:
+  //       this.handleManualKeyboardNavigation(event);
+  //       break;
+  //   }
+  // };
 
   private getOptionId = (value: string): string => {
     return `${this.menuId}-${value}`;
