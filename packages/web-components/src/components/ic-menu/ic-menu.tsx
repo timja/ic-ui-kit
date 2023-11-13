@@ -515,6 +515,8 @@ export class Menu {
   };
 
   private selectHighlightedOption = (target: EventTarget, options: IcMenuOption[], highlightedOptionIndex: number) => {
+    this.keyboardNav = true;
+
     if (this.open) {
       if (highlightedOptionIndex >= 0) {
         if (options[highlightedOptionIndex] !== undefined) {
@@ -1211,7 +1213,11 @@ export class Menu {
       options,
     } = this;
 
-    console.log
+    console.log("keyboardNav " + keyboardNav);
+    console.log("option[this.valueField] " + option[this.valueField]);
+    console.log("optionHighlighted " + optionHighlighted);
+    console.log("selected " + selected);
+
 
     return (
       <li
