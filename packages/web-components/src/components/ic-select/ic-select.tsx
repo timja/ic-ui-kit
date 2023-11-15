@@ -299,7 +299,7 @@ export class Select {
   }
 
   /**
-   * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
+   * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.
    */
   @Prop({ mutable: true }) value?: string | string[];
   @State() initialValue = this.value;
@@ -988,12 +988,6 @@ export class Select {
       this.searchableSelectInputValue =
         this.searchable && this.getDefaultValue(this.currValue as string);
 
-      if (this.multiple) {
-        this.currValue = this.getValueSortedByOptions(
-          this.currValue as string[]
-        );
-      }
-
       this.initialValue = this.currValue;
       this.hasSetDefaultValue = true;
     }
@@ -1398,7 +1392,7 @@ export class Select {
               closeOnSelect={!multiple}
             ></ic-menu>
           )}
-          {this.multiple && (
+          {/* {this.multiple && (
             <div
               // aria-live="polite"
               // role="status"
@@ -1406,7 +1400,7 @@ export class Select {
             >
               {currValue && `${currValue.length} of ${options.length} selected`}
             </div>
-          )}
+          )} */}
           {hasValidationStatus(this.validationStatus, this.disabled) && (
             <ic-input-validation
               class={{ "menu-open": this.open }}

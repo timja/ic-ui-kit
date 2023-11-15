@@ -2423,4 +2423,8 @@ describe("ic-select", () => {
       expect(Object.values(menuClasses).includes("menu-scroll")).toBeTruthy();
     });
   });
+
+  // describe("multi", () => {
+
+  // });
 });

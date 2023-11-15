@@ -1705,7 +1705,7 @@ export namespace Components {
          */
         "validationText"?: string;
         /**
-          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
+          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.
          */
         "value"?: string | string[];
     }
@@ -4484,7 +4484,7 @@ declare namespace LocalJSX {
          */
         "validationText"?: string;
         /**
-          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
+          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.
          */
         "value"?: string | string[];
     }

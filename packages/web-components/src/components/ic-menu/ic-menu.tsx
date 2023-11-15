@@ -1213,12 +1213,6 @@ export class Menu {
       options,
     } = this;
 
-    console.log("keyboardNav " + keyboardNav);
-    console.log("option[this.valueField] " + option[this.valueField]);
-    console.log("optionHighlighted " + optionHighlighted);
-    console.log("selected " + selected);
-
-
     return (
       <li
         id={this.getOptionId(option[this.valueField])}
