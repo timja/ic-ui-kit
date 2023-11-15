@@ -1,0 +1,203 @@
+import {
+  Meta,
+  Story,
+  Canvas,
+  ArgsTable,
+  Description,
+} from "@storybook/addon-docs";
+import { html } from "lit-html";
+import readme from "./readme.md";
+
+<Meta title="Web Components/Date picker" component="Date Picker" />
+
+<Description markdown={readme} />
+
+### Default
+
+<Canvas>
+  <Story name="Default" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Large
+
+<Canvas>
+  <Story name="Large" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          size="large"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Small
+
+<Canvas>
+  <Story name="Small" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          size="small"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### With value
+
+<Canvas>
+  <Story name="With value" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          value="01/01/2023"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Open at date
+
+<Canvas>
+  <Story name="Open at date" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          helper-text="The calendar will open showing 25th December 2023, if no date selected"
+          open-at-date="2023-12-25"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Start of week - Sunday
+
+<Canvas>
+  <Story name="Start of week - Sunday" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          start-of-week="0"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Working weekdays only
+
+<Canvas>
+  <Story name="Working weekdays only" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <script>
+          document.querySelector("#weekday-picker").disableDays = [0, 6];
+        </script>
+        <ic-date-picker
+          id="weekday-picker"
+          label="When would you like to collect your coffee?"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Max & Min - July 2023
+
+<Canvas>
+  <Story name="Max & Min - July 2023" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          helper-text="Choose a date between the 1st and 31st of July"
+          min="2023-07-01"
+          max="2023-07-31"
+          show-picker-today-button="false"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Dates in past disabled
+
+<Canvas>
+  <Story name="Dates in past disabled" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          disable-past
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Dates in future disabled
+
+<Canvas>
+  <Story name="Dates in future disabled" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          disable-future
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Days outside month hidden
+
+<Canvas>
+  <Story name="Days outside month hidden" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          show-days-outside-month="false"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Today & clear buttons hidden
+
+<Canvas>
+  <Story
+    name="Today & clear buttons hidden"
+    parameters={{ loki: { skip: true } }}
+  >
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          show-picker-today-button="false"
+          show-picker-clear-button="false"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
