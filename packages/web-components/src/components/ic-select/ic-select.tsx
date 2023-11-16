@@ -449,7 +449,8 @@ export class Select {
 
     clearTimeout(this.debounceIcChange);
     this.debounceIcChange = window.setTimeout(() => {
-      this.icChange.emit({ value: this.value });
+      const valueToEmit = this.multiple ? this.value : value;
+      this.icChange.emit({ value: valueToEmit });
     }, this.currDebounce);
   };
 
