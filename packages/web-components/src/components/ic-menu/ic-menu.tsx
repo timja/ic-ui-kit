@@ -514,7 +514,11 @@ export class Menu {
     }
   };
 
-  private selectHighlightedOption = (target: EventTarget, options: IcMenuOption[], highlightedOptionIndex: number) => {
+  private selectHighlightedOption = (
+    target: EventTarget,
+    options: IcMenuOption[],
+    highlightedOptionIndex: number
+  ) => {
     this.keyboardNav = true;
 
     if (this.open) {
@@ -533,10 +537,13 @@ export class Menu {
       } else {
         this.setInputValue(highlightedOptionIndex);
       }
-    } else if ((target as HTMLElement).id !== "clear-button" && this.isMultiSelect) {
+    } else if (
+      (target as HTMLElement).id !== "clear-button" &&
+      this.isMultiSelect
+    ) {
       this.handleMenuChange(true);
     }
-  }
+  };
 
   // Determines keyboard behaviour when selection is manual (i.e. when you have to press Enter to select an option)
   private manualSetInputValueKeyboardOpen = (event: KeyboardEvent) => {
@@ -557,7 +564,11 @@ export class Menu {
 
     // Space press should be equivalent to Enter when multi-select
     if (event.key === " " && this.isMultiSelect) {
-      this.selectHighlightedOption(event.target, menuOptions, highlightedOptionIndex);
+      this.selectHighlightedOption(
+        event.target,
+        menuOptions,
+        highlightedOptionIndex
+      );
     } else {
       switch (event.key) {
         case "ArrowDown":
@@ -627,7 +638,11 @@ export class Menu {
           break;
         case "Enter":
           event.preventDefault();
-          this.selectHighlightedOption(event.target, menuOptions, highlightedOptionIndex);
+          this.selectHighlightedOption(
+            event.target,
+            menuOptions,
+            highlightedOptionIndex
+          );
           break;
         case "Escape":
           if (this.open) {
@@ -681,21 +696,6 @@ export class Menu {
           break;
       }
     }
-
-    
-
-    // switch (event.key) {
-    //   case " ":
-    //   case "Enter":
-    //     if ((event.target as HTMLElement).id !== "clear-button") {
-    //       this.handleMenuChange(true);
-    //     }
-    //     break;
-    //   default:
-    //     this.handleManualKeyboardNavigation(event);
-    //     break;
-    // }
-
   };
 
   private setInputValue = (highlightedOptionIndex: number) => {

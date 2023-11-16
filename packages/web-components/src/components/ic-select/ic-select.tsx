@@ -1377,7 +1377,7 @@ export class Select {
               menuId={menuId}
               open={this.open}
               options={searchable ? this.filteredOptions : this.uniqueOptions}
-              value={multiple ? currValue as string[] : currValue as string}
+              value={multiple ? (currValue as string[]) : (currValue as string)}
               fullWidth={fullWidth}
               onMenuStateChange={this.handleMenuChange}
               onMenuOptionSelect={this.handleCustomSelectChange}

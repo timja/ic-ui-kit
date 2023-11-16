@@ -152,7 +152,9 @@ describe("ic-menu in isolation", () => {
 
     await page.waitForChanges();
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("ArrowDown"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("ArrowDown")
+    );
 
     await page.waitForChanges();
 
@@ -435,7 +437,9 @@ describe("ic-menu in isolation", () => {
 
     await page.waitForChanges();
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("ArrowDown"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("ArrowDown")
+    );
 
     await page.waitForChanges();
 
@@ -451,7 +455,9 @@ describe("ic-menu in isolation", () => {
 
     await page.waitForChanges();
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("ArrowDown"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("ArrowDown")
+    );
 
     await page.waitForChanges();
 
@@ -483,7 +489,9 @@ describe("ic-menu in isolation", () => {
 
     await page.waitForChanges();
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("ArrowDown"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("ArrowDown")
+    );
 
     await page.waitForChanges();
 
@@ -534,7 +542,9 @@ describe("ic-menu in isolation", () => {
 
     page.rootInstance.setHighlightedOption(4);
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("Backspace"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("Backspace")
+    );
 
     await page.waitForChanges();
 
@@ -608,7 +618,9 @@ describe("ic-menu in isolation", () => {
 
     page.rootInstance.isSearchableSelect = true;
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("Backspace"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("Backspace")
+    );
 
     await page.waitForChanges();
 
@@ -641,7 +653,9 @@ describe("ic-menu in isolation", () => {
 
     page.rootInstance.isSearchBar = true;
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("Backspace"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("Backspace")
+    );
 
     await page.waitForChanges();
 

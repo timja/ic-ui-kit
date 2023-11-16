@@ -1834,7 +1834,7 @@ describe("ic-select multi", () => {
     expect(page.rootInstance.value).toBe(undefined);
   });
 
-  it("should test menu handleKeyboardOpen method - arrow up", async () => { 
+  it("should test menu handleKeyboardOpen method - arrow up", async () => {
     const page = await newSpecPage({
       components: [Select, Menu, InputComponentContainer],
       html: `<ic-select label="IC Select Test" multiple="true"></ic-select>`,
