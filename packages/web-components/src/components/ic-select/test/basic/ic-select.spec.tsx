@@ -1792,6 +1792,19 @@ describe("ic-select multi", () => {
 
     expect(page.root).toMatchSnapshot();
   });
+  
+  it("should update correctly when options are selected", async () => {
+    const page = await newSpecPage({
+      components: [Select, Menu, InputComponentContainer],
+      html: `<ic-select label="IC Select Test" multiple="true"></ic-select>`,
+    });
+
+    page.root.options = menuOptions;
+    page.root.value = [value1, value2];
+    await page.waitForChanges();
+
+    expect(page.root).toMatchSnapshot();
+  });
 
   it("should not render a native select on a mobile / tablet screen", async () => {
     Object.defineProperty(helpers, "isMobileOrTablet", {

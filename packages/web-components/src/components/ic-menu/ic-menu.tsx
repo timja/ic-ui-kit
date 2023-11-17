@@ -556,7 +556,7 @@ export class Menu {
     );
 
     const clickedMultiOptionIndex = menuOptions.findIndex(
-      (option) => option.value === this.multiOptionClicked
+      (option) => option[this.valueField] === this.multiOptionClicked
     );
 
     const getOptionId = (index: number): string =>
@@ -914,7 +914,7 @@ export class Menu {
   };
 
   private emitSelectAll = () => {
-    // Select all if there is either no value or all options are not selected
+    // Select all if there is either no value or not all options are selected
     // 'true' means select all, 'false' means clear all
     this.menuOptionSelectAll.emit({
       select:
@@ -1189,7 +1189,7 @@ export class Menu {
           )}
         </div>
         {!!option[this.valueField] &&
-          !!this.value && // SHOULD 'selected' BE BASED ON .toLowerCase() OF OPTION VALUE?
+          !!this.value &&
           selected &&
           this.parentEl.tagName !== "IC-SEARCH-BAR" && (
             <span class="check-icon" innerHTML={Check} />
@@ -1233,7 +1233,7 @@ export class Menu {
         role="option"
         tabindex={
           open &&
-          (selected || option.value === optionHighlighted) &&
+          (selected || option[this.valueField] === optionHighlighted) &&
           keyboardNav
             ? "0"
             : "-1"
