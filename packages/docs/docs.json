@@ -5418,6 +5418,11 @@
       ],
       "styles": [
         {
+          "name": "--ic-z-index-date-picker",
+          "annotation": "prop",
+          "docs": "z-index of date picker."
+        },
+        {
           "name": "--input-width",
           "annotation": "prop",
           "docs": "Width of the input field"

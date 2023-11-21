@@ -1,10 +1,9 @@
-/* istanbul ignore file */
 import { h, FunctionalComponent } from "@stencil/core";
 import {
   dateInRange,
   getMonthStart,
   getMonthEnd,
-} from "./ic-date-picker-utils";
+} from "../../utils/date-helpers";
 import { stringEnumToArray } from "../../utils/helpers";
 import { IcSizes, IcDateInputMonths } from "../../utils/types";
 
@@ -36,8 +35,6 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
     onSelectMonth(Number(button.getAttribute("data-month")));
   };
 
-  // const buttonSize = size === "small" ? "small" : "default";
-  const buttonSize = size;
   const monthNames = stringEnumToArray(IcDateInputMonths);
 
   return (
@@ -68,7 +65,7 @@ export const MonthPicker: FunctionalComponent<MonthPickerProps> = ({
             disabled={outsideRange}
             variant={current ? "primary" : "tertiary"}
             data-month={index}
-            size={buttonSize}
+            size={size}
             tabIndex={focussed ? 0 : -1}
             aria-current={current ? "true" : "false"}
             aria-label={current ? "" : `select ${month}`}

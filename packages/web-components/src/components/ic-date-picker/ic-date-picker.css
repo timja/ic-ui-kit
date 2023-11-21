@@ -2,10 +2,10 @@
 
 /**
 * @prop --input-width: Width of the input field
+  @prop --ic-z-index-date-picker: z-index of date picker.
 */
 
 :host {
-  /* z-index: var(--ic-z-index-popover); */
   display: block;
   position: relative;
 
@@ -35,32 +35,11 @@ ic-date-input {
   --input-width: var(--input-field-width);
 }
 
-.hidden-describe {
-  display: none;
-}
-
-.sr-only {
-  position: absolute;
-  left: -9999px;
-}
-
-.calendar-button {
-  position: absolute;
-  left: 336px;
-  bottom: 4px;
-}
-
 :host .calendar-container {
-  /* max-height: 0; */
-  height: 0;
-
-  /* display: none; */
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: var(--date-picker-flex-gap);
-  visibility: hidden;
-
-  /* height: 0; */
   position: absolute;
   width: 19.625rem;
   border: var(--ic-border-default);
@@ -72,13 +51,7 @@ ic-date-input {
   box-shadow: var(--ic-elevation-overlay);
   margin-top: var(--ic-space-xs);
   padding: var(--ic-space-xs) var(--ic-space-xxs);
-
-  /* transition: height var(--ic-transition-duration-slow); */
-
-  /* animation: fadeOutCalendar var(--ic-transition-duration-slow); */
-
-  /* animation: fadeOutCalendar 1000ms; */
-  opacity: 0;
+  animation: fade-in-calendar var(--ic-transition-duration-slow);
 }
 
 :host(.large) .calendar-container {
@@ -91,18 +64,8 @@ ic-date-input {
   padding: var(--ic-space-xxxs) var(--ic-space-xxs);
 }
 
-.calendar-container.open {
-  opacity: 1;
-  visibility: visible;
-  height: auto;
-
-  /* animation: fadeInCalendar var(--ic-transition-duration-slow); */
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .calendar-container.open {
-    transition: opacity var(--ic-transition-duration-slow);
-  }
+:host .calendar-container.above {
+  bottom: 50px;
 }
 
 :host .month-year-nav-container {
@@ -247,6 +210,7 @@ ic-date-input {
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
+  animation: fade-in-buttons var(--ic-transition-duration-slow);
 }
 
 :host .bottom-buttons.no-today {
@@ -264,6 +228,7 @@ ic-date-input {
   padding: 0.625rem 1.75rem;
   align-items: flex-start;
   width: 15.75rem;
+  animation: fade-in-buttons var(--ic-transition-duration-slow);
 }
 
 :host(.large) .calendar {
@@ -338,85 +303,6 @@ ic-date-input {
   flex-shrink: 0;
 }
 
-/* .calendar-container {
-    animation: fadeOutCalendar var(--ic-transition-duration-slow);
-  } */
-
-/* 
-  .calendar-container.open {
-    animation: fadeInCalendar var(--ic-transition-duration-slow);
-  }
-
-  @keyframes fadeInCalendar {
-    0% {
-        display: none;
-        opacity: 0;
-    }
-
-    1% {
-        display: block;
-        opacity: 0;
-    }
-
-    100% {
-        display: block;
-        opacity: 1;
-    }
-  }
-
-  @keyframes fadeOutCalendar {
-    0% {
-        display: block;
-        opacity: 1;
-    }
-
-    1% {
-        display: block;
-        opacity: 0;
-    }
-
-    100% {
-        display: none;
-        opacity: 0;
-    }
-  }
-
-} */
-
-/* @keyframes fadeInCalendar {
-  0% {
-      display: none;
-      opacity: 0;
-  }
-
-  1% {
-      display: block;
-      opacity: 0;
-  }
-
-  100% {
-      display: block;
-      opacity: 1;
-  }
-}
-
-@keyframes fadeOutCalendar {
-  0% {
-      display: block;
-      opacity: 1;
-  }
-
-  1% {
-      display: block;
-      opacity: 0;
-  }
-
-  100% {
-      display: none;
-      opacity: 0;
-  }
-} */
-
 :host .day-button {
   display: flex;
   position: relative;
@@ -428,7 +314,7 @@ ic-date-input {
   background-color: var(--ic-architectural-white);
   width: 1.75rem;
   height: 1.75rem;
-  margin: 0 4px;
+  margin: 0 var(--ic-space-xxs);
   cursor: pointer;
 }
 
@@ -439,11 +325,11 @@ ic-date-input {
 :host(.large) .day-button {
   width: 2rem;
   height: 2rem;
-  margin: 0 6px;
+  margin: 0 calc(var(--ic-space-xs) - var(--ic-space-xxxs));
 }
 
 :host(.small) .day-button {
-  margin: 0 2px;
+  margin: 0 var(--ic-space-xxxs);
 }
 
 :host .day-button.outside-range ic-typography {
@@ -522,6 +408,45 @@ ic-date-input {
 :host #select-month-hint,
 :host #select-year-hint {
   display: none;
+}
+
+.sr-only {
+  position: absolute;
+  left: -9999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host .calendar-container,
+  :host .calendar,
+  :host .bottom-buttons {
+    animation: none;
+  }
+}
+
+@keyframes fade-in-buttons {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-calendar {
+  0% {
+    display: flex;
+    max-height: 0;
+  }
+
+  100% {
+    display: flex;
+    max-height: 600px;
+  }
 }
 
 @media (forced-colors: active) {

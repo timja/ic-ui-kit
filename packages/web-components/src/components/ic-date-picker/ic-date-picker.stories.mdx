@@ -21,6 +21,18 @@ import readme from "./readme.md";
         <ic-date-picker
           label="When would you like to collect your coffee?"
         ></ic-date-picker>
+        <br />
+        <br />
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          date-format="MM/DD/YYYY"
+        ></ic-date-picker>
+        <br />
+        <br />
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          date-format="YYYY/MM/DD"
+        ></ic-date-picker>
       `
     }
   </Story>
@@ -87,6 +99,27 @@ import readme from "./readme.md";
   </Story>
 </Canvas>
 
+### Open above
+
+<Canvas>
+  <Story name="Open above" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <style>
+          .bottom {
+            position: absolute;
+            bottom: 80px;
+          }
+        </style>
+        <ic-date-picker
+          class="bottom"
+          label="When would you like to collect your coffee?"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
 ### Start of week - Sunday
 
 <Canvas>
@@ -132,6 +165,26 @@ import readme from "./readme.md";
           min="2023-07-01"
           max="2023-07-31"
           show-picker-today-button="false"
+        ></ic-date-picker>
+      `
+    }
+  </Story>
+</Canvas>
+
+### Disabled & required - July 2023
+
+<Canvas>
+  <Story name="Disabled & required" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          disabled="true"
+        ></ic-date-picker>
+        <br />
+        <ic-date-picker
+          label="When would you like to collect your coffee?"
+          required="true"
         ></ic-date-picker>
       `
     }

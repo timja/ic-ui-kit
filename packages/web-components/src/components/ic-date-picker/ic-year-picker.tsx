@@ -1,6 +1,5 @@
-/* istanbul ignore file */
 import { h, FunctionalComponent } from "@stencil/core";
-import { yearInRange } from "./ic-date-picker-utils";
+import { yearInRange } from "../../utils/date-helpers";
 import { IcSizes } from "../../utils/types";
 
 export type YearPickerProps = {
@@ -10,6 +9,8 @@ export type YearPickerProps = {
   yearInView: number;
   onSelectYear: (year: number) => void;
   onKeyDown: (ev: KeyboardEvent) => void;
+  onFocusYear: () => void;
+  onBlurYear: () => void;
   minDate: Date;
   maxDate: Date;
   focussedYearRef: (element: HTMLIcButtonElement) => void;
@@ -21,6 +22,8 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
   focussedYear,
   yearInView,
   onSelectYear,
+  onFocusYear,
+  onBlurYear,
   onKeyDown,
   minDate,
   maxDate,
@@ -30,20 +33,24 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
     const button = ev.target as HTMLElement;
     onSelectYear(Number(button.getAttribute("data-year")));
   };
-  // const buttonSize = size === "small" ? "small" : "default";
-  const buttonSize = size;
+
+  const handleYearFocus = (): void => {
+    onFocusYear();
+  };
+
+  const handleYearBlur = (): void => {
+    onBlurYear();
+  };
+
+  const navButtonMouseDownHandler = (ev: MouseEvent): void => {
+    ev.preventDefault();
+  };
 
   const prevDecade = decadeView[0];
   const nextDecade = decadeView[11];
   const years = decadeView.slice(1, 11);
 
   return (
-    // <div
-    //   class={{
-    //     "year-picker": true,
-    //   }}
-    // >
-    // <div class="year-picker">
     <div class="year-picker-container">
       <div class="prev-decade" aria-hidden="true">
         <ic-button
@@ -55,11 +62,9 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
           tabIndex={-1}
           variant="tertiary"
           onClick={handleYearClick}
+          onMouseDown={navButtonMouseDownHandler}
           aria-hidden="true"
-          // aria-selected={inDecade ? current ? "true" : "false" : undefined}
-          // aria-describedby={`btn-describe-${index}`}
-          // onKeyDown={onKeyDown}
-          size={buttonSize}
+          size={size}
         >
           {`${prevDecade - 9}s`}
           <svg
@@ -74,28 +79,12 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
               fill="currentColor"
             />
           </svg>
-          {/* <svg
-            slot="left-icon"
-            width="17"
-            height="16"
-            viewBox="0 0 17 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M8.49996 2.66675L7.55996 3.60675L11.28 7.33341H3.16663V8.66675H11.28L7.55996 12.3934L8.49996 13.3334L13.8333 8.00008L8.49996 2.66675Z"
-              fill="currentColor"
-            />
-          </svg> */}
         </ic-button>
       </div>
       <div class="years-list" role="list">
         {years.map((yr) => {
           const current = yearInView === yr;
           const focussed = focussedYear === yr;
-          const inDecade = true;
-          // const label = inDecade ? yr : index === 0 ? `${yr - 9}s` : `${yr}s`;
-          const label = yr;
           return (
             <ic-button
               class={{
@@ -108,20 +97,19 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
               variant={current ? "primary" : "tertiary"}
               onClick={handleYearClick}
               aria-label={current ? "" : `select ${yr}`}
-              aria-hidden={inDecade ? "false" : "true"}
-              role={inDecade ? "listitem" : ""}
-              // aria-selected={inDecade ? current ? "true" : "false" : undefined}
+              role="listitem"
               aria-current={current ? "true" : "false"}
-              // aria-describedby={`btn-describe-${index}`}
               onKeyDown={onKeyDown}
-              size={buttonSize}
+              onFocus={handleYearFocus}
+              onBlur={handleYearBlur}
+              size={size}
               ref={(el: HTMLIcButtonElement) => {
                 if (focussed && el) {
                   focussedYearRef(el);
                 }
               }}
             >
-              {label}
+              {yr}
             </ic-button>
           );
         })}
@@ -137,11 +125,9 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
           tabIndex={-1}
           variant="tertiary"
           onClick={handleYearClick}
+          onMouseDown={navButtonMouseDownHandler}
           aria-hidden="true"
-          // aria-selected={inDecade ? current ? "true" : "false" : undefined}
-          // aria-describedby={`btn-describe-${index}`}
-          // onKeyDown={onKeyDown}
-          size={buttonSize}
+          size={size}
         >
           {`${nextDecade}s`}
           <svg
@@ -156,23 +142,8 @@ export const YearPicker: FunctionalComponent<YearPickerProps> = ({
               fill="currentColor"
             />
           </svg>
-          {/* <svg
-            slot="right-icon"
-            width="17"
-            height="16"
-            viewBox="0 0 17 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M8.49996 2.66675L7.55996 3.60675L11.28 7.33341H3.16663V8.66675H11.28L7.55996 12.3934L8.49996 13.3334L13.8333 8.00008L8.49996 2.66675Z"
-              fill="currentColor"
-            /> 
-        </svg> */}
         </ic-button>
       </div>
     </div>
-    // </div>
-    // </div>
   );
 };

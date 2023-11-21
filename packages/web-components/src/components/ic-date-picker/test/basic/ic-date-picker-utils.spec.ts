@@ -1,6 +1,5 @@
 import { IcWeekDays } from "../../../../utils/types";
 import {
-  // createDateFromISOString,
   dateMatches,
   dateInRange,
   getMonthStart,
@@ -8,8 +7,6 @@ import {
   getWeekEnd,
   getWeekStart,
   yearInRange,
-} from "../../ic-date-picker-utils";
-import {
   createDate,
   convertToDoubleDigits,
   isDateOrEpoch,
@@ -306,27 +303,4 @@ describe("ic-date-picker-utils", () => {
       ).toBe(true);
     });
   });
-
-  // describe("createDateFromISOString", () => {
-  //   it("should test empty string", () => {
-  //     expect(createDateFromISOString("")).toBe(null);
-  //   });
-  //   it("should test null", () => {
-  //     expect(createDateFromISOString(null)).toBe(null);
-  //   });
-  //   it("should test undefined", () => {
-  //     expect(createDateFromISOString(undefined)).toBe(null);
-  //   });
-  //   it("should test invalid format", () => {
-  //     expect(createDateFromISOString("01-01-2023")).toBe(null);
-  //   });
-  //   it("should return valid date", () => {
-  //     expect(createDateFromISOString("2023-01-01")).toEqual(
-  //       new Date(2023, 0, 1)
-  //     );
-  //   });
-  //   it("should test invalid date", () => {
-  //     expect(createDateFromISOString("2023-01-32")).toBe(null);
-  //   });
-  // });
 });
