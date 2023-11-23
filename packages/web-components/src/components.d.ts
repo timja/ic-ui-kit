@@ -792,7 +792,7 @@ export namespace Components {
         /**
           * The size of the input component container component.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
@@ -968,6 +968,10 @@ export namespace Components {
         "anchorEl": HTMLElement;
         "autoFocusOnSelected": boolean;
         /**
+          * If `true`, the menu will close when an option is selected.
+         */
+        "closeOnSelect": boolean;
+        /**
           * If `true`, the menu will fill the width of the container.
          */
         "fullWidth": boolean;
@@ -1008,17 +1012,17 @@ export namespace Components {
          */
         "searchMode"?: IcSearchBarSearchModes;
         /**
-          * The size of the menu component.
+          * The size of the menu.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small"?: boolean;
         /**
-          * The value of the currently selected option.
+          * The value of the currently selected option - or array of values (if multiple options allowed).
          */
-        "value": string;
+        "value": string | string[];
         /**
           * The custom name for the value field for IcMenuOption.
          */
@@ -1646,6 +1650,10 @@ export namespace Components {
          */
         "loadingLabel"?: string;
         /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
+        /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
@@ -1682,9 +1690,9 @@ export namespace Components {
          */
         "showClearButton"?: boolean;
         /**
-          * The size of the select component.
+          * The size of the select.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
@@ -1702,9 +1710,9 @@ export namespace Components {
          */
         "validationText"?: string;
         /**
-          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
+          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.
          */
-        "value"?: string;
+        "value"?: string | string[];
     }
     interface IcSideNavigation {
         /**
@@ -3495,7 +3503,7 @@ declare namespace LocalJSX {
         /**
           * The size of the input component container component.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
@@ -3667,6 +3675,10 @@ declare namespace LocalJSX {
         "anchorEl": HTMLElement;
         "autoFocusOnSelected"?: boolean;
         /**
+          * If `true`, the menu will close when an option is selected.
+         */
+        "closeOnSelect"?: boolean;
+        /**
           * If `true`, the menu will fill the width of the container.
          */
         "fullWidth"?: boolean;
@@ -3689,8 +3701,8 @@ declare namespace LocalJSX {
         "onMenuKeyPress"?: (event: IcMenuCustomEvent<{ isNavKey: boolean; key: string }>) => void;
         "onMenuOptionId"?: (event: IcMenuCustomEvent<IcMenuOptionIdEventDetail>) => void;
         "onMenuOptionSelect"?: (event: IcMenuCustomEvent<IcOptionSelectEventDetail>) => void;
+        "onMenuOptionSelectAll"?: (event: IcMenuCustomEvent<{ select: boolean }>) => void;
         "onMenuStateChange"?: (event: IcMenuCustomEvent<IcMenuChangeEventDetail>) => void;
-        "onMenuValueChange"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         "onRetryButtonClicked"?: (event: IcMenuCustomEvent<IcValueEventDetail>) => void;
         "onTimeoutBlur"?: (event: IcMenuCustomEvent<{ ev: FocusEvent }>) => void;
         "onUngroupedOptionsSet"?: (event: IcMenuCustomEvent<{ options: IcMenuOption[] }>) => void;
@@ -3708,17 +3720,17 @@ declare namespace LocalJSX {
          */
         "searchMode"?: IcSearchBarSearchModes;
         /**
-          * The size of the menu component.
+          * The size of the menu.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
         "small"?: boolean;
         /**
-          * The value of the currently selected option.
+          * The value of the currently selected option - or array of values (if multiple options allowed).
          */
-        "value": string;
+        "value": string | string[];
         /**
           * The custom name for the value field for IcMenuOption.
          */
@@ -4396,6 +4408,10 @@ declare namespace LocalJSX {
          */
         "loadingLabel"?: string;
         /**
+          * If `true`, multiple options can be selected.
+         */
+        "multiple"?: boolean;
+        /**
           * The name of the control, which is submitted with the form data.
          */
         "name"?: string;
@@ -4420,7 +4436,11 @@ declare namespace LocalJSX {
          */
         "onIcInput"?: (event: IcSelectCustomEvent<IcValueEventDetail>) => void;
         /**
-          * Emitted when an option is highlighted within the menu. Highlighting a menu item will also trigger an `icChange/onIcChange` due to the value being updated.
+          * Emitted when `multiple` is `true` and an option is deselected.
+         */
+        "onIcOptionDeselect"?: (event: IcSelectCustomEvent<IcOptionSelectEventDetail>) => void;
+        /**
+          * Emitted when an option is selected. Selecting an option will also trigger an `icChange/onIcChange` due to the value being updated.
          */
         "onIcOptionSelect"?: (event: IcSelectCustomEvent<IcOptionSelectEventDetail>) => void;
         /**
@@ -4456,9 +4476,9 @@ declare namespace LocalJSX {
          */
         "showClearButton"?: boolean;
         /**
-          * The size of the select component.
+          * The size of the select.
          */
-        "size"?: IcSizesNoLarge;
+        "size"?: IcSizes;
         /**
           * @deprecated This prop should not be used anymore. Set prop `size` to "small" instead.
          */
@@ -4476,9 +4496,9 @@ declare namespace LocalJSX {
          */
         "validationText"?: string;
         /**
-          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input.
+          * The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.
          */
-        "value"?: string;
+        "value"?: string | string[];
     }
     interface IcSideNavigation {
         /**
