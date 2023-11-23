@@ -116,9 +116,11 @@ jobs:
 
       - name: Build components and web-components and react storybook
         run: |
-          npm run build
+          npm run build:all
           npm run build-storybook:web-components
           npm run build-storybook:react
+          npm run build-storybook:canary-web-components
+          npm run build-storybook:canary-react
 
       - name: Deploy web components storybook
         uses: JamesIves/github-pages-deploy-action@v4
