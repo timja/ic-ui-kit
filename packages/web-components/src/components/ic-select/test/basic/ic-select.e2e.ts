@@ -49,6 +49,22 @@ const searchableOptions = `[
   { label: "Macchiato", value: "Mac" },
 ]`;
 
+const optionsWithDisabled = `[
+  { label: 'Test label 1', value: 'Test value 1', disabled: true },
+  { label: 'Test label 2', value: 'Test value 2' },
+  { label: 'Test label 3', value: 'Test value 3', disabled: true },
+  { label: 'Test label 4', value: 'Test value 4', disabled: true },
+  { label: 'Test label 5', value: 'Test value 5' },
+]`;
+
+const optionsWithGroups = `[
+  { label: 'Test label 1', value: 'Test value 1' },
+  { label: 'Test label 2', value: 'Test value 2' },
+  { label: 'Group', children: [
+    { label: 'Test label 3', value: 'Test value 3' },
+  ] },
+]`;
+
 const getTestSelect = (
   options: string
 ) => `<ic-select label="IC Select Test"></ic-select>
@@ -113,6 +129,18 @@ const getTestSelectAsync = (firstDataset: string, secondDataset: string) =>
           select.options = ${secondDataset}
         }, 1500)
       </script>`;
+
+const getTestMultiSelect = (
+  options: string
+) => `<ic-select label="IC Select Test" multiple="true"></ic-select>
+  <script>
+    var select = document.querySelector('ic-select');
+    select.options = ${options};
+    select.addEventListener('icChange', function (event) {
+      option = event.detail.value;
+      select.value = option;
+    });
+  </script>`;
 
 const getMenuVisibility = async (page: E2EPage) => {
   return await page.evaluate(() => {
@@ -419,9 +447,9 @@ describe("ic-select", () => {
 
         const menu = await page.find("ic-select >>> #ic-select-input-0-menu");
         const firstOption = await menu.findAll("li");
-        expect(firstOption[0]).toHaveAttribute("aria-selected");
+        expect(firstOption[0].getAttribute("aria-selected")).toBeTruthy;
         expect(await firstOption[0].find(".check-icon")).not.toBeNull;
-        expect(firstOption[1]).not.toHaveAttribute("aria-selected");
+        expect(firstOption[1].getAttribute("aria-selected")).toBeFalsy;
         expect(await firstOption[1].find(".check-icon")).toBeNull;
       });
 
@@ -721,11 +749,6 @@ describe("ic-select", () => {
 
     it("should prevent click on disabled options", async () => {
       const page = await newE2EPage();
-      const optionsWithDisabled = `[
-        { label: 'Test label 1', value: 'Test value 1' },
-        { label: 'Test label 2', value: 'Test value 2', disabled: true },
-        { label: 'Test label 3', value: 'Test value 3' },
-      ]`;
       await page.setContent(getTestSelect(optionsWithDisabled));
       await page.waitForChanges();
 
@@ -742,12 +765,12 @@ describe("ic-select", () => {
 
     it("should set aria-disabled and skip focus when option disabled", async () => {
       const page = await newE2EPage();
-      const optionsWithDisabled = `[
+      const optionsWithFirstDisabled = `[
         { label: 'Test label 1', value: 'Test value 1', disabled: true },
         { label: 'Test label 2', value: 'Test value 2' },
         { label: 'Test label 3', value: 'Test value 3' },
       ]`;
-      await page.setContent(getTestSelect(optionsWithDisabled));
+      await page.setContent(getTestSelect(optionsWithFirstDisabled));
       await page.waitForChanges();
 
       const select = await page.find("ic-select >>> #ic-select-input-0");
@@ -863,12 +886,12 @@ describe("ic-select", () => {
 
     it("should render options at the top of the menu if they are recommended", async () => {
       const page = await newE2EPage();
-      const optionsWithDisabled = `[
+      const optionsWithRecommended = `[
         { label: 'Test label 1', value: 'Test value 1' },
         { label: 'Test label 2', value: 'Test value 2', recommended: true },
         { label: 'Test label 3', value: 'Test value 3' },
       ]`;
-      await page.setContent(getTestSelect(optionsWithDisabled));
+      await page.setContent(getTestSelect(optionsWithRecommended));
       await page.waitForChanges();
 
       const select = await page.find("ic-select >>> #ic-select-input-0");
@@ -1393,7 +1416,7 @@ describe("ic-select", () => {
       const select = await page.find("ic-select >>> #ic-select-input-0");
       await select.press("ArrowDown");
       await page.waitForChanges();
-      await select.press("Enter");
+      await page.keyboard.press("Enter");
       await page.waitForChanges();
 
       expect(icChange).toHaveReceivedEventDetail({
@@ -1418,6 +1441,7 @@ describe("ic-select", () => {
       const select = await page.find("ic-select >>> #ic-select-input-0");
       await select.press("ArrowDown");
       await page.waitForChanges();
+
       await select.press("Enter");
       await page.waitForChanges();
 
@@ -1859,14 +1883,6 @@ describe("ic-select", () => {
     });
 
     it("should only highlight and select enabled options in searchable with arrowDown", async () => {
-      const optionsWithDisabled = `[
-        { label: 'Test label 1', value: 'Test value 1', disabled: true },
-        { label: 'Test label 2', value: 'Test value 2' },
-        { label: 'Test label 3', value: 'Test value 3', disabled: true },
-        { label: 'Test label 4', value: 'Test value 4', disabled: true },
-        { label: 'Test label 5', value: 'Test value 5' },
-      ]`;
-
       const page = await newE2EPage();
       await page.setContent(getTestSearchableSelect(optionsWithDisabled));
       await page.waitForChanges();
@@ -1913,14 +1929,6 @@ describe("ic-select", () => {
     });
 
     it("should only highlight and select enabled options in searchable with arrowUp", async () => {
-      const optionsWithDisabled = `[
-        { label: 'Test label 1', value: 'Test value 1', disabled: true },
-        { label: 'Test label 2', value: 'Test value 2' },
-        { label: 'Test label 3', value: 'Test value 3', disabled: true },
-        { label: 'Test label 4', value: 'Test value 4', disabled: true },
-        { label: 'Test label 5', value: 'Test value 5' },
-      ]`;
-
       const page = await newE2EPage();
       await page.setContent(getTestSearchableSelect(optionsWithDisabled));
       await page.waitForChanges();
@@ -2099,9 +2107,10 @@ describe("ic-select", () => {
 
     await select.press("ArrowDown");
     await page.waitForChanges();
-    await select.press("ArrowDown");
+
+    await page.keyboard.press("ArrowDown");
     await page.waitForChanges();
-    await select.press("Enter");
+    await page.keyboard.press("Enter");
     await page.waitForChanges();
 
     value = await page.$eval("ic-select", (el) => {
@@ -2167,11 +2176,6 @@ describe("ic-select", () => {
     });
 
     it("should disable options correctly", async () => {
-      const optionsWithDisabled = `[
-        { label: 'Test label 1', value: 'Test value 1', disabled: true },
-        { label: 'Test label 2', value: 'Test value 2' },
-        { label: 'Test label 3', value: 'Test value 3' },
-      ]`;
       await page.setContent(getTestSelect(optionsWithDisabled));
       await page.waitForChanges();
 
@@ -2184,7 +2188,7 @@ describe("ic-select", () => {
         )
       );
 
-      expect(optionsDisabled[0]).toBe(true);
+      expect(optionsDisabled[1]).toBe(true);
     });
 
     it("should render options as <optgroup>s if they have children", async () => {
@@ -2454,6 +2458,308 @@ describe("ic-select", () => {
       });
 
       expect(Object.values(menuClasses).includes("menu-scroll")).toBeTruthy();
+    });
+  });
+
+  describe("multi", () => {
+    it("should emit icChange and icOptionSelect when an option is selected", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const icOptionSelect = await page.spyOnEvent("icOptionSelect");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 1"],
+      });
+      expect(icOptionSelect).toHaveReceivedEventDetail({
+        value: "Test value 1",
+      });
+    });
+
+    it("should deselect an option correctly - emit icChange and icOptionDeselect, and remove check icon and aria-selected", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const icOptionDeselect = await page.spyOnEvent("icOptionDeselect");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+      const menu = await page.find("ic-select >>> #ic-select-input-0-menu");
+      const optionEls = await menu.findAll("li");
+
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(optionEls[0].getAttribute("aria-selected")).toBeTruthy;
+      expect(await optionEls[0].find(".check-icon")).not.toBeNull;
+
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: [],
+      });
+      expect(icOptionDeselect).toHaveReceivedEventDetail({
+        value: "Test value 1",
+      });
+      expect(optionEls[0].getAttribute("aria-selected")).toBeFalsy;
+      expect(await optionEls[0].find(".check-icon")).toBeNull;
+    });
+
+    it("should move focus from menu to 'Select all' button and back again", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("Enter");
+      await page.waitForChanges();
+
+      let activeElId = await page.$eval(
+        "ic-select",
+        (el) => el.shadowRoot.activeElement.id
+      );
+      expect(activeElId).toBe("ic-select-input-0-menu");
+
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      const activeElClass = await page.$eval(
+        "ic-select",
+        (el) => el.shadowRoot.activeElement.className
+      );
+
+      expect(activeElClass).toContain("select-all-button");
+
+      await page.keyboard.down("Shift");
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      await page.keyboard.up("Shift");
+      await page.waitForChanges();
+
+      activeElId = await page.$eval(
+        "ic-select",
+        (el) => el.shadowRoot.activeElement.id
+      );
+      expect(activeElId).toBe("ic-select-input-0-menu");
+    });
+
+    it("should move focus from option (i.e. when option is highlighted) to 'Select all' button", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      const activeElId = await page.$eval(
+        "ic-select",
+        (el) => el.shadowRoot.activeElement.id
+      );
+      expect(activeElId).toBe("ic-select-input-0-menu-Test value 1");
+
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      const activeElClass = await page.$eval(
+        "ic-select",
+        (el) => el.shadowRoot.activeElement.className
+      );
+
+      expect(activeElClass).toContain("select-all-button");
+    });
+
+    it("should emit icChange when the 'Select all' button is pressed, and emit icOptionSelect only for unselected options", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 1"],
+      });
+
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      const icOptionSelect = await page.spyOnEvent("icOptionSelect");
+
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 1", "Test value 2", "Test value 3"],
+      });
+      expect(icOptionSelect).toHaveReceivedEventTimes(2);
+    });
+
+    it("should emit icChange when the 'Clear all' button is pressed, and emit icOptionDeselect for all options", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const icOptionDeselect = await page.spyOnEvent("icOptionDeselect");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("ArrowDown");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("ArrowDown");
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: [],
+      });
+      expect(icOptionDeselect).toHaveReceivedEventTimes(3);
+    });
+
+    it("should close menu when user tabs off 'Select all' button", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("Enter");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      expect(await getMenuVisibility(page)).toBe("visible");
+
+      await page.keyboard.press("Tab");
+      await page.waitForChanges();
+
+      expect(await getMenuVisibility(page)).toBe("hidden");
+    });
+
+    it("should select and clear all options on Ctrl+A", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("Enter");
+      await page.waitForChanges();
+
+      await page.keyboard.down("Control");
+      await page.keyboard.press("KeyA");
+      await page.waitForChanges();
+
+      await page.keyboard.up("Control");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 1", "Test value 2", "Test value 3"],
+      });
+
+      await page.keyboard.down("Control");
+      await page.keyboard.press("KeyA");
+      await page.waitForChanges();
+
+      await page.keyboard.up("Control");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: [],
+      });
+    });
+
+    it("should not select disabled options when the 'Select all' button is pressed", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(optionsWithDisabled));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("Enter");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 2", "Test value 5"],
+      });
+    });
+
+    it("should select all grouped options correctly", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(optionsWithGroups));
+      await page.waitForChanges();
+
+      const icChange = await page.spyOnEvent("icChange");
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+
+      await select.press("Enter");
+      await page.waitForChanges();
+
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Enter");
+      await page.waitForChanges();
+
+      expect(icChange).toHaveReceivedEventDetail({
+        value: ["Test value 1", "Test value 2", "Test value 3"],
+      });
+    });
+
+    it("should not reset focus back to the top of the menu when changing from clicking to using the keyboard", async () => {
+      const page = await newE2EPage();
+      await page.setContent(getTestMultiSelect(options));
+      await page.waitForChanges();
+
+      const select = await page.find("ic-select >>> #ic-select-input-0");
+      await select.press("ArrowDown");
+      await page.waitForChanges();
+
+      const menu = await page.find("ic-select >>> #ic-select-input-0-menu");
+      await menu.click();
+      await page.waitForChanges();
+
+      await page.keyboard.press("ArrowDown");
+      await page.waitForChanges();
+
+      const optionEls = await menu.findAll("li");
+      expect(optionEls[0]).not.toHaveClass("focused-option");
+      expect(optionEls[1]).toHaveClass("focused-option");
     });
   });
 });
