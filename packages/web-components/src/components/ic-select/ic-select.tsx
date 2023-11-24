@@ -316,6 +316,10 @@ export class Select {
       }
     }
 
+    if (this.multiple) {
+      this.updateMultiSelectSelectedCountAriaLive();
+    }
+
     if (this.searchable) {
       this.searchableSelectInputValue =
         this.getLabelFromValue(this.currValue as string) ||
@@ -587,6 +591,8 @@ export class Select {
 
     return valueArray;
   };
+
+  private getSelectedOptionsCount = () => `${this.currValue?.length} of ${this.ungroupedOptions.length} selected`;
 
   private handleNativeSelectChange = (): void => {
     this.icOptionSelect.emit({ value: this.nativeSelectElement.value });
@@ -994,6 +1000,20 @@ export class Select {
     }, 800);
   }
 
+  private updateMultiSelectSelectedCountAriaLive = (): void => {
+    const multiSelectSelectedCountEl = this.el.shadowRoot.querySelector(
+      ".multi-select-selected-count"
+    ) as HTMLDivElement;
+
+    if (multiSelectSelectedCountEl) {
+      if (this.currValue && multiSelectSelectedCountEl.innerText !== this.getSelectedOptionsCount()) {
+        multiSelectSelectedCountEl.innerText = this.getSelectedOptionsCount();
+      } else {
+        multiSelectSelectedCountEl.innerText = "";
+      }
+    }
+  };
+
   private getDefaultValue = (value: string): string | null =>
     this.getLabelFromValue(value) || value || null;
 
@@ -1107,7 +1127,7 @@ export class Select {
       hasValidationStatus(this.validationStatus, this.disabled)
     ).trim();
 
-    const optionsSelectedCount = `${currValue?.length} of ${this.ungroupedOptions.length} selected`;
+    const optionsSelectedCount = `${currValue?.length} of ${this.ungroupedOptions.length} selected`; // Change to use getSelectedOptionsCount()
 
     return (
       <Host
@@ -1395,7 +1415,6 @@ export class Select {
               role="status"
               class="multi-select-selected-count"
             >
-              {currValue && optionsSelectedCount}
             </div>
           )}
           {hasValidationStatus(this.validationStatus, this.disabled) && (

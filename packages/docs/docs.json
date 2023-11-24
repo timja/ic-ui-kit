@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-23T15:41:13",
+  "timestamp": "2023-11-23T17:50:37",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.3.0",
@@ -7680,13 +7680,7 @@
       ],
       "events": [],
       "listeners": [],
-      "styles": [
-        {
-          "name": "--ic-z-index-menu",
-          "annotation": "prop",
-          "docs": "z-index of menu"
-        }
-      ],
+      "styles": [],
       "slots": [],
       "parts": [],
       "dependents": [
@@ -13169,23 +13163,7 @@
         }
       ],
       "listeners": [],
-      "styles": [
-        {
-          "name": "--ic-z-index-menu",
-          "annotation": "prop",
-          "docs": "z-index of select menu"
-        },
-        {
-          "name": "--input-width",
-          "annotation": "prop",
-          "docs": "Width of the input field"
-        },
-        {
-          "name": "--menu-width",
-          "annotation": "prop",
-          "docs": "Width of the dropdown menu"
-        }
-      ],
+      "styles": [],
       "slots": [],
       "parts": [],
       "dependents": [],
