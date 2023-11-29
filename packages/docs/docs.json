@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-11-23T20:02:58",
+  "timestamp": "2023-11-29T12:25:12",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.3.0",
@@ -9627,9 +9627,15 @@
           "name": "alignment",
           "type": "\"left\" | \"right\" | \"space-between\"",
           "complexType": {
-            "original": "\"left\" | \"right\" | \"space-between\"",
+            "original": "IcPaginationAlignmentOptions",
             "resolved": "\"left\" | \"right\" | \"space-between\"",
-            "references": {}
+            "references": {
+              "IcPaginationAlignmentOptions": {
+                "location": "import",
+                "path": "../ic-pagination/ic-pagination.types",
+                "id": "src/components/ic-pagination/ic-pagination.types.ts::IcPaginationAlignmentOptions"
+              }
+            }
           },
           "mutable": false,
           "attr": "alignment",
@@ -9671,7 +9677,7 @@
           "mutable": false,
           "attr": "appearance",
           "reflectToAttr": false,
-          "docs": "The styling for the items in the pagination bar.",
+          "docs": "The appearance for the items in the pagination bar.",
           "docsTags": [],
           "default": "\"default\"",
           "values": [
@@ -9723,7 +9729,7 @@
           },
           "mutable": true,
           "reflectToAttr": false,
-          "docs": "The options that will be displayed for the 'items per page' select input. Maximum of 4 options including a required 'All' option with a value equal to the total number of items.",
+          "docs": "The options that will be displayed for the 'items per page' select input. Set a maximum of 4 options including a required 'All' option with a value equal to the total number of items.",
           "docsTags": [],
           "values": [
             {
@@ -9756,15 +9762,54 @@
           "required": false
         },
         {
-          "name": "paginationControl",
-          "type": "\"complex\" | \"simple\"",
+          "name": "paginationItemDisplay",
+          "type": "\"data\" | \"page\"",
           "complexType": {
-            "original": "\"simple\" | \"complex\"",
-            "resolved": "\"complex\" | \"simple\"",
-            "references": {}
+            "original": "IcPaginationItemDisplayTypes",
+            "resolved": "\"data\" | \"page\"",
+            "references": {
+              "IcPaginationItemDisplayTypes": {
+                "location": "import",
+                "path": "../ic-pagination/ic-pagination.types",
+                "id": "src/components/ic-pagination/ic-pagination.types.ts::IcPaginationItemDisplayTypes"
+              }
+            }
           },
           "mutable": false,
-          "attr": "pagination-control",
+          "attr": "pagination-item-display",
+          "reflectToAttr": false,
+          "docs": "Whether total number of items and current item range or the total number of pages and current page is displayed.",
+          "docsTags": [],
+          "default": "\"page\"",
+          "values": [
+            {
+              "value": "data",
+              "type": "string"
+            },
+            {
+              "value": "page",
+              "type": "string"
+            }
+          ],
+          "optional": true,
+          "required": false
+        },
+        {
+          "name": "paginationType",
+          "type": "\"complex\" | \"simple\"",
+          "complexType": {
+            "original": "IcPaginationTypes",
+            "resolved": "\"complex\" | \"simple\"",
+            "references": {
+              "IcPaginationTypes": {
+                "location": "import",
+                "path": "../ic-pagination/ic-pagination.types",
+                "id": "src/components/ic-pagination/ic-pagination.types.ts::IcPaginationTypes"
+              }
+            }
+          },
+          "mutable": false,
+          "attr": "pagination-type",
           "reflectToAttr": false,
           "docs": "Whether the displayed pagination is simple or complex.",
           "docsTags": [],
@@ -9776,33 +9821,6 @@
             },
             {
               "value": "simple",
-              "type": "string"
-            }
-          ],
-          "optional": true,
-          "required": false
-        },
-        {
-          "name": "paginationType",
-          "type": "\"data\" | \"page\"",
-          "complexType": {
-            "original": "\"data\" | \"page\"",
-            "resolved": "\"data\" | \"page\"",
-            "references": {}
-          },
-          "mutable": false,
-          "attr": "pagination-type",
-          "reflectToAttr": false,
-          "docs": "Whether the total number of items and current item range is displayed or total number of pages and current page is displayed.",
-          "docsTags": [],
-          "default": "\"page\"",
-          "values": [
-            {
-              "value": "data",
-              "type": "string"
-            },
-            {
-              "value": "page",
               "type": "string"
             }
           ],
@@ -9842,7 +9860,7 @@
           "mutable": false,
           "attr": "show-items-per-page",
           "reflectToAttr": false,
-          "docs": "If `true`, the number of total items and current item range or number of total pages and current page will be displayed.",
+          "docs": "If `true`, the number of total items and current item range or the number of total pages and current page will be displayed.",
           "docsTags": [],
           "default": "true",
           "values": [
@@ -18033,10 +18051,20 @@
       "docstring": "",
       "path": "src/components/ic-pagination-item/ic-pagination-item.types.ts"
     },
+    "src/components/ic-pagination/ic-pagination.types.ts::IcPaginationAlignmentOptions": {
+      "declaration": "export type IcPaginationAlignmentOptions = \"left\" | \"right\" | \"space-between\";",
+      "docstring": "",
+      "path": "src/components/ic-pagination/ic-pagination.types.ts"
+    },
     "src/interface.d.ts::IcThemeForeground": {
       "declaration": "any",
       "docstring": "",
       "path": "src/interface.d.ts"
+    },
+    "src/components/ic-pagination/ic-pagination.types.ts::IcPaginationItemDisplayTypes": {
+      "declaration": "export type IcPaginationItemDisplayTypes = \"data\" | \"page\";",
+      "docstring": "",
+      "path": "src/components/ic-pagination/ic-pagination.types.ts"
     },
     "src/components/ic-tooltip/ic-tooltip.types.ts::IcTooltipPlacements": {
       "declaration": "export type IcTooltipPlacements =\n  | \"top-start\"\n  | \"top\"\n  | \"top-end\"\n  | \"right-start\"\n  | \"right\"\n  | \"right-end\"\n  | \"bottom-end\"\n  | \"bottom\"\n  | \"bottom-start\"\n  | \"left-end\"\n  | \"left\"\n  | \"left-start\";",
