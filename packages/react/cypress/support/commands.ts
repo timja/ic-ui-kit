@@ -1,5 +1,9 @@
 /// <reference types="cypress" />
 
+/// <reference types="@cypress/audit/lighthouse" /> 
+
+import "cypress-audit/commands";
+
 const compareSnapshotCommand = require("cypress-image-diff-js/dist/command");
 compareSnapshotCommand();
 
@@ -11,8 +15,10 @@ declare global {
         checkShadowElVisible: typeof checkShadowElVisible;
         findShadowEl: typeof findShadowEl;
         getWhatIsFavCoffeeQueTitle: typeof getWhatIsFavCoffeeQueTitle,
-        clickOnButton :typeof clickOnButton;
-        compareSnapshot: typeof compareSnapshot;
+        clickOnButton :typeof clickOnButton,
+        compareSnapshot: typeof compareSnapshot,
+        cssType(locator:string, text:string): void;
+        lighthouse: typeof lighthouse,
         
       }
     }
@@ -53,6 +59,7 @@ declare global {
     findShadowEl,
     getWhatIsFavCoffeeQueTitle,
     clickOnButton,
+    lighthouse
   };
   
   export default Commands;

@@ -11,7 +11,7 @@
     "allowJs": true,
     "types": ["cypress", "node", "cypress-axe"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "cypress"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["**/__tests__/**"],
   "compileOnSave": false,
   "buildOnSave": false

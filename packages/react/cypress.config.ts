@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { defineConfig } from "cypress";
+const { lighthouse, prepareAudit } = require("@cypress-audit/lighthouse");
 
 export default defineConfig({
+  
   component: {
     devServer: {
       framework: "react",
@@ -13,5 +15,18 @@ export default defineConfig({
     },
     supportFile: "./cypress/support/index.ts",
     retries: 1,
+  },
+  e2e: {
+    baseUrl: "http://localhost:6007/",
+    setupNodeEvents(on, config) {
+      on("before:browser:launch", (browser = {}, launchOptions)=> {
+        prepareAudit(launchOptions);
+      })
+
+      on("task", {
+        lighthouse: lighthouse(), // calling the function is important 
+           });
+      return (config)
+    },
   },
 });
