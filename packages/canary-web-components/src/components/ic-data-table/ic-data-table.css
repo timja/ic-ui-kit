@@ -283,7 +283,7 @@ ic-tooltip > ic-typography {
     align-items: center;
   }
 
-  .cell-container {
+  /* .cell-container {
     display: flex;
-  }
+  } */
 }

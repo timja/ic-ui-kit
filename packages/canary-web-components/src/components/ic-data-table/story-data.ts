@@ -869,13 +869,66 @@ export const CustomRowHeights = (): HTMLElement => {
   return wrapper;
 };
 
-export const TruncationShowHide = (): HTMLIcDataTableElement => {
+export const TruncationShowHide = (): HTMLElement => {
   const dataTable = CustomRowHeights().querySelector("ic-data-table");
   dataTable.globalRowHeight = 40;
   dataTable.variableRowHeight = null;
   dataTable.setAttribute("truncation-pattern", "showHide");
 
-  return dataTable;
+  const resetButton = document.createElement("ic-button");
+  resetButton.addEventListener("click", () => dataTable.resetRowHeights());
+  resetButton.innerHTML = "Reset";
+
+  const setButton = document.createElement("ic-button");
+  setButton.addEventListener("click", () => {
+    dataTable.globalRowHeight = 80;
+    dataTable.variableRowHeight = ({ name, age }) =>
+      name === "John Smith" || age === 41 ? 200 : null;
+  });
+  setButton.innerHTML = "Set";
+
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.style["display"] = "flex";
+  buttonWrapper.style["paddingTop"] = "10px";
+  buttonWrapper.style["gap"] = "8px";
+  buttonWrapper.insertAdjacentElement("afterbegin", setButton);
+  buttonWrapper.insertAdjacentElement("beforeend", resetButton);
+
+  const wrapper = document.createElement("div");
+  wrapper.insertAdjacentElement("afterbegin", dataTable);
+  wrapper.insertAdjacentElement("beforeend", buttonWrapper);
+  return wrapper;
+};
+
+export const TruncationTooltip = (): HTMLElement => {
+  const dataTable = CustomRowHeights().querySelector("ic-data-table");
+  dataTable.globalRowHeight = 40;
+  dataTable.variableRowHeight = null;
+  dataTable.setAttribute("truncation-pattern", "tooltip");
+
+  const resetButton = document.createElement("ic-button");
+  resetButton.addEventListener("click", () => dataTable.resetRowHeights());
+  resetButton.innerHTML = "Reset";
+
+  const setButton = document.createElement("ic-button");
+  setButton.addEventListener("click", () => {
+    dataTable.globalRowHeight = 80;
+    dataTable.variableRowHeight = ({ name, age }) =>
+      name === "John Smith" || age === 41 ? 200 : null;
+  });
+  setButton.innerHTML = "Set";
+
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.style["display"] = "flex";
+  buttonWrapper.style["paddingTop"] = "10px";
+  buttonWrapper.style["gap"] = "8px";
+  buttonWrapper.insertAdjacentElement("afterbegin", setButton);
+  buttonWrapper.insertAdjacentElement("beforeend", resetButton);
+
+  const wrapper = document.createElement("div");
+  wrapper.insertAdjacentElement("afterbegin", dataTable);
+  wrapper.insertAdjacentElement("beforeend", buttonWrapper);
+  return wrapper;
 };
 
 export const CustomTitleBar = (): HTMLIcDataTableElement => {
