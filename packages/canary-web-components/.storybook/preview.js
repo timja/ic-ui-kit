@@ -1,6 +1,6 @@
-import "../src/global/normalize.css"
+import "@ukic/web-components/dist/core/normalize.css";
 import "@ukic/fonts/dist/fonts.css";
-import "../src/global/icds.css";
+import "@ukic/web-components/dist/core/core.css";
 
 import { defineCustomElements } from '../dist/esm/loader';
 
