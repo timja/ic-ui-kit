@@ -32,12 +32,8 @@ jobs:
               - './packages/canary-react/**'
 
   ic-ui-kit-static-analysis-tests:
-<<<<<<< HEAD
     needs: [check-updates]
     name: "Static analysis tests"
-=======
-    name: "Static Analysis Tests"
->>>>>>> fc48ce3a (build(root): added canary commands)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -80,12 +76,8 @@ jobs:
         run: npm run test:coverage-ci
 
   ic-ui-kit-e2e-tests:
-<<<<<<< HEAD
     needs: [check-updates]
     name: "E2E tests"
-=======
-    name: "E2E Tests"
->>>>>>> fc48ce3a (build(root): added canary commands)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -98,12 +90,8 @@ jobs:
           npm ci --legacy-peer-deps
           npm run bootstrap -- -- --ci --legacy-peer-deps
 
-<<<<<<< HEAD
       - name: E2E core tests
         if: ${{ needs.check-updates.outputs.core == 'true' }}
-=======
-      - name: E2E tests
->>>>>>> fc48ce3a (build(root): added canary commands)
         run: npm run test-e2e
 
       - name: E2E canary tests
@@ -111,12 +99,8 @@ jobs:
         run: npm run test-e2e:canary
 
   ic-ui-kit-visual-tests:
-<<<<<<< HEAD
     needs: [check-updates]
     name: "Visual regression tests"
-=======
-    name: "Visual Regression Tests"
->>>>>>> fc48ce3a (build(root): added canary commands)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -135,6 +119,7 @@ jobs:
         run: npm run test-visual:ci
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Canary visual regression tests
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
         run: npm run test-visual:ci:canary
@@ -143,6 +128,9 @@ jobs:
 =======
   ic-ui-kit-deploy:
 >>>>>>> fc48ce3a (build(root): added canary commands)
+=======
+  ic-ui-kit-deploy-core:
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     needs:
       [
         ic-ui-kit-static-analysis-tests,
@@ -154,8 +142,50 @@ jobs:
     name: "Deploy QA storybook"
 =======
       ]
+<<<<<<< HEAD
     name: "Deploy QA Storybook"
 >>>>>>> fc48ce3a (build(root): added canary commands)
+=======
+    name: "Deploy core QA Storybook"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: |
+          npm ci --legacy-peer-deps
+          npm run bootstrap -- -- --ci --legacy-peer-deps
+
+      - name: Build components and web-components and react storybook
+        run: |
+          npm run build
+          npm run build-storybook:web-components
+          npm run build-storybook:react
+
+      - name: Deploy web components storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./packages/web-components/storybook-static
+          target-folder: ./branches/develop/web-components
+
+      - name: Deploy react storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./packages/react/storybook-static
+          target-folder: ./branches/develop/react
+
+  ic-ui-kit-deploy-canary:
+    if: ${{ needs.check-updates.outputs.canary == 'true' }}
+    needs:
+      [
+        ic-ui-kit-static-analysis-tests,
+        ic-ui-kit-e2e-tests,
+        ic-ui-kit-visual-tests,
+      ]
+    name: "Deploy canary QA Storybook"
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -177,6 +207,7 @@ jobs:
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
         run: |
           npm run build:all
+<<<<<<< HEAD
 
       - name: Build web-components and react storybook
         if: ${{ needs.check-updates.outputs.core == 'true' }}
@@ -224,15 +255,20 @@ jobs:
           folder: ./packages/canary-react/storybook-static
           target-folder: ./branches/canary/develop/react
 =======
+=======
+          npm run build-storybook:canary-web-components
+          npm run build-storybook:canary-react
+
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
       - name: Deploy CANARY web components storybook
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ./packages/web-components/storybook-static
+          folder: ./packages/canary-web-components/storybook-static
           target-folder: ./branches/develop/canary-web-components
 
       - name: Deploy CANARY react storybook
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ./packages/react/storybook-static
+          folder: ./packages/canary-react/storybook-static
           target-folder: ./branches/develop/canary-react
 >>>>>>> fc48ce3a (build(root): added canary commands)

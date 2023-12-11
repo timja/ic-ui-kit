@@ -7,12 +7,18 @@ on:
 
 jobs:
   check-updates:
+<<<<<<< HEAD
     name: "Check package updates"
+=======
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     outputs:
+<<<<<<< HEAD
       core: ${{ steps.filter.outputs.core }}
+=======
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
       canary: ${{ steps.filter.outputs.canary }}
     steps:
       - uses: actions/checkout@v3
@@ -20,9 +26,12 @@ jobs:
         id: filter
         with:
           filters: |
+<<<<<<< HEAD
             core:
               - './packages/web-components/**'
               - './packages/react/**'
+=======
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
             canary:
               - './packages/canary-web-components/**'
               - './packages/canary-react/**'
@@ -42,7 +51,7 @@ jobs:
         run: |
           npm ci --legacy-peer-deps
           npm run bootstrap -- -- --ci --legacy-peer-deps
-          npm run build
+          npm run build:all
 
       - name: Install all dependencies
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
@@ -157,9 +166,15 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   ic-ui-kit-deploy-storybook-canary:
+<<<<<<< HEAD
     needs: [ic-ui-kit-publish, check-updates]
     if: ${{ needs.check-updates.outputs.canary == 'true' }}
     name: "Deploy canary storybook"
+=======
+    if: ${{ needs.check-updates.outputs.canary == 'true' }}
+    needs: [ic-ui-kit-publish]
+    name: "Deploy Canary Storybook"
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -177,6 +192,7 @@ jobs:
           npm run build-storybook:canary-web-components
           npm run build-storybook:canary-react
 
+<<<<<<< HEAD
       - name: Deploy canary web components storybook
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -188,6 +204,19 @@ jobs:
         with:
           folder: ./packages/canary-react/storybook-static
           target-folder: ./branches/canary/main/react
+=======
+      - name: Deploy CANARY web components storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./packages/canary-web-components/storybook-static
+          target-folder: ./branches/main/canary-web-components
+
+      - name: Deploy CANARY react storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ./packages/canary-react/storybook-static
+          target-folder: ./branches/main/canary-react
+>>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
 
   # Triggers a workflow in the design system repo
   ic-ui-kit-update-design-system:
