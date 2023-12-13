@@ -124,6 +124,24 @@ export namespace Components {
     index: number;
   }) => IcDataTableRowHeights | null;
     }
+    interface IcDataTableTitleBar {
+        /**
+          * The description that is displayed below the `heading` and `metadata`. Can be overridden with the `description` slot.
+         */
+        "description"?: string;
+        /**
+          * The heading of the title bar. Can be overridden with the `heading` slot. If used with an ic-data-table it will default to the table's `caption` unless overridden.
+         */
+        "heading"?: string;
+        /**
+          * When `true`, the density select will not be rendered.
+         */
+        "hideDensitySelect"?: boolean;
+        /**
+          * The metadata displayed next to the `heading`.
+         */
+        "metadata"?: string;
+    }
     interface IcPaginationBar {
         /**
           * Sets the alignment of the items in the pagination bar.
@@ -173,47 +191,53 @@ export namespace Components {
          */
         "totalItems": number;
     }
-    interface IcTitleBar {
-        /**
-          * The description that is displayed below the `header` and `metadata`. Can be overridden with the `description` slot.
-         */
-        "description"?: string;
-        /**
-          * If `true`, will apply a background colour and a bottom border to the title bar.
-         */
-        "fullWidth"?: boolean;
-        /**
-          * The header of the title bar. Can be overridden with the `header` slot. If used with an ic-data-table it will default to the table's `caption` unless overridden.
-         */
-        "header"?: string;
-        /**
-          * When `true`, the density select will not be rendered.
-         */
-        "hideDensitySelect"?: boolean;
-        /**
-          * The metadata displayed next to the `header`.
-         */
-        "metadata"?: string;
-    }
 }
 export interface IcDataTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDataTableElement;
 }
+export interface IcDataTableTitleBarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLIcDataTableTitleBarElement;
+}
 export interface IcPaginationBarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcPaginationBarElement;
 }
-export interface IcTitleBarCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLIcTitleBarElement;
-}
 declare global {
+    interface HTMLIcDataTableElementEventMap {
+        "icRowHeightChange": void;
+    }
     interface HTMLIcDataTableElement extends Components.IcDataTable, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLIcDataTableElementEventMap>(type: K, listener: (this: HTMLIcDataTableElement, ev: IcDataTableCustomEvent<HTMLIcDataTableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLIcDataTableElementEventMap>(type: K, listener: (this: HTMLIcDataTableElement, ev: IcDataTableCustomEvent<HTMLIcDataTableElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLIcDataTableElement: {
         prototype: HTMLIcDataTableElement;
         new (): HTMLIcDataTableElement;
+    };
+    interface HTMLIcDataTableTitleBarElementEventMap {
+        "icTableDensityUpdate": IcDensityUpdateEventDetail;
+    }
+    interface HTMLIcDataTableTitleBarElement extends Components.IcDataTableTitleBar, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLIcDataTableTitleBarElementEventMap>(type: K, listener: (this: HTMLIcDataTableTitleBarElement, ev: IcDataTableTitleBarCustomEvent<HTMLIcDataTableTitleBarElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLIcDataTableTitleBarElementEventMap>(type: K, listener: (this: HTMLIcDataTableTitleBarElement, ev: IcDataTableTitleBarCustomEvent<HTMLIcDataTableTitleBarElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLIcDataTableTitleBarElement: {
+        prototype: HTMLIcDataTableTitleBarElement;
+        new (): HTMLIcDataTableTitleBarElement;
     };
     interface HTMLIcPaginationBarElementEventMap {
         "icPageChange": { value: number };
@@ -233,16 +257,10 @@ declare global {
         prototype: HTMLIcPaginationBarElement;
         new (): HTMLIcPaginationBarElement;
     };
-    interface HTMLIcTitleBarElement extends Components.IcTitleBar, HTMLStencilElement {
-    }
-    var HTMLIcTitleBarElement: {
-        prototype: HTMLIcTitleBarElement;
-        new (): HTMLIcTitleBarElement;
-    };
     interface HTMLElementTagNameMap {
         "ic-data-table": HTMLIcDataTableElement;
+        "ic-data-table-title-bar": HTMLIcDataTableTitleBarElement;
         "ic-pagination-bar": HTMLIcPaginationBarElement;
-        "ic-title-bar": HTMLIcTitleBarElement;
     }
 }
 declare namespace LocalJSX {
@@ -356,6 +374,28 @@ declare namespace LocalJSX {
     index: number;
   }) => IcDataTableRowHeights | null;
     }
+    interface IcDataTableTitleBar {
+        /**
+          * The description that is displayed below the `heading` and `metadata`. Can be overridden with the `description` slot.
+         */
+        "description"?: string;
+        /**
+          * The heading of the title bar. Can be overridden with the `heading` slot. If used with an ic-data-table it will default to the table's `caption` unless overridden.
+         */
+        "heading"?: string;
+        /**
+          * When `true`, the density select will not be rendered.
+         */
+        "hideDensitySelect"?: boolean;
+        /**
+          * The metadata displayed next to the `heading`.
+         */
+        "metadata"?: string;
+        /**
+          * Emitted when the table density select value is changed.
+         */
+        "onIcTableDensityUpdate"?: (event: IcDataTableTitleBarCustomEvent<IcDensityUpdateEventDetail>) => void;
+    }
     interface IcPaginationBar {
         /**
           * Sets the alignment of the items in the pagination bar.
@@ -413,36 +453,10 @@ declare namespace LocalJSX {
          */
         "totalItems": number;
     }
-    interface IcTitleBar {
-        /**
-          * The description that is displayed below the `header` and `metadata`. Can be overridden with the `description` slot.
-         */
-        "description"?: string;
-        /**
-          * If `true`, will apply a background colour and a bottom border to the title bar.
-         */
-        "fullWidth"?: boolean;
-        /**
-          * The header of the title bar. Can be overridden with the `header` slot. If used with an ic-data-table it will default to the table's `caption` unless overridden.
-         */
-        "header"?: string;
-        /**
-          * When `true`, the density select will not be rendered.
-         */
-        "hideDensitySelect"?: boolean;
-        /**
-          * The metadata displayed next to the `header`.
-         */
-        "metadata"?: string;
-        /**
-          * Emitted when the table density select value is changed.
-         */
-        "onIcTableDensityUpdate"?: (event: IcTitleBarCustomEvent<IcDensityUpdateEventDetail>) => void;
-    }
     interface IntrinsicElements {
         "ic-data-table": IcDataTable;
+        "ic-data-table-title-bar": IcDataTableTitleBar;
         "ic-pagination-bar": IcPaginationBar;
-        "ic-title-bar": IcTitleBar;
     }
 }
 export { LocalJSX as JSX };
@@ -450,8 +464,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "ic-data-table": LocalJSX.IcDataTable & JSXBase.HTMLAttributes<HTMLIcDataTableElement>;
+            "ic-data-table-title-bar": LocalJSX.IcDataTableTitleBar & JSXBase.HTMLAttributes<HTMLIcDataTableTitleBarElement>;
             "ic-pagination-bar": LocalJSX.IcPaginationBar & JSXBase.HTMLAttributes<HTMLIcPaginationBarElement>;
-            "ic-title-bar": LocalJSX.IcTitleBar & JSXBase.HTMLAttributes<HTMLIcTitleBarElement>;
         }
     }
 }
