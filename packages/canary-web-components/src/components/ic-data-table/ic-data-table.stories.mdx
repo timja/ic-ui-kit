@@ -28,12 +28,13 @@ import {
   CustomIcons,
   CustomRowHeights,
   TruncationShowHide,
+  TruncationTooltip,
   CustomTitleBar,
 } from "./story-data";
 import readme from "./readme.md";
 
 <Meta
-  title="Web Components/Data Table"
+  title="Canary Web Components/Data Table"
   component="ic-data-table"
   parameters={{
     componentAPI: {
@@ -1034,6 +1035,10 @@ If there is a certain row or column that should be exempt from truncation, then 
   <Story name="Truncating Cell Data with See More/Less Button">
     {TruncationShowHide()}
   </Story>
+</Canvas>
+
+<Canvas withSource="none">
+  <Story name="Truncating Cell Data with Tooltip">{TruncationTooltip()}</Story>
 </Canvas>
 
 #### Truncating Cell Data code example

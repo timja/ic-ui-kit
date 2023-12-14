@@ -12,6 +12,11 @@ export const IcDataTable =
   /*@__PURE__*/ createReactComponent<JSX.IcDataTable, HTMLIcDataTableElement>(
     "ic-data-table"
   );
+export const IcDataTableCopy =
+  /*@__PURE__*/ createReactComponent<
+    JSX.IcDataTableCopy,
+    HTMLIcDataTableCopyElement
+  >("ic-data-table-copy");
 export const IcDataTableTitleBar = /*@__PURE__*/ createReactComponent<
   JSX.IcDataTableTitleBar,
   HTMLIcDataTableTitleBarElement
