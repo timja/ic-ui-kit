@@ -30,13 +30,8 @@ import {
   IcPaginationTypes,
 } from "../ic-pagination/ic-pagination.types";
 import { IcThemeForegroundNoDefault } from "@ukic/web-components/dist/types/utils/types";
-import {
-  getCurrentDeviceSize,
-  isSlotUsed,
-  getSlotContent,
-  checkResizeObserver,
-} from "../../utils/helpers";
-import { IC_DEVICE_SIZES } from "../../utils/constants";
+// Unable to import helper functions via @ukic/web-components
+import { getSlotContent, isSlotUsed } from "../../utils/helpers";
 
 /**
  * @slot empty-state - Content is slotted below the table header when there is no data and the table is not loading.
@@ -45,7 +40,7 @@ import { IC_DEVICE_SIZES } from "../../utils/constants";
  * @slot title-bar - A custom ic-data-table-title-bar can be slotted above the column headers to display additional information about the table.
  */
 @Component({
-  tag: "ic-data-table",
+  tag: "ic-data-table-copy",
   styleUrl: "ic-data-table.css",
   shadow: true,
 })
@@ -70,12 +65,9 @@ export class DataTable {
 
   private currentRowHeight: number;
   private hasLoadedForOneSecond: boolean = true;
-  private resizeObserver: ResizeObserver = null;
   private timerStarted: number;
 
   @Element() el: HTMLIcDataTableElement;
-
-  @State() deviceSize: number = IC_DEVICE_SIZES.XL;
 
   @State() fromRow: number = 0;
 
@@ -244,12 +236,6 @@ export class DataTable {
    */
   @Event() icRowHeightChange: EventEmitter<void>;
 
-  disconnectedCallback(): void {
-    if (this.resizeObserver !== null) {
-      this.resizeObserver.disconnect();
-    }
-  }
-
   componentWillLoad(): void {
     this.rowsPerPage = Number(this.paginationOptions.itemsPerPage[0].value);
     this.previousRowsPerPage = this.rowsPerPage;
@@ -271,24 +257,9 @@ export class DataTable {
     ) {
       this.scrollable = true;
     }
-    checkResizeObserver(this.runResizeObserver);
+
     this.dataTruncation();
   }
-
-  private resizeObserverCallback = (currSize: number) => {
-    if (currSize !== this.deviceSize) {
-      this.deviceSize = currSize;
-      this.dataTruncation();
-    }
-  };
-
-  private runResizeObserver = () => {
-    this.resizeObserver = new ResizeObserver(() => {
-      const currSize = getCurrentDeviceSize();
-      this.resizeObserverCallback(currSize);
-    });
-    this.resizeObserver.observe(this.el);
-  };
 
   private removeDivStyles = (parentDiv: HTMLElement) => {
     parentDiv.style["height"] = null;

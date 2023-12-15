@@ -128,6 +128,120 @@ export namespace Components {
     index: number;
   }) => IcDataTableRowHeights | null;
     }
+    interface IcDataTableCopy {
+        /**
+          * The title for the table only visible to screen readers.
+         */
+        "caption": string;
+        /**
+          * The column headers for the table.
+         */
+        "columns": IcDataTableColumnObject[];
+        /**
+          * The row content for the table.
+         */
+        "data": { [key: string]: any }[];
+        /**
+          * Set the density of the table including font and padding.
+         */
+        "density"?: IcDataTableDensityOptions;
+        /**
+          * Applies a border to the table container.
+         */
+        "embedded"?: boolean;
+        /**
+          * Sets the row height on all rows in the table that aren't set using the variableRowHeight method.
+         */
+        "globalRowHeight"?: IcDataTableRowHeights;
+        /**
+          * If `true`, column headers will not be visible.
+         */
+        "hideColumnHeaders"?: boolean;
+        /**
+          * When set to `true`, the full table will show a loading state, featuring a radial indicator.
+         */
+        "loading"?: boolean;
+        /**
+          * Sets the props for the circular loading indicator used in the loading state.
+         */
+        "loadingOptions"?: {
+    appearance?: IcThemeForegroundNoDefault;
+    description?: string;
+    label?: string;
+    labelDuration?: number;
+    max?: number;
+    min?: number;
+    progress?: number;
+    showBackground?: boolean;
+  };
+        /**
+          * The minimum amount of time the `loading` state displays for before showing the data. Used to prevent flashing in the component.
+         */
+        "minimumLoadingDisplayDuration"?: number;
+        /**
+          * Sets the props for the pagination bar.
+         */
+        "paginationOptions"?: {
+    itemsPerPage?: { label: string; value: string }[];
+    type?: IcPaginationTypes;
+    control?: IcPaginationControlTypes;
+    itemsPerPageControl?: boolean;
+    goToPageControl?: boolean;
+    alignment?: IcPaginationAlignmentOptions;
+  };
+        /**
+          * Resets the `globalRowHeight` prop to `40px` and sets the `variableRowHeight` prop to `null`.
+         */
+        "resetRowHeights": () => Promise<void>;
+        /**
+          * If `true`, adds a pagination bar to the bottom of the table.
+         */
+        "showPagination"?: boolean;
+        /**
+          * Sets the order columns will be sorted in and allows for 'default' sorts to be added.
+         */
+        "sortOptions"?: {
+    sortOrders: IcDataTableSortOrderOptions[];
+    defaultColumn?: string;
+  };
+        /**
+          * If `true`, allows table columns to be sorted using applied sort buttons.
+         */
+        "sortable"?: boolean;
+        /**
+          * If `true`, column headers will remain at the top of the table when scrolling vertically.
+         */
+        "stickyColumnHeaders"?: boolean;
+        /**
+          * If `true`, row headers will remain to the left when scrolling horizontally.
+         */
+        "stickyRowHeaders"?: boolean;
+        /**
+          * For long text in cells that aren't set to textWrap, define how they should be truncated. `tooltip` adds a tooltip for the rest of the text, `showHide` adds the ic-typography "See More"/"See Less" buttons.
+         */
+        "truncationPattern"?: IcDataTableTruncationTypes;
+        /**
+          * If `true`, the table displays a linear loading indicator below the header row to indicate an updating state.
+         */
+        "updating"?: boolean;
+        /**
+          * Sets the props for the linear loading indicator used in the updating state.
+         */
+        "updatingOptions"?: {
+    appearance?: IcThemeForegroundNoDefault;
+    description?: string;
+    max?: number;
+    min?: number;
+    progress?: number;
+  };
+        /**
+          * Allows for custom setting of row heights on individual rows based on an individual value from the `data` prop and the row index. If the function returns `null`, that row's height will be set to the `globalRowHeight` property.
+         */
+        "variableRowHeight"?: (params: {
+    [key: string]: any;
+    index: number;
+  }) => IcDataTableRowHeights | null;
+    }
     interface IcDataTableTitleBar {
         /**
           * The description that is displayed below the `heading` and `metadata`. Can be overridden with the `description` slot.
@@ -200,6 +314,10 @@ export interface IcDataTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDataTableElement;
 }
+export interface IcDataTableCopyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLIcDataTableCopyElement;
+}
 export interface IcDataTableTitleBarCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIcDataTableTitleBarElement;
@@ -215,6 +333,12 @@ declare global {
         prototype: HTMLIcDataTableElement;
         new (): HTMLIcDataTableElement;
     };
+    interface HTMLIcDataTableCopyElement extends Components.IcDataTableCopy, HTMLStencilElement {
+    }
+    var HTMLIcDataTableCopyElement: {
+        prototype: HTMLIcDataTableCopyElement;
+        new (): HTMLIcDataTableCopyElement;
+    };
     interface HTMLIcDataTableTitleBarElement extends Components.IcDataTableTitleBar, HTMLStencilElement {
     }
     var HTMLIcDataTableTitleBarElement: {
@@ -229,6 +353,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ic-data-table": HTMLIcDataTableElement;
+        "ic-data-table-copy": HTMLIcDataTableCopyElement;
         "ic-data-table-title-bar": HTMLIcDataTableTitleBarElement;
         "ic-pagination-bar": HTMLIcPaginationBarElement;
     }
@@ -288,6 +413,120 @@ declare namespace LocalJSX {
           * Emitted when the `globalRowHeight` or `variableRowHeight` properties change in the data table.
          */
         "onIcRowHeightChange"?: (event: IcDataTableCustomEvent<void>) => void;
+        /**
+          * Sets the props for the pagination bar.
+         */
+        "paginationOptions"?: {
+    itemsPerPage?: { label: string; value: string }[];
+    type?: IcPaginationTypes;
+    control?: IcPaginationControlTypes;
+    itemsPerPageControl?: boolean;
+    goToPageControl?: boolean;
+    alignment?: IcPaginationAlignmentOptions;
+  };
+        /**
+          * If `true`, adds a pagination bar to the bottom of the table.
+         */
+        "showPagination"?: boolean;
+        /**
+          * Sets the order columns will be sorted in and allows for 'default' sorts to be added.
+         */
+        "sortOptions"?: {
+    sortOrders: IcDataTableSortOrderOptions[];
+    defaultColumn?: string;
+  };
+        /**
+          * If `true`, allows table columns to be sorted using applied sort buttons.
+         */
+        "sortable"?: boolean;
+        /**
+          * If `true`, column headers will remain at the top of the table when scrolling vertically.
+         */
+        "stickyColumnHeaders"?: boolean;
+        /**
+          * If `true`, row headers will remain to the left when scrolling horizontally.
+         */
+        "stickyRowHeaders"?: boolean;
+        /**
+          * For long text in cells that aren't set to textWrap, define how they should be truncated. `tooltip` adds a tooltip for the rest of the text, `showHide` adds the ic-typography "See More"/"See Less" buttons.
+         */
+        "truncationPattern"?: IcDataTableTruncationTypes;
+        /**
+          * If `true`, the table displays a linear loading indicator below the header row to indicate an updating state.
+         */
+        "updating"?: boolean;
+        /**
+          * Sets the props for the linear loading indicator used in the updating state.
+         */
+        "updatingOptions"?: {
+    appearance?: IcThemeForegroundNoDefault;
+    description?: string;
+    max?: number;
+    min?: number;
+    progress?: number;
+  };
+        /**
+          * Allows for custom setting of row heights on individual rows based on an individual value from the `data` prop and the row index. If the function returns `null`, that row's height will be set to the `globalRowHeight` property.
+         */
+        "variableRowHeight"?: (params: {
+    [key: string]: any;
+    index: number;
+  }) => IcDataTableRowHeights | null;
+    }
+    interface IcDataTableCopy {
+        /**
+          * The title for the table only visible to screen readers.
+         */
+        "caption": string;
+        /**
+          * The column headers for the table.
+         */
+        "columns": IcDataTableColumnObject[];
+        /**
+          * The row content for the table.
+         */
+        "data"?: { [key: string]: any }[];
+        /**
+          * Set the density of the table including font and padding.
+         */
+        "density"?: IcDataTableDensityOptions;
+        /**
+          * Applies a border to the table container.
+         */
+        "embedded"?: boolean;
+        /**
+          * Sets the row height on all rows in the table that aren't set using the variableRowHeight method.
+         */
+        "globalRowHeight"?: IcDataTableRowHeights;
+        /**
+          * If `true`, column headers will not be visible.
+         */
+        "hideColumnHeaders"?: boolean;
+        /**
+          * When set to `true`, the full table will show a loading state, featuring a radial indicator.
+         */
+        "loading"?: boolean;
+        /**
+          * Sets the props for the circular loading indicator used in the loading state.
+         */
+        "loadingOptions"?: {
+    appearance?: IcThemeForegroundNoDefault;
+    description?: string;
+    label?: string;
+    labelDuration?: number;
+    max?: number;
+    min?: number;
+    progress?: number;
+    showBackground?: boolean;
+  };
+        /**
+          * The minimum amount of time the `loading` state displays for before showing the data. Used to prevent flashing in the component.
+         */
+        "minimumLoadingDisplayDuration"?: number;
+        /**
+          * Emitted when the `globalRowHeight` or `variableRowHeight` properties change in the data table.
+         */
+        "onIcRowHeightChange"?: (event: IcDataTableCopyCustomEvent<void>) => void;
         /**
           * Sets the props for the pagination bar.
          */
@@ -429,6 +668,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "ic-data-table": IcDataTable;
+        "ic-data-table-copy": IcDataTableCopy;
         "ic-data-table-title-bar": IcDataTableTitleBar;
         "ic-pagination-bar": IcPaginationBar;
     }
@@ -438,6 +678,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "ic-data-table": LocalJSX.IcDataTable & JSXBase.HTMLAttributes<HTMLIcDataTableElement>;
+            "ic-data-table-copy": LocalJSX.IcDataTableCopy & JSXBase.HTMLAttributes<HTMLIcDataTableCopyElement>;
             "ic-data-table-title-bar": LocalJSX.IcDataTableTitleBar & JSXBase.HTMLAttributes<HTMLIcDataTableTitleBarElement>;
             "ic-pagination-bar": LocalJSX.IcPaginationBar & JSXBase.HTMLAttributes<HTMLIcPaginationBarElement>;
         }

@@ -90,3 +90,23 @@ export const inheritAttributes = (
 
   return attributeObject;
 };
+
+export const deviceSizeMatches = (size: number): boolean =>
+  window.matchMedia(`(max-width: ${size}px)`).matches;
+
+export const getCurrentDeviceSize = (): number => {
+  if (deviceSizeMatches(DEVICE_SIZES.S)) {
+    return DEVICE_SIZES.S;
+  }
+  if (deviceSizeMatches(DEVICE_SIZES.M)) {
+    return DEVICE_SIZES.M;
+  }
+  if (deviceSizeMatches(DEVICE_SIZES.L)) {
+    return DEVICE_SIZES.L;
+  }
+  if (deviceSizeMatches(DEVICE_SIZES.XL)) {
+    return DEVICE_SIZES.XL;
+  }
+  //fallback needed as all of above get initialised to 0 in jest tests
+  return DEVICE_SIZES.UNDEFINED;
+};
