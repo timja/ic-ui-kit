@@ -1,8 +1,9 @@
 /// <reference types="Cypress" />
 import { mount } from "@cypress/react";
-import { IcAlert } from "../../src/components";
+import { IcAlert, IcButton, IcLink } from "../../src/components";
 import React from "react";
 import { should } from "chai";
+import { CYPRESS_AXE_OPTIONS } from "../utils/a11y";
 
 
 
@@ -59,37 +60,79 @@ it("Success Alert with Message and Icon", () => {
  .contains("This alert is for displaying success messages.").should("be.visible");       
 })
 
-it.only("Title displayed with Message and Icon", () => {
-  mount(<IcAlert heading="Title displayed above the message" message="This alert has the title at the top of the alert and the message below it." title-above="true"/>);
-  cy.checkHydrated("ic-alert");
-  cy.findShadowEl("ic-alert","svg").should("be.visible");
-  cy.get('[heading="Title displayed above the message"]').should("be.visible");
-  cy.findShadowEl("ic-alert","ic-typography").find("p").should("be.visible")
-  .contains("Title displayed above the message");
-  cy.findShadowEl("ic-alert","ic-typography")
- .contains("This alert has the title at the top of the alert and the message below it.").should("be.visible");       
-})
-
-it.only("Title displayed with Message and Icon", () => {
-  mount(<IcAlert heading="Title displayed above the message" message="This alert has the title at the top of the alert and the message below it." title-above="true"/>);
-  cy.checkHydrated("ic-alert");
-  cy.findShadowEl("ic-alert","svg").should("be.visible");
-  cy.get('[heading="Title displayed above the message"]').should("be.visible");
-  cy.findShadowEl("ic-alert","ic-typography").find("p").should("be.visible")
-  .contains("Title displayed above the message");
-  cy.findShadowEl("ic-alert","ic-typography")
- .contains("This alert has the title at the top of the alert and the message below it.").should("be.visible");       
-})
 it("should close on dismiss icon", () => {
-       mount(<IcAlert heading="Dismissible" message="This alert is dismissible."dismissible />
-       );
-       cy.checkHydrated("ic-alert");
-       cy.get("ic-alert").should("exist");
-       cy.findShadowEl("ic-alert", "ic-button").should('be.visible').click()
-       
-})
+  mount(<IcAlert heading="Dismissible" message="This alert is dismissible."dismissible />
+  );
+  cy.checkHydrated("ic-alert");
+  cy.get("ic-alert").should("exist");
+  cy.findShadowEl("ic-alert", "ic-button").should("be.visible").click();
   
+})
+
+it("Responsive title with Message and Icon", () => {
+  mount(<IcAlert heading="This title is very long so should force the alert to add 'title-above'
+  " message="This alert does not have 'title-above' added as a prop but it's forced to add it due to the length of the title."/>);
+
+  cy.checkHydrated("ic-alert");
+  cy.findShadowEl("ic-alert","svg").should("be.visible");
+  cy.findShadowEl("ic-alert","ic-typography").find("p").should("be.visible")
+  .contains("This title is very long so should force the alert to add 'title-above")
+  .should('be.visible');
+  cy.findShadowEl("ic-alert","ic-typography")
+ .contains("This alert does not have 'title-above' added as a prop but it's forced to add it due to the length of the title.")
+ .should("be.visible");       
+})
+
+it("Title Above with Message and Icon", () => {
+  mount(<IcAlert heading="Title displayed above the message" message="This alert has the title at the top of the alert and the message below it." title-above="true"/>);
+  cy.checkHydrated("ic-alert");
+  cy.findShadowEl("ic-alert","svg").should("be.visible");
+  cy.get('[heading="Title displayed above the message"]').should("be.visible");
+  
+         
+})
+
+it("Custom with Message and Icon", () => {
+  mount(<IcAlert heading="This alert uses a custom message slot">
+  <span slot="message">This is some text and <IcLink href="/" inline>this is an inline link</IcLink> within the text.</span>
+</IcAlert>);
+  cy.checkHydrated("ic-alert");
+  cy.findShadowEl("ic-alert","svg").should("be.visible");
+  cy.findShadowEl("ic-alert","ic-typography").find("p")
+  .contains("This alert uses a custom message slot").should("be.visible");
+  cy.get('ic-link').click(); 
+})
 
 
-    
- });
+it(" With Action Message and Icon", () => {
+  mount(<IcAlert heading="With action" message="This alert has an action.">
+  <IcButton button slot="action" variant="secondary" appearance="dark">Button</IcButton>
+</IcAlert>
+);
+  cy.checkHydrated("ic-alert");
+  cy.findShadowEl("ic-alert","svg").should("be.visible");
+  cy.findShadowEl("ic-alert","ic-typography").find("p")
+  .contains("With action").should("be.visible");
+  cy.findShadowEl("ic-alert","ic-typography")
+  .contains("This alert has an action.").should("be.visible");
+   cy.get('ic-button').should("be.visible").click();  
+})
+
+describe("IcAlert", () => {
+  beforeEach(() => {
+    cy.injectAxe();
+  });
+  it("Accessblity ", () => {
+    cy.checkA11y(undefined, CYPRESS_AXE_OPTIONS);
+ 
+})
+
+});
+
+
+
+
+
+
+
+});
