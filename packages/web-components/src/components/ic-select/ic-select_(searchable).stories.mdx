@@ -8,14 +8,14 @@ import {
 import { html } from "lit-html";
 import readme from "./readme.md";
 
-    <Meta title="Web Components/Select/Searchable" component="ic-select" />
+<Meta title="Web Components/Select/Searchable" component="ic-select" />
 
-    <Description markdown={readme} />
+<Description markdown={readme} />
 
 export const defaultArgs = {
   disabled: false,
   ["full-width"]: false,
-  ["helper-text"]: "Select one option from the list.",
+  ["helper-text"]: "Select one option from the list",
   ["hide-label"]: false,
   loading: false,
   loadingLabel: "Loading...",
@@ -33,10 +33,10 @@ export const defaultArgs = {
 
 ### Default
 
-    <Canvas>
-          <Story name="Default">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Default">
+    {(args) =>
+      html`<ic-select
           id="select-default"
           label="What is your favourite coffee?"
           searchable
@@ -62,16 +62,16 @@ export const defaultArgs = {
             console.log("icOptionSelect: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Async default
 
-    <Canvas>
-          <Story name="Async default" parameters={{ loki: { skip: true } }}>
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Async default" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`<ic-select
           id="select-async"
           label="What is your favourite coffee?"
           searchable
@@ -92,19 +92,19 @@ export const defaultArgs = {
             ];
           }, 5000);
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Default value
 
-    <Canvas>
-          <Story name="Default value">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Default value">
+    {(args) =>
+      html`<ic-select
           id="select-default-value"
           label="What is your favourite coffee?"
           searchable
@@ -122,19 +122,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Filter by start of options
 
-    <Canvas>
-          <Story name="Filter by start of options">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Filter by start of options">
+    {(args) =>
+      html`<ic-select
           id="select-filter-start"
           label="What is your favourite coffee?"
           searchable
@@ -152,19 +152,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### With descriptions
 
-    <Canvas>
-          <Story name="With descriptions">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="With descriptions">
+    {(args) =>
+      html`<ic-select
           id="select-descriptions"
           label="What is your favourite coffee?"
           searchable
@@ -210,19 +210,19 @@ export const defaultArgs = {
             },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### With descriptions (included in search)
 
-    <Canvas>
-          <Story name="With descriptions (included in search)">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="With descriptions (included in search)">
+    {(args) =>
+      html`<ic-select
           id="select-descriptions-included"
           label="What is your favourite coffee?"
           searchable
@@ -269,19 +269,19 @@ export const defaultArgs = {
             },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Helper text
 
-    <Canvas>
-          <Story name="Helper text">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Helper text">
+    {(args) =>
+      html`<ic-select
           id="select-helper"
           label="What is your favourite coffee?"
           searchable
@@ -299,19 +299,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Sizes
 
-    <Canvas>
-          <Story name="Sizes">
-              {(args) =>
-                  html`<div style="display: flex; flex-direction: column; gap: 16px;">
+<Canvas>
+  <Story name="Sizes">
+    {(args) =>
+      html`<div style="display: flex; flex-direction: column; gap: 16px;">
         <ic-select
           id="select-size-small"
           label="What is your favourite coffee?"
@@ -330,7 +330,7 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>
         <ic-select
@@ -350,7 +350,7 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>
         <ic-select
@@ -371,20 +371,20 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>
       </div>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Disabled
 
-    <Canvas>
-          <Story name="Disabled">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Disabled">
+    {(args) =>
+      html`<ic-select
           id="select-disabled"
           label="What is your favourite coffee?"
           searchable
@@ -402,19 +402,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Disabled options
 
-    <Canvas>
-          <Story name="Disabled options">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Disabled options">
+    {(args) =>
+      html`<ic-select
           id="select-disabled-options"
           label="What is your favourite coffee?"
           searchable
@@ -431,19 +431,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac", disabled: true },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Hidden label
 
-    <Canvas>
-          <Story name="Hidden label">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Hidden label">
+    {(args) =>
+      html`<ic-select
           id="select-hidden-label"
           label="What is your favourite coffee?"
           searchable
@@ -461,19 +461,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Required
 
-    <Canvas>
-          <Story name="Required">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Required">
+    {(args) =>
+      html`<ic-select
           id="select-required"
           label="What is your favourite coffee?"
           searchable
@@ -491,19 +491,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Groups
 
-    <Canvas>
-          <Story name="Groups">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Groups">
+    {(args) =>
+      html`<ic-select
           id="select-groups"
           label="What is your favourite coffee?"
           searchable
@@ -527,19 +527,19 @@ export const defaultArgs = {
             },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Groups (group titles included in search)
 
-    <Canvas>
-          <Story name="Groups (group titles included in search)">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Groups (group titles included in search)">
+    {(args) =>
+      html`<ic-select
           id="select-groups-included"
           label="What is your favourite coffee?"
           searchable
@@ -564,19 +564,19 @@ export const defaultArgs = {
             },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Recommended
 
-    <Canvas>
-          <Story name="Recommended">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Recommended">
+    {(args) =>
+      html`<ic-select
           id="select-recommended"
           label="What is your favourite coffee?"
           searchable
@@ -593,19 +593,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Validation
 
-    <Canvas>
-          <Story name="Validation">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Validation">
+    {(args) =>
+      html`<ic-select
           id="select-success"
           label="What is your favourite coffee?"
           validation-status="success"
@@ -625,7 +625,7 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select1.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>
         <ic-select
@@ -648,7 +648,7 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select2.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>
         <ic-select
@@ -671,19 +671,19 @@ export const defaultArgs = {
             { label: "Macchiato", value: "Mac" },
           ];
           select3.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Scroll behaviour
 
-    <Canvas>
-          <Story name="Scroll behaviour">
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="Scroll behaviour">
+    {(args) =>
+      html`<ic-select
           id="select-scroll"
           label="What is your favourite coffee?"
           searchable
@@ -704,19 +704,19 @@ export const defaultArgs = {
             { label: "Ristretto", value: "Ris" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### External filtering
 
-    <Canvas>
-          <Story name="External filtering" parameters={{ loki: { skip: true } }}>
-              {(args) =>
-                  html`<ic-select
+<Canvas>
+  <Story name="External filtering" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`<ic-select
           label="What is your favourite coffee?"
           searchable
           debounce="300"
@@ -780,18 +780,18 @@ export const defaultArgs = {
           select.addEventListener("icChange", handleFilter);
           select.addEventListener("icRetryLoad", handleFilter);
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### In form
 
 This shows how the searchable select works within a form. The value will appear in the console on submit.
 
-    <Canvas>
-          <Story name="In form" parameters={{ loki: { skip: true } }}>
-              {(args) =>
-                  html`
+<Canvas>
+  <Story name="In form" parameters={{ loki: { skip: true } }}>
+    {(args) =>
+      html`
         <form>
           <ic-select
             id="select-form"
@@ -811,7 +811,7 @@ This shows how the searchable select works within a form. The value will appear 
             { label: "Americano", value: "Ame" },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
           document.querySelector("form").addEventListener("submit", (ev) => {
             ev.preventDefault();
@@ -819,19 +819,19 @@ This shows how the searchable select works within a form. The value will appear 
           });
         </script>
       `
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
 
 ### Update input value from external request
 
-    <Canvas>
-          <Story
-              name="Update input value from external request"
-              parameters={{ loki: { skip: true } }}
-            >
-              {(args) =>
-                  html`<ic-section-container>
+<Canvas>
+  <Story
+    name="Update input value from external request"
+    parameters={{ loki: { skip: true } }}
+  >
+    {(args) =>
+      html`<ic-section-container>
           <ic-select
             id="select-external-request"
             searchable
@@ -860,61 +860,90 @@ This shows how the searchable select works within a form. The value will appear 
             }
           });
           searchSelect.addEventListener("icOptionSelect", function (event) {
-            console.log("icOptionSelect", event.detail.value);
+            console.log("icOptionSelect: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>
+
+### Emitting icOptionSelect on enter
+
+<Canvas>
+  <Story
+    name="Emitting icOptionSelect on enter"
+    parameters={{ loki: { skip: true } }}
+  >
+    {(args) =>
+      html`<ic-select
+          id="select-icoptionselect"
+          label="What is your favourite coffee?"
+          select-on-enter
+          searchable
+        ></ic-select>
+        <script>
+          var select = document.querySelector("#select-icoptionselect");
+          select.options = [
+            { label: "Cappuccino", value: "Cap" },
+            { label: "Latte", value: "Lat" },
+            { label: "Americano", value: "Ame" },
+          ];
+          select.addEventListener("icOptionSelect", function (event) {
+            console.log("icOptionSelect: " + event.detail.value);
+          });
+        </script>`
+    }
+  </Story>
+</Canvas>
 
 ### Playground
 
-    <Canvas>
-          <Story
-              name="Playground"
-              parameters={{ loki: { skip: true } }}
-              args={defaultArgs}
-              argTypes={{
-                ["search-match-position"]: {
-                  defaultValue: "anywhere",
-                  options: ["anywhere", "start"],
-                  control: { type: "inline-radio" },
-                },
-                ["validation-status"]: {
-                  defaultValue: "",
-                  options: ["none", "error", "success", "warning"],
-                  control: { type: "inline-radio" },
-                },
-                size: {
-                  options: ["small", "default", "large"],
-                  control: { type: "inline-radio" },
-                },
-              }}
-            >
-              {(args) =>
-                  html` <ic-select
+<Canvas>
+  <Story
+    name="Playground"
+    parameters={{ loki: { skip: true } }}
+    args={defaultArgs}
+    argTypes={{
+      ["search-match-position"]: {
+        defaultValue: "anywhere",
+        options: ["anywhere", "start"],
+        control: { type: "inline-radio" },
+      },
+      ["validation-status"]: {
+        defaultValue: "",
+        options: ["none", "error", "success", "warning"],
+        control: { type: "inline-radio" },
+      },
+      size: {
+        options: ["small", "default", "large"],
+        control: { type: "inline-radio" },
+      },
+    }}
+  >
+    {(args) =>
+      html` <ic-select
           id="select-playground"
           disabled=${args.disabled}
-                                          full-width=${args["full-width"]}
-                                          helper-text=${args["helper-text"]}
-                                          hide-label=${args["hide-label"]}
-                                          include-descriptions-in-search=${args[
-                    "include-descriptions-in-search"
-                    ]}
-                                          include-group-titles-in-search=${args[
-                    "include-group-titles-in-search"
-                    ]}
-                                          loading=${args.loading}
-                                          loading-label=${args["loading-label"]}
-                                          label=${args.label}
-                                          placeholder=${args.placeholder}
-                                          readonly=${args.readonly}
-                                          required=${args.required}
-                                          search-match-position=${args["search-match-position"]}
-                                          searchable
-                                          size=${args.size}
-                                          validation-status=${args["validation-status"]}
-                                          validation-text=${args["validation-text"]}
+          full-width=${args["full-width"]}
+          helper-text=${args["helper-text"]}
+          hide-label=${args["hide-label"]}
+          include-descriptions-in-search=${args[
+            "include-descriptions-in-search"
+          ]}
+          include-group-titles-in-search=${args[
+            "include-group-titles-in-search"
+          ]}
+          loading=${args.loading}
+          loading-label=${args["loading-label"]}
+          label=${args.label}
+          placeholder=${args.placeholder}
+          readonly=${args.readonly}
+          required=${args.required}
+          search-match-position=${args["search-match-position"]}
+          searchable
+          size=${args.size}
+          validation-status=${args["validation-status"]}
+          validation-text=${args["validation-text"]}
         >
         </ic-select>
         <script>
@@ -969,9 +998,9 @@ This shows how the searchable select works within a form. The value will appear 
             },
           ];
           select.addEventListener("icChange", function (event) {
-            console.log(event.detail.value);
+            console.log("icChange: " + event.detail.value);
           });
         </script>`
-                }
-              </Story>
-          </Canvas>
+    }
+  </Story>
+</Canvas>

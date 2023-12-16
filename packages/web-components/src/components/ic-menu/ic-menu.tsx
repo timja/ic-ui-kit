@@ -38,6 +38,7 @@ import { IcSearchBarSearchModes } from "../ic-search-bar/ic-search-bar.types";
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class Menu {
+  private clearButtonId = "clear-button"; // Prevent duplicate literal string lint error
   private disabledOptionSelected: boolean = false;
   private hasPreviouslyBlurred: boolean = false;
   private hasTimedOut: boolean = false;
@@ -323,7 +324,7 @@ export class Menu {
    * @internal Used to initialize popperJS with an anchor element.
    */
   @Method()
-  async initPopperJs(anchor: HTMLElement) {
+  async initPopperJs(anchor: HTMLElement): Promise<void> {
     // Placements set to "-start" to accommodate for custom menu width - menu should always be aligned to the left
     this.popperInstance = createPopper(anchor, this.el, {
       placement: "bottom-start",
@@ -510,7 +511,7 @@ export class Menu {
         break;
       case " ":
       case "Enter":
-        if ((event.target as HTMLElement).id !== "clear-button") {
+        if ((event.target as HTMLElement).id !== this.clearButtonId) {
           this.handleMenuChange(true);
         }
         break;
@@ -544,7 +545,7 @@ export class Menu {
         this.setInputValue(highlightedOptionIndex);
       }
     } else if (
-      (target as HTMLElement).id !== "clear-button" &&
+      (target as HTMLElement).id !== this.clearButtonId &&
       this.isMultiSelect
     ) {
       this.handleMenuChange(true);
@@ -646,7 +647,7 @@ export class Menu {
           if (this.isSearchBar || this.isSearchableSelect) {
             break;
           } else {
-            if ((event.target as HTMLElement).id !== "clear-button") {
+            if ((event.target as HTMLElement).id !== this.clearButtonId) {
               this.handleMenuChange(true);
             }
           }
@@ -953,7 +954,7 @@ export class Menu {
       ? (this.el.querySelector(
           `li[data-value="${this.optionHighlighted}"]`
         ) as HTMLElement)
-      : (menu.querySelector(".option[aria-selected]") as HTMLElement);
+      : (menu.querySelector(".option[aria-selected='true']") as HTMLElement);
 
     if (selectedOption) {
       const elTop = selectedOption.offsetTop + selectedOption.offsetHeight;
@@ -1067,7 +1068,7 @@ export class Menu {
           option: true,
           "focused-option": isManualMode
             ? (keyboardNav || initialOptionsListRender) &&
-            option[this.valueField] === optionHighlighted
+              option[this.valueField] === optionHighlighted
             : keyboardNav && selected,
           "last-recommended-option":
             option.recommended &&

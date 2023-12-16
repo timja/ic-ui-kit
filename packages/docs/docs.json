@@ -1,5 +1,5 @@
 {
-  "timestamp": "2023-12-14T10:33:21",
+  "timestamp": "2023-12-20T16:22:33",
   "compiler": {
     "name": "@stencil/core",
     "version": "4.3.0",
@@ -7739,13 +7739,7 @@
       ],
       "events": [],
       "listeners": [],
-      "styles": [
-        {
-          "name": "--ic-z-index-menu",
-          "annotation": "prop",
-          "docs": "z-index of menu"
-        }
-      ],
+      "styles": [],
       "slots": [],
       "parts": [],
       "dependents": [
@@ -13067,7 +13061,7 @@
           "mutable": true,
           "attr": "value",
           "reflectToAttr": false,
-          "docs": "The value of the select, reflected by the value of the currently selected option. For the searchable variant, the value is also reflected by the user input. For the multi-select variant, the value must be an array of values.",
+          "docs": "The value of the select, reflected by the value of the currently selected option.\nFor the searchable variant, the value is also reflected by the user input.\nFor the multi-select variant, the value must be an array of values.",
           "docsTags": [],
           "values": [
             {

@@ -6,6 +6,8 @@ import readme from "../../../web-components/src/components/ic-select/readme.md";
 
 <Meta title="React Components/Select/Single" component={IcSelect} />
 
+<Description markdown={readme} />
+
 export const defaultArgs = {
   disabled: false,
   fullWidth: false,
@@ -191,7 +193,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           options={options}
           value="Cap"
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -208,7 +210,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           showClearButton
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -224,7 +226,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={optionsWithDescriptions}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -241,7 +243,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           helperText="Select one option from the list"
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -259,7 +261,7 @@ export const playgroundOptions = [
           placeholder="Placeholder goes here"
           options={options}
           value={value}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -275,7 +277,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={optionsWithCustomElements}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -328,7 +330,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           disabled
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -344,7 +346,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={optionsWithDisabled}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -361,7 +363,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           fullWidth
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -378,7 +380,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           hideLabel
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -395,7 +397,7 @@ export const playgroundOptions = [
           label="What is your favourite coffee?"
           required
           options={options}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -413,7 +415,7 @@ export const playgroundOptions = [
           readonly
           options={options}
           value="Cap"
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -429,7 +431,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={groupedOptions}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -445,7 +447,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={optionsWithRecommended}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -464,21 +466,27 @@ export const playgroundOptions = [
             validationStatus="success"
             validationText="Coffee available"
             options={options}
-            onIcChange={(event) => console.log(event.detail.value)}
+            onIcChange={(event) =>
+              console.log(`icChange: ${event.detail.value}`)
+            }
           />
           <IcSelect
             label="What is your favourite coffee?"
             validationStatus="warning"
             validationText="Only a few left"
             options={options}
-            onIcChange={(event) => console.log(event.detail.value)}
+            onIcChange={(event) =>
+              console.log(`icChange: ${event.detail.value}`)
+            }
           />
           <IcSelect
             label="What is your favourite coffee?"
             validationStatus="error"
             validationText="Coffee unavailable"
             options={options}
-            onIcChange={(event) => console.log(event.detail.value)}
+            onIcChange={(event) =>
+              console.log(`icChange: ${event.detail.value}`)
+            }
           />
         </div>
       );
@@ -495,7 +503,7 @@ export const playgroundOptions = [
         <IcSelect
           label="What is your favourite coffee?"
           options={manyOptions}
-          onIcChange={(event) => console.log(event.detail.value)}
+          onIcChange={(event) => console.log(`icChange: ${event.detail.value}`)}
         />
       );
     }}
@@ -522,6 +530,25 @@ export const LoadingWithError = () => {
 <Canvas>
   <Story name="Loading with error">
     <LoadingWithError />
+  </Story>
+</Canvas>
+
+### Emitting icOptionSelect on enter
+
+<Canvas>
+  <Story name="Emitting icOptionSelect on enter">
+    {() => {
+      return (
+        <IcSelect
+          label="What is your favourite coffee?"
+          options={options}
+          selectOnEnter
+          onIcOptionSelect={(event) =>
+            console.log(`icOptionSelect: ${event.detail.value}`)
+          }
+        />
+      );
+    }}
   </Story>
 </Canvas>
 

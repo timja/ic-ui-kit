@@ -92,7 +92,7 @@ exports[`ic-select multi should test keydown on menu - arrow down, up, and enter
           </div>
         </div>
       </ic-input-component-container>
-      <ic-menu class="default multiple no-focus no-results open" data-popper-placement="bottom-start" data-popper-reference-hidden open="" style="position: absolute; left: 0; top: 0; margin: 0; right: auto; bottom: auto; transform: translate(0px, 7px);">
+      <ic-menu class="default multiple no-focus no-results open" open="">
         <ul aria-label="IC Select Test pop-up" aria-multiselectable="true" class="menu" id="ic-select-input-70-menu" role="listbox" tabindex="-1">
           <li aria-disabled="false" aria-label="Test label 1" aria-selected="true" class="focused-option option" data-label="Test label 1" data-value="Test value 1" id="ic-select-input-70-menu-Test value 1" role="option" tabindex="0">
             <div class="option-text-container">
@@ -165,7 +165,7 @@ exports[`ic-select multi should test keydown on menu - arrow down, up, and enter
           </div>
         </div>
       </ic-input-component-container>
-      <ic-menu class="default multiple no-focus no-results open" data-popper-placement="bottom-start" data-popper-reference-hidden open="" style="position: absolute; left: 0; top: 0; margin: 0; right: auto; bottom: auto; transform: translate(0px, 7px);">
+      <ic-menu class="default multiple no-focus no-results open" open="">
         <ul aria-label="IC Select Test pop-up" aria-multiselectable="true" class="menu" id="ic-select-input-70-menu" role="listbox" tabindex="-1">
           <li aria-disabled="false" aria-label="Test label 1" aria-selected="true" class="option" data-label="Test label 1" data-value="Test value 1" id="ic-select-input-70-menu-Test value 1" role="option" tabindex="0">
             <div class="option-text-container">

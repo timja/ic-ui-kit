@@ -844,7 +844,9 @@ describe("ic-menu in isolation", () => {
     const eventSpy = jest.fn();
     page.root.addEventListener("menuOptionSelect", eventSpy);
 
-    page.rootInstance.manualSetInputValueKeyboardOpen(keyboardEvent("ArrowDown"));
+    page.rootInstance.manualSetInputValueKeyboardOpen(
+      keyboardEvent("ArrowDown")
+    );
     await page.waitForChanges();
 
     expect(eventSpy).not.toHaveBeenCalled();
