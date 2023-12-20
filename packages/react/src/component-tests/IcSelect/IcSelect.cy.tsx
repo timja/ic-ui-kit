@@ -2464,7 +2464,8 @@ describe("IcSelect Searchable Visual Regression Testing", () => {
       </div>
     );
     cy.checkHydrated("ic-select");
-    cy.compareSnapshot("searchable-validation");
+    cy.compareSnapshot("searchable-validation"); 
     cy.checkA11y(undefined, CYPRESS_AXE_OPTIONS);
   });
 });
+ 
