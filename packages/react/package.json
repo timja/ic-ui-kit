@@ -20,7 +20,7 @@
     "compile": "npm run tsc",
     "tsc": "tsc -p .",
     "rollup": "rollup -c",
-    "storybook": "storybook dev -p 6007 --debug-webpack",
+    "storybook": "storybook dev -p 6007",
     "build-storybook": "rimraf ./storybook-static && storybook build -s public",
     "audit": "echo 'Audit for: @ukic/react' && audit-ci -m --config ../../audit-ci.json",
     "prettier": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore src --check",
