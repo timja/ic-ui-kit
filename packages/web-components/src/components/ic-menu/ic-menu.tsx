@@ -603,7 +603,10 @@ export class Menu {
         if (this.isSearchBar) {
           (this.parentEl as HTMLIcSearchBarElement).setFocus();
           if (this.searchMode === "navigation") this.setHighlightedOption(0);
-        } else if (this.isSearchableSelect) {
+        } else if (
+          this.isSearchableSelect &&
+          menuOptions[highlightedOptionIndex] // Using highlightedOptionIndex to determine whether IcMenu is focused
+        ) {
           (this.parentEl as HTMLIcSelectElement).setFocus();
         }
         this.focusFromSearchKeypress = true;
@@ -613,7 +616,10 @@ export class Menu {
           if (this.isSearchBar) {
             (this.parentEl as HTMLIcSearchBarElement).setFocus();
             if (this.searchMode === "navigation") this.setHighlightedOption(0);
-          } else if (this.isSearchableSelect) {
+          } else if (
+            this.isSearchableSelect &&
+            menuOptions[highlightedOptionIndex] // Using highlightedOptionIndex to determine whether IcMenu is focused
+          ) {
             (this.parentEl as HTMLIcSelectElement).setFocus();
           }
           this.focusFromSearchKeypress = true;
