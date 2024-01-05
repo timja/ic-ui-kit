@@ -118,76 +118,19 @@ jobs:
         if: ${{ needs.check-updates.outputs.core == 'true' }}
         run: npm run test-visual:ci
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       - name: Canary visual regression tests
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
         run: npm run test-visual:ci:canary
 
   ic-ui-kit-deploy-core:
-=======
-  ic-ui-kit-deploy:
->>>>>>> fc48ce3a (build(root): added canary commands)
-=======
-  ic-ui-kit-deploy-core:
->>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     needs:
       [
         ic-ui-kit-static-analysis-tests,
         ic-ui-kit-e2e-tests,
         ic-ui-kit-visual-tests,
-<<<<<<< HEAD
         check-updates,
       ]
     name: "Deploy QA storybook"
-=======
-      ]
-<<<<<<< HEAD
-    name: "Deploy QA Storybook"
->>>>>>> fc48ce3a (build(root): added canary commands)
-=======
-    name: "Deploy core QA Storybook"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install dependencies
-        run: |
-          npm ci --legacy-peer-deps
-          npm run bootstrap -- -- --ci --legacy-peer-deps
-
-      - name: Build components and web-components and react storybook
-        run: |
-          npm run build:all
-          npm run build-storybook:web-components
-          npm run build-storybook:react
-          npm run build-storybook:canary-web-components
-          npm run build-storybook:canary-react
-
-      - name: Deploy web components storybook
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: ./packages/web-components/storybook-static
-          target-folder: ./branches/develop/web-components
-
-      - name: Deploy react storybook
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: ./packages/react/storybook-static
-          target-folder: ./branches/develop/react
-
-  ic-ui-kit-deploy-canary:
-    if: ${{ needs.check-updates.outputs.canary == 'true' }}
-    needs:
-      [
-        ic-ui-kit-static-analysis-tests,
-        ic-ui-kit-e2e-tests,
-        ic-ui-kit-visual-tests,
-      ]
-    name: "Deploy canary QA Storybook"
->>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -202,25 +145,18 @@ jobs:
       - name: Build core components
         if: ${{ needs.check-updates.outputs.canary == 'false' }}
         run: |
-<<<<<<< HEAD
           npm run build
 
       - name: Build all components
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
         run: |
           npm run build:all
-<<<<<<< HEAD
 
       - name: Build web-components and react storybook
         if: ${{ needs.check-updates.outputs.core == 'true' }}
         run: |
-=======
-          npm run build:all
->>>>>>> fc48ce3a (build(root): added canary commands)
           npm run build-storybook:web-components
           npm run build-storybook:react
-          npm run build-storybook:canary-web-components
-          npm run build-storybook:canary-react
 
       - name: Build canary web-components and canary react storybook
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
@@ -242,7 +178,6 @@ jobs:
           folder: ./packages/react/storybook-static
           target-folder: ./branches/develop/react
 
-<<<<<<< HEAD
       - name: Deploy canary web components storybook
         if: ${{ needs.check-updates.outputs.canary == 'true' }}
         uses: JamesIves/github-pages-deploy-action@v4
@@ -256,21 +191,3 @@ jobs:
         with:
           folder: ./packages/canary-react/storybook-static
           target-folder: ./branches/canary/develop/react
-=======
-=======
-          npm run build-storybook:canary-web-components
-          npm run build-storybook:canary-react
-
->>>>>>> ebb76fc5 (build(root): update npm scripts for canary implementation)
-      - name: Deploy CANARY web components storybook
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: ./packages/canary-web-components/storybook-static
-          target-folder: ./branches/develop/canary-web-components
-
-      - name: Deploy CANARY react storybook
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: ./packages/canary-react/storybook-static
-          target-folder: ./branches/develop/canary-react
->>>>>>> fc48ce3a (build(root): added canary commands)
