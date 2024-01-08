@@ -35,14 +35,14 @@
     "create-component": "stencil generate",
     "storybook": "npm-run-all --parallel build:watch start-storybook",
     "start-storybook": "storybook dev -p 6006 -s dist",
-    "build-storybook": "rimraf ./storybook-static && storybook build -s public",
+    "build-storybook": "rimraf /storybook-static && storybook build -s public",
     "prettier": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore src --check",
     "prettier:fix": "prettier --config ../../.prettierrc.json --ignore-path ../../.prettierignore src --write",
     "lint": "remark src && echo '*** Linting CSS ***' && stylelint --config ../../.stylelintrc.json src/**/*.css && echo '*** Linting standard files ***' && eslint --config ../../.eslintrc.js src",
     "lint:fix": "echo '*** Linting CSS ***' && stylelint --config ../../.stylelintrc.json src/**/*.css --fix && echo '*** Linting standard files ***' && eslint --config ../../.eslintrc.js src --fix",
-    "test-visual": "loki --requireReference --reactUri file:./storybook-static --chromeTolerance=1",
-    "test-visual:ci": "loki --requireReference --reactUri file:./storybook-static --chromeFlags=\"--no-sandbox --headless --hide-scrollbars --disable-gpu\" --chromeTolerance=1",
-    "test-visual:update": "npm run storybook build && loki update --reactUri file:./storybook-static",
+    "test-visual": "loki --port 8080 --chromeTolerance=1",
+    "test-visual:ci": "loki --port 8080 --chromeFlags=\"--no-sandbox --headless --hide-scrollbars --disable-gpu\" --chromeTolerance=1",
+    "test-visual:update": "npm run build-storybook && loki update --port=8080 --chromeTolerance=1",
     "audit": "echo 'Audit for: @ukic/web-components' && audit-ci -m --config ../../audit-ci.json"
   },
   "dependencies": {
